@@ -12,8 +12,6 @@
 - status – Trạng thái (ACTIVE/INACTIVE)
 - created_at – Ngày tạo
 
-👉 Quản lý tài khoản đăng nhập hệ thống.
-
 ---
 
 ### 1.2. `roles` (Vai trò)
@@ -33,8 +31,6 @@
 ### 1.5. `user_roles` (Gán vai trò cho user)
 - user_id – Người dùng
 - role_id – Vai trò
-
-👉 Phân quyền hệ thống.
 
 ---
 
@@ -188,7 +184,7 @@
 ---
 
 ### 1.20. `flyway_schema_history` (Lịch sử migration DB)
-👉 Dùng cho Flyway quản lý phiên bản CSDL.
+- Dùng cho Flyway quản lý phiên bản CSDL.
 
 ---
 
@@ -238,8 +234,3 @@
 - Hỗ trợ cập nhật tình trạng khách hàng.
 
 ---
-
-# Kết luận
-- Các bảng cần có dữ liệu trước khi chạy thực tế:  
-  `roles`, `permissions`, `role_permissions`, `users`, `partners`, `services`, `tours`, `itineraries`.  
-- Luồng chính bắt đầu từ: **Khách hàng → Booking → Thanh toán/Hóa đơn/Chi phí/Phải trả → Báo cáo**.
