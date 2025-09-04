@@ -9,7 +9,6 @@ import org.knowm.xchart.style.markers.SeriesMarkers;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.ItemEvent;
 import java.sql.*;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -24,7 +23,6 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.Collections;
 import java.util.Locale;
-import java.util.Objects;
 import java.util.Calendar;
 
 public class DashboardPanel extends JPanel {
@@ -55,13 +53,9 @@ public class DashboardPanel extends JPanel {
             new SpinnerDateModel(java.sql.Date.valueOf(YearMonth.now().atDay(1)), null, null, Calendar.DAY_OF_MONTH));
     private final JSpinner endDate = new JSpinner(new SpinnerDateModel(
             java.sql.Date.valueOf(YearMonth.now().atEndOfMonth()), null, null, Calendar.DAY_OF_MONTH));
-    private final JComboBox<String> quickRange = new JComboBox<>(
-            new String[] { "Tháng này", "Quý này", "Năm nay", "12 tháng", "Tùy chọn" });
-    private final JTextField tourFilter = new JTextField();
     private final JCheckBox ckCash = new JCheckBox("Tiền mặt", true);
     private final JCheckBox ckTransfer = new JCheckBox("Chuyển khoản", true);
     private final JCheckBox ckCard = new JCheckBox("Thẻ", true);
-    private final JCheckBox ckOther = new JCheckBox("Khác", true);
 
     private volatile boolean loading = false;
 
@@ -77,53 +71,31 @@ public class DashboardPanel extends JPanel {
         moneyFmt = new DecimalFormat("#,###", dfs);
 
         JPanel filters = ThemeComponents.cardPanel();
-        filters.setLayout(new GridBagLayout());
-        GridBagConstraints gc = new GridBagConstraints();
-        gc.insets = new Insets(0, 0, ThemeTokens.SPACE_8, ThemeTokens.SPACE_12);
-        gc.gridx = 0;
-        gc.gridy = 0;
-        gc.anchor = GridBagConstraints.WEST;
+        filters.setLayout(new FlowLayout(FlowLayout.LEFT, ThemeTokens.SPACE_16, 0));
 
         startDate.setEditor(new JSpinner.DateEditor(startDate, "dd/MM/yyyy"));
         ((JSpinner.DateEditor) startDate.getEditor()).getTextField().setColumns(8);
         endDate.setEditor(new JSpinner.DateEditor(endDate, "dd/MM/yyyy"));
         ((JSpinner.DateEditor) endDate.getEditor()).getTextField().setColumns(8);
-        tourFilter.setColumns(16);
 
-        addL(filters, gc, new JLabel("Khoảng ngày"));
-        filters.add(startDate, pos(gc));
-        filters.add(new JLabel("đến"), pos(gc));
-        filters.add(endDate, pos(gc));
+        JPanel range = new JPanel(new FlowLayout(FlowLayout.LEFT, ThemeTokens.SPACE_6, 0));
+        range.setOpaque(false);
+        range.add(new JLabel("Khoảng ngày"));
+        range.add(startDate);
+        range.add(new JLabel("đến"));
+        range.add(endDate);
+        filters.add(range);
 
-        GridBagConstraints stretchR = pos(gc);
-        stretchR.weightx = 1;
-        stretchR.fill = GridBagConstraints.HORIZONTAL;
-        filters.add(Box.createHorizontalStrut(1), stretchR);
-
-        addL(filters, gc, new JLabel("Nhanh"));
-        filters.add(quickRange, pos(gc));
-
-        newRow(gc);
-
-        addL(filters, gc, new JLabel("Thanh toán"));
         JPanel types = new JPanel(new FlowLayout(FlowLayout.LEFT, ThemeTokens.SPACE_8, 0));
         types.setOpaque(false);
+        types.add(new JLabel("Thanh toán"));
         types.add(ckCash);
         types.add(ckTransfer);
         types.add(ckCard);
-        types.add(ckOther);
-        filters.add(types, pos(gc));
-
-        addL(filters, gc, new JLabel("Tour"));
-        filters.add(tourFilter, pos(gc));
-
-        GridBagConstraints stretch = pos(gc);
-        stretch.weightx = 1;
-        stretch.fill = GridBagConstraints.HORIZONTAL;
-        filters.add(Box.createHorizontalStrut(1), stretch);
+        filters.add(types);
 
         JButton applyBtn = ThemeComponents.primaryButton("Áp dụng");
-        filters.add(applyBtn, pos(gc));
+        filters.add(applyBtn);
 
         JPanel kpiPanel = new JPanel(new GridLayout(1, 3, ThemeTokens.SPACE_16, 0));
         kpiPanel.setOpaque(true);
@@ -180,17 +152,11 @@ public class DashboardPanel extends JPanel {
 
         initEmptySeries();
 
-        quickRange.addItemListener(e -> {
-            if (e.getStateChange() == ItemEvent.SELECTED)
-                applyQuickRange();
-        });
         applyBtn.addActionListener(e -> refreshAsync());
         Runnable onTypeChange = this::refreshAsync;
         ckCash.addActionListener(e -> onTypeChange.run());
         ckTransfer.addActionListener(e -> onTypeChange.run());
         ckCard.addActionListener(e -> onTypeChange.run());
-        ckOther.addActionListener(e -> onTypeChange.run());
-        tourFilter.addActionListener(e -> refreshAsync());
 
         refreshAsync();
         refreshTimer = new javax.swing.Timer(REFRESH_MS, e -> refreshAsync());
@@ -205,21 +171,6 @@ public class DashboardPanel extends JPanel {
                 java.util.Collections.emptyList());
         updatePieSafe(typePieChart, java.util.Collections.emptyMap());
         updateXYSafe(dailyAreaChart, "Theo ngày", java.util.Collections.emptyList(), java.util.Collections.emptyList());
-    }
-
-    private GridBagConstraints pos(GridBagConstraints gc) {
-        gc.gridx++;
-        return (GridBagConstraints) gc.clone();
-    }
-
-    private void addL(JPanel p, GridBagConstraints gc, JComponent l) {
-        l.setForeground(ThemeTokens.MUTED());
-        p.add(l, pos(gc));
-    }
-
-    private void newRow(GridBagConstraints gc) {
-        gc.gridx = 0;
-        gc.gridy++;
     }
 
     @Override
@@ -319,14 +270,11 @@ public class DashboardPanel extends JPanel {
             types.add("TRANSFER");
         if (ckCard.isSelected())
             types.add("CARD");
-        if (ckOther.isSelected())
-            types.add("OTHER");
-        String tourLike = tourFilter.getText() == null ? "" : tourFilter.getText().trim();
 
         new SwingWorker<Stats, Void>() {
             @Override
             protected Stats doInBackground() {
-                return fetchStats(from, to, types, tourLike);
+                return fetchStats(from, to, types);
             }
 
             @Override
@@ -361,61 +309,19 @@ public class DashboardPanel extends JPanel {
         }.execute();
     }
 
-    private void applyQuickRange() {
-        String sel = Objects.toString(quickRange.getSelectedItem(), "");
-        LocalDate now = LocalDate.now();
-        LocalDate s, e;
-        if (sel.equals("Tháng này")) {
-            YearMonth m = YearMonth.from(now);
-            s = m.atDay(1);
-            e = m.atEndOfMonth();
-        } else if (sel.equals("Quý này")) {
-            int q = (now.getMonthValue() - 1) / 3;
-            int startMonth = q * 3 + 1;
-            YearMonth sm = YearMonth.of(now.getYear(), startMonth);
-            YearMonth em = YearMonth.of(now.getYear(), startMonth + 2);
-            s = sm.atDay(1);
-            e = em.atEndOfMonth();
-        } else if (sel.equals("Năm nay")) {
-            s = LocalDate.of(now.getYear(), 1, 1);
-            e = LocalDate.of(now.getYear(), 12, 31);
-        } else if (sel.equals("12 tháng")) {
-            s = now.minusMonths(11).withDayOfMonth(1);
-            e = YearMonth.from(now).atEndOfMonth();
-        } else {
-            return;
-        }
-        startDate.setValue(java.sql.Date.valueOf(s));
-        endDate.setValue(java.sql.Date.valueOf(e));
-        refreshAsync();
-    }
-
     private LocalDate toLocal(java.util.Date d) {
         return d.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
     }
 
-    private Stats fetchStats(LocalDate from, LocalDate to, Set<String> types, String tourLike) {
+    private Stats fetchStats(LocalDate from, LocalDate to, Set<String> types) {
         Stats s = new Stats();
-        boolean wantOther = types.contains("OTHER");
-        boolean hasTour = tourLike != null && !tourLike.isBlank();
-
         try (Connection conn = DataSourceProvider.getDataSource().getConnection()) {
-            String typeFilter = buildTypeFilter(types, wantOther, "p.type");
-            String tourJoinPayments = hasTour
-                    ? " JOIN bookings b ON b.id = p.booking_id JOIN tours t ON t.id = b.tour_id "
-                    : "";
-            String tourCondPayments = hasTour ? " AND LOWER(t.name) LIKE LOWER(?) " : "";
-            String tourJoinBookings = hasTour ? " JOIN tours t ON t.id = b.tour_id " : "";
-            String tourCondBookings = hasTour ? " AND LOWER(t.name) LIKE LOWER(?) " : "";
+            String typeFilter = buildTypeFilter(types, "p.type");
 
-            String sqlBk = "SELECT b.status, COUNT(*) FROM bookings b" + tourJoinBookings +
-                    " WHERE b.created_at BETWEEN ? AND ?" + tourCondBookings + " GROUP BY b.status";
+            String sqlBk = "SELECT b.status, COUNT(*) FROM bookings b WHERE b.created_at BETWEEN ? AND ? GROUP BY b.status";
             try (PreparedStatement ps = conn.prepareStatement(sqlBk)) {
-                int idx = 1;
-                ps.setDate(idx++, java.sql.Date.valueOf(from));
-                ps.setDate(idx++, java.sql.Date.valueOf(to));
-                if (hasTour)
-                    ps.setString(idx++, "%" + tourLike.trim() + "%");
+                ps.setDate(1, java.sql.Date.valueOf(from));
+                ps.setDate(2, java.sql.Date.valueOf(to));
                 try (ResultSet rs = ps.executeQuery()) {
                     while (rs.next()) {
                         String st = rs.getString(1);
@@ -427,34 +333,29 @@ public class DashboardPanel extends JPanel {
                 }
             }
 
-            String sqlTotal = "SELECT COALESCE(SUM(p.amount),0) FROM payments p" + tourJoinPayments +
-                    " WHERE p.paid_at BETWEEN ? AND ? " + typeFilter.replace("WHERE", "AND") + tourCondPayments;
+            String sqlTotal = "SELECT COALESCE(SUM(p.amount),0) FROM payments p WHERE p.paid_at BETWEEN ? AND ? "
+                    + typeFilter.replace("WHERE", "AND");
             try (PreparedStatement ps = conn.prepareStatement(sqlTotal)) {
                 int idx = 1;
                 ps.setDate(idx++, java.sql.Date.valueOf(from));
                 ps.setDate(idx++, java.sql.Date.valueOf(to));
-                idx = setTypeParams(ps, idx, types, wantOther);
-                if (hasTour)
-                    ps.setString(idx++, "%" + tourLike.trim() + "%");
+                idx = setTypeParams(ps, idx, types);
                 try (ResultSet rs = ps.executeQuery()) {
                     if (rs.next())
                         s.totalRevenue = rs.getDouble(1);
                 }
             }
 
-            String sqlTour = "SELECT t.name, COALESCE(SUM(p.amount),0) FROM payments p " +
-                    "JOIN bookings b ON b.id = p.booking_id " +
-                    "JOIN tours t ON t.id = b.tour_id " +
-                    "WHERE p.paid_at BETWEEN ? AND ? " + typeFilter.replace("WHERE", "AND") +
-                    (hasTour ? " AND LOWER(t.name) LIKE LOWER(?) " : "") +
-                    "GROUP BY t.name ORDER BY SUM(p.amount) DESC LIMIT 12";
+            String sqlTour = "SELECT t.name, COALESCE(SUM(p.amount),0) FROM payments p "
+                    + "JOIN bookings b ON b.id = p.booking_id "
+                    + "JOIN tours t ON t.id = b.tour_id "
+                    + "WHERE p.paid_at BETWEEN ? AND ? " + typeFilter.replace("WHERE", "AND")
+                    + "GROUP BY t.name ORDER BY SUM(p.amount) DESC LIMIT 12";
             try (PreparedStatement ps = conn.prepareStatement(sqlTour)) {
                 int idx = 1;
                 ps.setDate(idx++, java.sql.Date.valueOf(from));
                 ps.setDate(idx++, java.sql.Date.valueOf(to));
-                idx = setTypeParams(ps, idx, types, wantOther);
-                if (hasTour)
-                    ps.setString(idx++, "%" + tourLike.trim() + "%");
+                idx = setTypeParams(ps, idx, types);
                 try (ResultSet rs = ps.executeQuery()) {
                     while (rs.next()) {
                         String name = rs.getString(1);
@@ -464,17 +365,14 @@ public class DashboardPanel extends JPanel {
                 }
             }
 
-            String sqlMonthly = "SELECT DATE_TRUNC('month', p.paid_at) m, COALESCE(SUM(p.amount),0) " +
-                    "FROM payments p" + tourJoinPayments +
-                    " WHERE p.paid_at >= ? AND p.paid_at <= ? " + typeFilter.replace("WHERE", "AND") +
-                    tourCondPayments + " GROUP BY m ORDER BY m";
+            String sqlMonthly = "SELECT DATE_TRUNC('month', p.paid_at) m, COALESCE(SUM(p.amount),0) FROM payments p "
+                    + "WHERE p.paid_at >= ? AND p.paid_at <= ? " + typeFilter.replace("WHERE", "AND")
+                    + "GROUP BY m ORDER BY m";
             try (PreparedStatement ps = conn.prepareStatement(sqlMonthly)) {
                 int idx = 1;
                 ps.setDate(idx++, java.sql.Date.valueOf(from.minusMonths(11).withDayOfMonth(1)));
                 ps.setDate(idx++, java.sql.Date.valueOf(to));
-                idx = setTypeParams(ps, idx, types, wantOther);
-                if (hasTour)
-                    ps.setString(idx++, "%" + tourLike.trim() + "%");
+                idx = setTypeParams(ps, idx, types);
                 try (ResultSet rs = ps.executeQuery()) {
                     while (rs.next()) {
                         Timestamp ts = rs.getTimestamp(1);
@@ -484,17 +382,14 @@ public class DashboardPanel extends JPanel {
                 }
             }
 
-            String sqlDaily = "SELECT CAST(p.paid_at AS DATE) d, COALESCE(SUM(p.amount),0) " +
-                    "FROM payments p" + tourJoinPayments +
-                    " WHERE p.paid_at BETWEEN ? AND ? " + typeFilter.replace("WHERE", "AND") +
-                    tourCondPayments + " GROUP BY d ORDER BY d";
+            String sqlDaily = "SELECT CAST(p.paid_at AS DATE) d, COALESCE(SUM(p.amount),0) FROM payments p "
+                    + "WHERE p.paid_at BETWEEN ? AND ? " + typeFilter.replace("WHERE", "AND")
+                    + "GROUP BY d ORDER BY d";
             try (PreparedStatement ps = conn.prepareStatement(sqlDaily)) {
                 int idx = 1;
                 ps.setDate(idx++, java.sql.Date.valueOf(from));
                 ps.setDate(idx++, java.sql.Date.valueOf(to));
-                idx = setTypeParams(ps, idx, types, wantOther);
-                if (hasTour)
-                    ps.setString(idx++, "%" + tourLike.trim() + "%");
+                idx = setTypeParams(ps, idx, types);
                 try (ResultSet rs = ps.executeQuery()) {
                     while (rs.next()) {
                         java.sql.Date d = rs.getDate(1);
@@ -505,17 +400,13 @@ public class DashboardPanel extends JPanel {
             }
 
             String sqlPie = "SELECT CASE WHEN p.type IS NULL OR p.type NOT IN ('CASH','TRANSFER','CARD') THEN 'OTHER' ELSE p.type END t, "
-                    +
-                    "COALESCE(SUM(p.amount),0) FROM payments p" + tourJoinPayments +
-                    " WHERE p.paid_at BETWEEN ? AND ? " + typeFilter.replace("WHERE", "AND") +
-                    tourCondPayments + " GROUP BY t ORDER BY 2 DESC";
+                    + "COALESCE(SUM(p.amount),0) FROM payments p WHERE p.paid_at BETWEEN ? AND ? "
+                    + typeFilter.replace("WHERE", "AND") + " GROUP BY t ORDER BY 2 DESC";
             try (PreparedStatement ps = conn.prepareStatement(sqlPie)) {
                 int idx = 1;
                 ps.setDate(idx++, java.sql.Date.valueOf(from));
                 ps.setDate(idx++, java.sql.Date.valueOf(to));
-                idx = setTypeParams(ps, idx, types, wantOther);
-                if (hasTour)
-                    ps.setString(idx++, "%" + tourLike.trim() + "%");
+                idx = setTypeParams(ps, idx, types);
                 try (ResultSet rs = ps.executeQuery()) {
                     while (rs.next()) {
                         String type = rs.getString(1);
@@ -535,22 +426,13 @@ public class DashboardPanel extends JPanel {
         return s;
     }
 
-    private String buildTypeFilter(Set<String> types, boolean wantOther, String col) {
-        List<String> base = new ArrayList<>();
-        if (types.contains("CASH"))
-            base.add("CASH");
-        if (types.contains("TRANSFER"))
-            base.add("TRANSFER");
-        if (types.contains("CARD"))
-            base.add("CARD");
-        String in = base.isEmpty() ? "FALSE"
-                : col + " IN (" + String.join(",", Collections.nCopies(base.size(), "?")) + ")";
-        String other = wantOther ? "(" + col + " IS NULL OR " + col + " NOT IN ('CASH','TRANSFER','CARD'))" : "FALSE";
-        return " WHERE (" + in + " OR " + other + ") ";
+    private String buildTypeFilter(Set<String> types, String col) {
+        if (types.isEmpty())
+            return "";
+        return " WHERE " + col + " IN (" + String.join(",", Collections.nCopies(types.size(), "?")) + ") ";
     }
 
-    private int setTypeParams(PreparedStatement ps, int startIdx, Set<String> types, boolean wantOther)
-            throws SQLException {
+    private int setTypeParams(PreparedStatement ps, int startIdx, Set<String> types) throws SQLException {
         List<String> ordered = new ArrayList<>();
         if (types.contains("CASH"))
             ordered.add("CASH");
@@ -564,7 +446,6 @@ public class DashboardPanel extends JPanel {
         }
         return idx;
     }
-
     private static class Stats {
         int totalBookings = 0;
         double totalRevenue = 0d;
