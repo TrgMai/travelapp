@@ -4,6 +4,7 @@ import com.example.travelapp.model.Allocation;
 import com.example.travelapp.service.AllocationService;
 import com.example.travelapp.ui.theme.ThemeComponents;
 import com.example.travelapp.ui.theme.ThemeTokens;
+import com.example.travelapp.ui.dialogs.AllocationFormDialog;
 import com.example.travelapp.ui.tableModels.AllocationsTableModel;
 
 import javax.swing.*;
@@ -57,16 +58,16 @@ public class AllocationsTab extends JPanel {
     }
 
     private void onAdd() {
-        AllocationForm f = new AllocationForm();
+        AllocationFormDialog f = new AllocationFormDialog();
         f.setVisible(true);
         if (!f.ok)
             return;
 
         Allocation a = new Allocation();
         a.setBookingId(bookingId);
-        a.setDayNo((Integer) f.spDay.getValue());
-        a.setServiceId(f.txtService.getText().trim());
-        a.setDetailJson(f.txtDetail.getText().trim());
+        a.setDayNo(f.getDayNo());
+        a.setServiceId(f.getServiceId());
+        a.setDetailJson(f.getDetailJson());
 
         if (service.add(a))
             reload();
@@ -85,71 +86,6 @@ public class AllocationsTab extends JPanel {
                 reload();
             else
                 JOptionPane.showMessageDialog(this, "Xóa thất bại", "Lỗi", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    static class AllocationForm extends JDialog {
-        JSpinner spDay = new JSpinner(new SpinnerNumberModel(1, 1, 999, 1));
-        JTextField txtService = new JTextField();
-        JTextField txtDetail = new JTextField();
-        boolean ok;
-
-        AllocationForm() {
-            setModal(true);
-            setTitle("Thêm phân bổ dịch vụ");
-            setSize(420, 220);
-            setLocationRelativeTo(null);
-            setLayout(new BorderLayout());
-            getContentPane().setBackground(ThemeTokens.SURFACE());
-
-            JPanel form = new JPanel(new GridBagLayout());
-            form.setOpaque(true);
-            form.setBackground(ThemeTokens.SURFACE());
-            GridBagConstraints g = new GridBagConstraints();
-            g.insets = new Insets(ThemeTokens.SPACE_8, ThemeTokens.SPACE_12, ThemeTokens.SPACE_8, ThemeTokens.SPACE_12);
-            g.anchor = GridBagConstraints.WEST;
-            g.fill = GridBagConstraints.HORIZONTAL;
-            g.weightx = 1;
-            int row = 0;
-            addRow(form, g, row++, "Ngày (thứ tự)", spDay);
-            addRow(form, g, row++, "Mã dịch vụ", txtService);
-            addRow(form, g, row++, "Chi tiết", txtDetail);
-
-            JPanel card = ThemeComponents.cardPanel();
-            card.setLayout(new BorderLayout());
-            card.add(form, BorderLayout.CENTER);
-            card.setBorder(new EmptyBorder(ThemeTokens.SPACE_12, ThemeTokens.SPACE_12, ThemeTokens.SPACE_12,
-                    ThemeTokens.SPACE_12));
-            add(card, BorderLayout.CENTER);
-
-            JPanel actions = new JPanel(new FlowLayout(FlowLayout.RIGHT, ThemeTokens.SPACE_8, ThemeTokens.SPACE_12));
-            actions.setOpaque(true);
-            actions.setBackground(ThemeTokens.SURFACE());
-            JButton okBtn = ThemeComponents.primaryButton("Xác nhận");
-            JButton cancelBtn = ThemeComponents.softButton("Hủy bỏ");
-            actions.add(okBtn);
-            actions.add(cancelBtn);
-            add(actions, BorderLayout.SOUTH);
-
-            okBtn.addActionListener(e -> {
-                ok = true;
-                setVisible(false);
-            });
-            cancelBtn.addActionListener(e -> {
-                ok = false;
-                setVisible(false);
-            });
-        }
-
-        private static void addRow(JPanel p, GridBagConstraints g, int row, String label, JComponent field) {
-            g.gridx = 0;
-            g.gridy = row;
-            g.gridwidth = 1;
-            JLabel l = new JLabel(label);
-            l.setForeground(ThemeTokens.TEXT());
-            p.add(l, g);
-            g.gridx = 1;
-            p.add(field, g);
         }
     }
 }

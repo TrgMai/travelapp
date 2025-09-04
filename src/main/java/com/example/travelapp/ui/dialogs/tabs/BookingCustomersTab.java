@@ -78,8 +78,20 @@ public class BookingCustomersTab extends JPanel {
         if (c == null)
             return;
 
-        String role = JOptionPane.showInputDialog(this, "Vai trò (không bắt buộc):", "");
-        boolean added = bcService.add(bookingId, c.getId(), role == null ? null : role.trim());
+        String[] roles = { "LEAD", "MEMBER", "CHILD", "VIP" };
+        JComboBox<String> cb = new JComboBox<>(roles);
+        int res = JOptionPane.showConfirmDialog(
+                this,
+                cb,
+                "Chọn vai trò",
+                JOptionPane.OK_CANCEL_OPTION,
+                JOptionPane.QUESTION_MESSAGE);
+
+        if (res != JOptionPane.OK_OPTION)
+            return;
+
+        String role = (String) cb.getSelectedItem();
+        boolean added = bcService.add(bookingId, c.getId(), role);
         if (added) {
             reload();
         } else {
@@ -93,11 +105,23 @@ public class BookingCustomersTab extends JPanel {
         if (r < 0)
             return;
         var row = model.getAt(table.convertRowIndexToModel(r));
-        String newRole = JOptionPane.showInputDialog(this, "Vai trò:", row.role == null ? "" : row.role);
-        if (newRole == null)
+
+        String[] roles = { "LEAD", "MEMBER", "CHILD", "VIP" };
+        JComboBox<String> cb = new JComboBox<>(roles);
+        cb.setSelectedItem(row.role);
+
+        int res = JOptionPane.showConfirmDialog(
+                this,
+                cb,
+                "Chọn vai trò mới",
+                JOptionPane.OK_CANCEL_OPTION,
+                JOptionPane.QUESTION_MESSAGE);
+        if (res != JOptionPane.OK_OPTION)
             return;
+
+        String newRole = (String) cb.getSelectedItem();
         boolean ok = bcService.remove(bookingId, row.customerId)
-                && bcService.add(bookingId, row.customerId, newRole.trim());
+                && bcService.add(bookingId, row.customerId, newRole);
         if (!ok) {
             JOptionPane.showMessageDialog(this, "Cập nhật vai trò thất bại", "Khách hàng", JOptionPane.ERROR_MESSAGE);
         }

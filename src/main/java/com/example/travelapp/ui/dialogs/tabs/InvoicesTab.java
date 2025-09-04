@@ -3,6 +3,7 @@ package com.example.travelapp.ui.dialogs.tabs;
 import com.example.travelapp.model.Invoice;
 import com.example.travelapp.service.InvoiceService;
 import com.example.travelapp.ui.components.TableUtils;
+import com.example.travelapp.ui.dialogs.InvoiceFormDialog;
 import com.example.travelapp.ui.theme.ThemeComponents;
 import com.example.travelapp.ui.theme.ThemeTokens;
 import com.example.travelapp.ui.tableModels.InvoicesTableModel;
@@ -11,6 +12,10 @@ import com.example.travelapp.ui.components.MoneyField;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 
 public class InvoicesTab extends JPanel {
     private final String bookingId;
@@ -66,13 +71,35 @@ public class InvoicesTab extends JPanel {
         if (!d.ok)
             return;
 
+        String no = d.txtNo.getText().trim();
+        if (no.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập số hóa đơn", "Thiếu dữ liệu",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        String dbPdfPath = d.getPdfPath();
+
+        if (d.selectedFile != null) {
+            try {
+                Path dest = Paths.get("invoices", no + ".pdf");
+                Files.createDirectories(dest.getParent());
+                Files.copy(d.selectedFile.toPath(), dest, StandardCopyOption.REPLACE_EXISTING);
+                System.out.println("PDF saved to: " + dest.toAbsolutePath());
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Không thể lưu file PDF: " + ex.getMessage(),
+                        "Lỗi", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        }
+
         Invoice inv = new Invoice();
         inv.setBookingId(bookingId);
-        inv.setNo(d.txtNo.getText().trim());
+        inv.setNo(no);
         inv.setAmount(d.amount.getBigDecimal());
         inv.setVat(d.vat.getBigDecimal());
-        inv.setIssuedAt(d.getDateTimeStrict());
-        inv.setPdfPath(d.txtPdf.getText().trim().isEmpty() ? null : d.txtPdf.getText().trim());
+        inv.setIssuedAt(d.getIssuedAt());
+        inv.setPdfPath(dbPdfPath);
 
         if (service.add(inv)) {
             reload();
@@ -95,88 +122,6 @@ public class InvoicesTab extends JPanel {
             reload();
         } else {
             JOptionPane.showMessageDialog(this, "Xóa thất bại", "Lỗi", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    static class InvoiceFormDialog extends JDialog {
-        JTextField txtNo = new JTextField();
-        MoneyField amount = new MoneyField();
-        MoneyField vat = new MoneyField();
-        JTextField txtIssued = new JTextField();
-        JTextField txtPdf = new JTextField();
-        boolean ok;
-
-        InvoiceFormDialog() {
-            setModal(true);
-            setTitle("Thêm hóa đơn");
-            setSize(480, 320);
-            setLocationRelativeTo(null);
-            setLayout(new BorderLayout());
-            getContentPane().setBackground(ThemeTokens.SURFACE());
-
-            JPanel form = new JPanel(new GridBagLayout());
-            form.setOpaque(true);
-            form.setBackground(ThemeTokens.SURFACE());
-            GridBagConstraints g = new GridBagConstraints();
-            g.insets = new Insets(ThemeTokens.SPACE_8, ThemeTokens.SPACE_12, ThemeTokens.SPACE_8, ThemeTokens.SPACE_12);
-            g.anchor = GridBagConstraints.WEST;
-            g.fill = GridBagConstraints.HORIZONTAL;
-            g.weightx = 1;
-
-            int row = 0;
-            addRow(form, g, row++, "Số hóa đơn", txtNo);
-            addRow(form, g, row++, "Số tiền", amount);
-            addRow(form, g, row++, "Thuế VAT", vat);
-            addRow(form, g, row++, "Ngày phát hành (yyyy-MM-dd HH:mm)", txtIssued);
-            addRow(form, g, row++, "Đường dẫn PDF", txtPdf);
-
-            JPanel card = ThemeComponents.cardPanel();
-            card.setLayout(new BorderLayout());
-            card.add(form, BorderLayout.CENTER);
-            card.setBorder(new EmptyBorder(ThemeTokens.SPACE_12, ThemeTokens.SPACE_12, ThemeTokens.SPACE_12,
-                    ThemeTokens.SPACE_12));
-            add(card, BorderLayout.CENTER);
-
-            JPanel actions = new JPanel(new FlowLayout(FlowLayout.RIGHT, ThemeTokens.SPACE_8, ThemeTokens.SPACE_12));
-            actions.setOpaque(true);
-            actions.setBackground(ThemeTokens.SURFACE());
-            JButton okBtn = ThemeComponents.primaryButton("Xác nhận");
-            JButton cancelBtn = ThemeComponents.softButton("Hủy bỏ");
-            actions.add(okBtn);
-            actions.add(cancelBtn);
-            add(actions, BorderLayout.SOUTH);
-
-            okBtn.addActionListener(e -> {
-                ok = true;
-                setVisible(false);
-            });
-            cancelBtn.addActionListener(e -> {
-                ok = false;
-                setVisible(false);
-            });
-        }
-
-        private static void addRow(JPanel p, GridBagConstraints g, int row, String label, JComponent field) {
-            g.gridx = 0;
-            g.gridy = row;
-            g.gridwidth = 1;
-            JLabel l = new JLabel(label);
-            l.setForeground(ThemeTokens.TEXT());
-            p.add(l, g);
-            g.gridx = 1;
-            p.add(field, g);
-        }
-
-        java.time.LocalDateTime getDateTimeStrict() {
-            String s = txtIssued.getText().trim();
-            if (s.isEmpty())
-                return null;
-            try {
-                return java.time.LocalDateTime.parse(s,
-                        java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
-            } catch (Exception ex) {
-                return null;
-            }
         }
     }
 }

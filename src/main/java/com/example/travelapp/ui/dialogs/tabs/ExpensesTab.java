@@ -4,6 +4,7 @@ import com.example.travelapp.model.Expense;
 import com.example.travelapp.service.ExpenseService;
 import com.example.travelapp.ui.components.MoneyField;
 import com.example.travelapp.ui.components.TableUtils;
+import com.example.travelapp.ui.dialogs.ExpenseFormDialog;
 import com.example.travelapp.ui.theme.ThemeComponents;
 import com.example.travelapp.ui.theme.ThemeTokens;
 import com.example.travelapp.ui.tableModels.ExpensesTableModel;
@@ -61,20 +62,26 @@ public class ExpensesTab extends JPanel {
     }
 
     private void onAdd() {
-        ExpenseForm f = new ExpenseForm();
+        ExpenseFormDialog f = new ExpenseFormDialog();
         f.setVisible(true);
         if (!f.ok)
             return;
+
+        Object sel = f.cbCategory.getSelectedItem();
+        String category = sel == null ? null : sel.toString().trim();
+
         Expense ex = new Expense();
         ex.setBookingId(bookingId);
-        ex.setCategory(f.txtCategory.getText().trim());
+        ex.setCategory(category);
         ex.setAmount(f.amount.getBigDecimal());
         ex.setSpentAt(f.getDateStrict());
         ex.setNote(f.txtNote.getText().trim());
-        if (service.add(ex))
+
+        if (service.add(ex)) {
             reload();
-        else
+        } else {
             JOptionPane.showMessageDialog(this, "Thêm chi phí thất bại", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     private void onDelete() {
@@ -88,85 +95,6 @@ public class ExpensesTab extends JPanel {
                 reload();
             else
                 JOptionPane.showMessageDialog(this, "Xóa thất bại", "Lỗi", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    static class ExpenseForm extends JDialog {
-        JTextField txtCategory = new JTextField();
-        MoneyField amount = new MoneyField();
-        JTextField txtSpent = new JTextField();
-        JTextField txtNote = new JTextField();
-        boolean ok;
-
-        ExpenseForm() {
-            setModal(true);
-            setTitle("Thêm chi phí");
-            setSize(420, 260);
-            setLocationRelativeTo(null);
-            setLayout(new BorderLayout());
-            getContentPane().setBackground(ThemeTokens.SURFACE());
-
-            JPanel form = new JPanel(new GridBagLayout());
-            form.setOpaque(true);
-            form.setBackground(ThemeTokens.SURFACE());
-            GridBagConstraints g = new GridBagConstraints();
-            g.insets = new Insets(ThemeTokens.SPACE_8, ThemeTokens.SPACE_12, ThemeTokens.SPACE_8, ThemeTokens.SPACE_12);
-            g.anchor = GridBagConstraints.WEST;
-            g.fill = GridBagConstraints.HORIZONTAL;
-            g.weightx = 1;
-
-            int row = 0;
-            addRow(form, g, row++, "Hạng mục", txtCategory);
-            addRow(form, g, row++, "Số tiền", amount);
-            addRow(form, g, row++, "Ngày chi (yyyy-MM-dd)", txtSpent);
-            addRow(form, g, row++, "Ghi chú", txtNote);
-
-            JPanel card = ThemeComponents.cardPanel();
-            card.setLayout(new BorderLayout());
-            card.add(form, BorderLayout.CENTER);
-            card.setBorder(new EmptyBorder(ThemeTokens.SPACE_12, ThemeTokens.SPACE_12, ThemeTokens.SPACE_12,
-                    ThemeTokens.SPACE_12));
-            add(card, BorderLayout.CENTER);
-
-            JPanel actions = new JPanel(new FlowLayout(FlowLayout.RIGHT, ThemeTokens.SPACE_8, ThemeTokens.SPACE_12));
-            actions.setOpaque(true);
-            actions.setBackground(ThemeTokens.SURFACE());
-            JButton okBtn = ThemeComponents.primaryButton("Xác nhận");
-            JButton cancelBtn = ThemeComponents.softButton("Hủy bỏ");
-            actions.add(okBtn);
-            actions.add(cancelBtn);
-            add(actions, BorderLayout.SOUTH);
-
-            okBtn.addActionListener(e -> {
-                ok = true;
-                setVisible(false);
-            });
-            cancelBtn.addActionListener(e -> {
-                ok = false;
-                setVisible(false);
-            });
-        }
-
-        private static void addRow(JPanel p, GridBagConstraints g, int row, String label, JComponent field) {
-            g.gridx = 0;
-            g.gridy = row;
-            g.gridwidth = 1;
-            JLabel l = new JLabel(label);
-            l.setForeground(ThemeTokens.TEXT());
-            p.add(l, g);
-            g.gridx = 1;
-            p.add(field, g);
-        }
-
-        java.time.LocalDate getDateStrict() {
-            String s = txtSpent.getText().trim();
-            if (s.isEmpty())
-                return null;
-            try {
-                return java.time.LocalDate.parse(s, java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-            } catch (Exception e) {
-                return null;
-            }
         }
     }
 }

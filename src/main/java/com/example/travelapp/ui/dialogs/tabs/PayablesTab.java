@@ -2,8 +2,8 @@ package com.example.travelapp.ui.dialogs.tabs;
 
 import com.example.travelapp.model.Payable;
 import com.example.travelapp.service.PayableService;
-import com.example.travelapp.ui.components.MoneyField;
 import com.example.travelapp.ui.components.TableUtils;
+import com.example.travelapp.ui.dialogs.PayableFormDialog;
 import com.example.travelapp.ui.theme.ThemeComponents;
 import com.example.travelapp.ui.theme.ThemeTokens;
 import com.example.travelapp.ui.tableModels.PayablesTableModel;
@@ -62,17 +62,33 @@ public class PayablesTab extends JPanel {
     }
 
     private void onAdd() {
-        PayableForm f = new PayableForm();
+        PayableFormDialog f = new PayableFormDialog();
         f.setVisible(true);
         if (!f.ok)
             return;
 
+        String partnerId = f.getPartnerId();
+        if (partnerId == null || partnerId.isBlank()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn đối tác.", "Thiếu dữ liệu",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        String statusCode;
+        try {
+            statusCode = f.getSelectedStatusCode();
+        } catch (NoSuchMethodError | Exception ignore) {
+            Object sel = f.cbStatus.getSelectedItem();
+            statusCode = (sel instanceof PayableFormDialog.StatusItem si) ? si.code
+                    : String.valueOf(sel);
+        }
+
         Payable p = new Payable();
         p.setBookingId(bookingId);
-        p.setPartnerId(f.txtPartner.getText().trim());
+        p.setPartnerId(partnerId);
         p.setAmount(f.amount.getBigDecimal());
-        p.setDueDate(f.getDateStrict());
-        p.setStatus(f.cbStatus.getSelectedItem().toString());
+        p.setDueDate(f.getDueDate());
+        p.setStatus(statusCode);
 
         if (service.add(p)) {
             reload();
@@ -92,84 +108,6 @@ public class PayablesTab extends JPanel {
                 reload();
             } else {
                 JOptionPane.showMessageDialog(this, "Xóa thất bại", "Lỗi", JOptionPane.ERROR_MESSAGE);
-            }
-        }
-    }
-
-    static class PayableForm extends JDialog {
-        JTextField txtPartner = new JTextField();
-        MoneyField amount = new MoneyField();
-        JTextField txtDue = new JTextField();
-        JComboBox<String> cbStatus = new JComboBox<>(new String[] { "MỚI", "MỘT PHẦN", "ĐÃ THANH TOÁN" });
-        boolean ok;
-
-        PayableForm() {
-            setModal(true);
-            setTitle("Thêm công nợ phải trả");
-            setSize(420, 260);
-            setLocationRelativeTo(null);
-            setLayout(new BorderLayout());
-            getContentPane().setBackground(ThemeTokens.SURFACE());
-
-            JPanel form = new JPanel(new GridBagLayout());
-            form.setOpaque(true);
-            form.setBackground(ThemeTokens.SURFACE());
-            GridBagConstraints g = new GridBagConstraints();
-            g.insets = new Insets(ThemeTokens.SPACE_8, ThemeTokens.SPACE_12, ThemeTokens.SPACE_8, ThemeTokens.SPACE_12);
-            g.anchor = GridBagConstraints.WEST;
-            g.fill = GridBagConstraints.HORIZONTAL;
-            g.weightx = 1;
-            int row = 0;
-            addRow(form, g, row++, "Đối tác (ID)", txtPartner);
-            addRow(form, g, row++, "Số tiền", amount);
-            addRow(form, g, row++, "Hạn thanh toán (yyyy-MM-dd)", txtDue);
-            addRow(form, g, row++, "Trạng thái", cbStatus);
-
-            JPanel card = ThemeComponents.cardPanel();
-            card.setLayout(new BorderLayout());
-            card.add(form, BorderLayout.CENTER);
-            card.setBorder(new EmptyBorder(ThemeTokens.SPACE_12, ThemeTokens.SPACE_12, ThemeTokens.SPACE_12,
-                    ThemeTokens.SPACE_12));
-            add(card, BorderLayout.CENTER);
-
-            JPanel actions = new JPanel(new FlowLayout(FlowLayout.RIGHT, ThemeTokens.SPACE_8, ThemeTokens.SPACE_12));
-            actions.setOpaque(true);
-            actions.setBackground(ThemeTokens.SURFACE());
-            JButton okBtn = ThemeComponents.primaryButton("Xác nhận");
-            JButton cancelBtn = ThemeComponents.softButton("Hủy bỏ");
-            actions.add(okBtn);
-            actions.add(cancelBtn);
-            add(actions, BorderLayout.SOUTH);
-
-            okBtn.addActionListener(e -> {
-                ok = true;
-                setVisible(false);
-            });
-            cancelBtn.addActionListener(e -> {
-                ok = false;
-                setVisible(false);
-            });
-        }
-
-        private static void addRow(JPanel p, GridBagConstraints g, int row, String label, JComponent field) {
-            g.gridx = 0;
-            g.gridy = row;
-            g.gridwidth = 1;
-            JLabel l = new JLabel(label);
-            l.setForeground(ThemeTokens.TEXT());
-            p.add(l, g);
-            g.gridx = 1;
-            p.add(field, g);
-        }
-
-        java.time.LocalDate getDateStrict() {
-            String s = txtDue.getText().trim();
-            if (s.isEmpty())
-                return null;
-            try {
-                return java.time.LocalDate.parse(s, java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-            } catch (Exception e) {
-                return null;
             }
         }
     }

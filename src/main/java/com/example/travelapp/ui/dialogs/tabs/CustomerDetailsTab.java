@@ -16,7 +16,7 @@ import java.util.Properties;
 
 public class CustomerDetailsTab extends JPanel {
     private final JTextField nameField = new JTextField();
-    private final JComboBox<String> genderField = new JComboBox<>(new String[] { "MALE", "FEMALE", "OTHER" });
+    private final JComboBox<String> genderField = new JComboBox<>(new String[] { "M", "F" });
     private final UtilDateModel dobModel = new UtilDateModel();
     private final JDatePickerImpl dobPicker;
     private final JTextField idTypeField = new JTextField();
@@ -38,7 +38,7 @@ public class CustomerDetailsTab extends JPanel {
                     boolean cellHasFocus) {
                 Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
                 String v = String.valueOf(value);
-                setText("MALE".equals(v) ? "Nam" : "FEMALE".equals(v) ? "Nữ" : "Khác");
+                setText("M".equals(v) ? "Nam" : "F".equals(v) ? "Nữ" : "");
                 return c;
             }
         });

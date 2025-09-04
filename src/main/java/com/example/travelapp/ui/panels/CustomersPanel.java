@@ -28,7 +28,7 @@ public class CustomersPanel extends JPanel {
     private final TableRowSorter<CustomersTableModel> sorter = new TableRowSorter<>(tableModel);
 
     private final JTextField txtKeyword = new JTextField();
-    private final JComboBox<String> cbGender = new JComboBox<>(new String[] { "All", "MALE", "FEMALE", "OTHER" });
+    private final JComboBox<String> cbGender = new JComboBox<>(new String[] { "All", "M", "F" });
     private JDatePickerImpl dobFromPicker;
     private JDatePickerImpl dobToPicker;
 
@@ -86,7 +86,7 @@ public class CustomersPanel extends JPanel {
                     boolean cellHasFocus) {
                 Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
                 String v = String.valueOf(value);
-                setText("All".equals(v) ? "Tất cả" : "MALE".equals(v) ? "Nam" : "FEMALE".equals(v) ? "Nữ" : "Khác");
+                setText("All".equals(v) ? "Tất cả" : "M".equals(v) ? "Nam" : "F".equals(v) ? "Nữ" : "");
                 return c;
             }
         });
