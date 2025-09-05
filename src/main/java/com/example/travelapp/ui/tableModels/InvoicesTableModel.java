@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class InvoicesTableModel extends AbstractTableModel {
-    private final String[] cols = { "Số hóa đơn", "Số tiền", "Ngày phát hành", "Tệp PDF" };
+    private final String[] cols = { "Số hóa đơn", "Số tiền", "VAT", "Ngày phát hành", "Tệp PDF" };
     private final List<Invoice> data = new ArrayList<>();
     private final DateTimeFormatter dt = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
@@ -50,8 +50,9 @@ public class InvoicesTableModel extends AbstractTableModel {
         return switch (c) {
             case 0 -> x.getNo();
             case 1 -> x.getAmount();
-            case 2 -> x.getIssuedAt() == null ? "" : x.getIssuedAt().format(dt);
-            case 3 -> x.getPdfPath();
+            case 2 -> x.getVat();
+            case 3 -> x.getIssuedAt() == null ? "" : x.getIssuedAt().format(dt);
+            case 4 -> x.getPdfPath();
             default -> "";
         };
     }

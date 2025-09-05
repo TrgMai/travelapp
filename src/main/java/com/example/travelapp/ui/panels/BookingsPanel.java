@@ -35,8 +35,7 @@ public class BookingsPanel extends JPanel {
     private final JButton deleteBtn = ThemeComponents.softButton("Xóa");
 
     private final JTextField txtKeyword = new JTextField();
-    private final JComboBox<String> cbStatus = new JComboBox<>(
-            new String[] { "All", "REQUESTED", "CONFIRMED", "COMPLETED", "CANCELED" });
+    private final JComboBox<String> cbStatus = new JComboBox<>(new String[] { "All", "REQUESTED", "CONFIRMED", "COMPLETED", "CANCELED" });
     private final JTextField txtMinPrice = new JTextField();
     private final JTextField txtMaxPrice = new JTextField();
     private final JButton btnFilter = ThemeComponents.primaryButton("Lọc");
@@ -60,9 +59,9 @@ public class BookingsPanel extends JPanel {
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         TableUtils.applyTheme(table, 4);
-        TableUtils.installMoneyRenderer(table, 4, new java.util.Locale("vi", "VN"), true);
+        TableUtils.installMoneyRenderer(table, 3, Locale.forLanguageTag("vi-VN"), true);
 
-        int[] w = { 120, 100, 260, 140, 140, 160 };
+        int[] w = { 120, 260, 100, 140, 140, 160 };
         for (int i = 0; i < w.length && i < table.getColumnModel().getColumnCount(); i++) {
             table.getColumnModel().getColumn(i).setPreferredWidth(w[i]);
         }
@@ -72,16 +71,16 @@ public class BookingsPanel extends JPanel {
 
         cbStatus.setRenderer(new DefaultListCellRenderer() {
             @Override
-            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected,
-                    boolean cellHasFocus) {
+            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                 Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
                 String v = String.valueOf(value);
-                setText(
-                        "All".equals(v) ? "Tất cả"
-                                : "REQUESTED".equals(v) ? "Yêu cầu"
-                                        : "CONFIRMED".equals(v) ? "Xác nhận"
-                                                : "COMPLETED".equals(v) ? "Hoàn tất"
-                                                        : "CANCELED".equals(v) ? "Hủy" : v);
+                setText("All".equals(v) 
+                        ? "Tất cả" : "REQUESTED".equals(v) 
+                        ? "Yêu cầu" : "CONFIRMED".equals(v) 
+                        ? "Xác nhận" : "COMPLETED".equals(v) 
+                        ? "Hoàn tất" : "CANCELED".equals(v) 
+                        ? "Hủy" : v
+                );
                 return c;
             }
         });
@@ -232,9 +231,7 @@ public class BookingsPanel extends JPanel {
             return;
         Booking b = tableModel.getBookingAt(table.convertRowIndexToModel(rowView));
 
-        int ok = JOptionPane.showConfirmDialog(this,
-                "Xóa đặt chỗ " + b.getId() + " ?",
-                "Xác nhận xóa", JOptionPane.YES_NO_OPTION);
+        int ok = JOptionPane.showConfirmDialog(this, "Xóa đặt chỗ " + b.getId() + " ?", "Xác nhận xóa", JOptionPane.YES_NO_OPTION);
         if (ok == JOptionPane.YES_OPTION) {
             if (bookingService.deleteBooking(b.getId())) {
                 reloadData();

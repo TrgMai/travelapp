@@ -156,12 +156,12 @@ public class DashboardPanel extends JPanel {
         dailyAreaChart.getStyler().setYAxisDecimalPattern("#,###");
         dailyAreaChart.getStyler().setToolTipsEnabled(true);
         dailyAreaPanel = new XChartPanel<>(dailyAreaChart);
-        
+
         chartsPanel.add(tourBarPanel);
         chartsPanel.add(monthlyLinePanel);
         chartsPanel.add(typePiePanel);
         chartsPanel.add(dailyAreaPanel);
-        
+
         enableMagnifyFrame(tourBarPanel, "Doanh thu theo tour", 4, 3, 12);
         enableMagnifyFrame(monthlyLinePanel, "Doanh thu 12 tháng", 4, 3, 12);
         enableMagnifyFrame(typePiePanel, "Cơ cấu doanh thu", 4, 4, 12);
@@ -274,7 +274,7 @@ public class DashboardPanel extends JPanel {
         c.getStyler().setSeriesColors(ThemeTokens.CHART_PALETTE());
         try {
             Class<?> annoCls = Class.forName("org.knowm.xchart.style.PieStyler$AnnotationType");
-            Object labelAndPct = Enum.valueOf((Class) annoCls, "LabelAndPercentage");
+            Object labelAndPct = annoCls.getMethod("valueOf", String.class).invoke(null, "LabelAndPercentage");
             c.getStyler().getClass().getMethod("setAnnotationType", annoCls).invoke(c.getStyler(), labelAndPct);
             try {
                 c.getStyler().getClass().getMethod("setDrawAllAnnotations", boolean.class).invoke(c.getStyler(), true);
@@ -478,6 +478,7 @@ public class DashboardPanel extends JPanel {
         }
         return idx;
     }
+
     private static class Stats {
         int totalBookings = 0;
         double totalRevenue = 0d;

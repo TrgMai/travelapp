@@ -2,7 +2,6 @@ package com.example.travelapp.ui.dialogs.tabs;
 
 import com.example.travelapp.model.Expense;
 import com.example.travelapp.service.ExpenseService;
-import com.example.travelapp.ui.components.MoneyField;
 import com.example.travelapp.ui.components.TableUtils;
 import com.example.travelapp.ui.dialogs.ExpenseFormDialog;
 import com.example.travelapp.ui.theme.ThemeComponents;
@@ -12,6 +11,7 @@ import com.example.travelapp.ui.tableModels.ExpensesTableModel;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.util.Locale;
 
 public class ExpensesTab extends JPanel {
     private final String bookingId;
@@ -39,7 +39,7 @@ public class ExpensesTab extends JPanel {
         ThemeComponents.table(table);
         ThemeComponents.zebra(table);
         TableUtils.applyTheme(table, 2);
-        TableUtils.installMoneyRenderer(table, 2, new java.util.Locale("vi", "VN"), true);
+        TableUtils.installMoneyRenderer(table, 1, Locale.forLanguageTag("vi-VN"), true);
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         int[] w = { 160, 140, 140, 360 };

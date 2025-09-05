@@ -39,7 +39,7 @@ public class PaymentsTab extends JPanel {
 
         ThemeComponents.table(tbl);
         TableUtils.applyTheme(tbl, 2);
-        TableUtils.installMoneyRenderer(tbl, 2, new Locale("vi", "VN"), true);
+        TableUtils.installMoneyRenderer(tbl, 2, Locale.forLanguageTag("vi-VN"), true);
         ThemeComponents.zebra(tbl);
         tbl.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         tbl.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);

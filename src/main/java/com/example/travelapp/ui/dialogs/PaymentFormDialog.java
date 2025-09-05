@@ -97,8 +97,7 @@ public class PaymentFormDialog extends JDialog {
             setOpaque(true);
             setBackground(ThemeTokens.SURFACE());
             setLayout(new GridBagLayout());
-            setBorder(new EmptyBorder(ThemeTokens.SPACE_16, ThemeTokens.SPACE_16, ThemeTokens.SPACE_16,
-                    ThemeTokens.SPACE_16));
+            setBorder(new EmptyBorder(ThemeTokens.SPACE_16, ThemeTokens.SPACE_16, ThemeTokens.SPACE_16, ThemeTokens.SPACE_16));
 
             cbType.setRenderer(new DefaultListCellRenderer() {
                 @Override

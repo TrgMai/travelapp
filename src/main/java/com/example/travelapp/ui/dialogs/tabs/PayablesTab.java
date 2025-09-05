@@ -11,6 +11,7 @@ import com.example.travelapp.ui.tableModels.PayablesTableModel;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.util.Locale;
 
 public class PayablesTab extends JPanel {
     private final String bookingId;
@@ -38,7 +39,7 @@ public class PayablesTab extends JPanel {
         ThemeComponents.table(table);
         ThemeComponents.zebra(table);
         TableUtils.applyTheme(table, 1);
-        TableUtils.installMoneyRenderer(table, 1, new java.util.Locale("vi", "VN"), true);
+        TableUtils.installMoneyRenderer(table, 1, Locale.forLanguageTag("vi-VN"), true);
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         int[] w = { 160, 140, 160, 120 };

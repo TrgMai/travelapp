@@ -7,7 +7,6 @@ import com.example.travelapp.ui.dialogs.InvoiceFormDialog;
 import com.example.travelapp.ui.theme.ThemeComponents;
 import com.example.travelapp.ui.theme.ThemeTokens;
 import com.example.travelapp.ui.tableModels.InvoicesTableModel;
-import com.example.travelapp.ui.components.MoneyField;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -16,6 +15,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Locale;
 
 public class InvoicesTab extends JPanel {
     private final String bookingId;
@@ -43,10 +43,11 @@ public class InvoicesTab extends JPanel {
         ThemeComponents.table(table);
         ThemeComponents.zebra(table);
         TableUtils.applyTheme(table, 2);
-        TableUtils.installMoneyRenderer(table, 2, new java.util.Locale("vi", "VN"), true);
+        TableUtils.installMoneyRenderer(table, 2, Locale.forLanguageTag("vi-VN"), true);
+        TableUtils.installMoneyRenderer(table, 1, Locale.forLanguageTag("vi-VN"), true);
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-        int[] w = { 140, 140, 160, 320 };
+        int[] w = { 140, 140, 140, 160, 320 };
         for (int i = 0; i < w.length && i < table.getColumnModel().getColumnCount(); i++) {
             table.getColumnModel().getColumn(i).setPreferredWidth(w[i]);
         }
