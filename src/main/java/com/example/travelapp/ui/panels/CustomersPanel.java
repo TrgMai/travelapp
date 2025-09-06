@@ -21,266 +21,275 @@ import java.util.List;
 import java.util.Properties;
 
 public class CustomersPanel extends JPanel {
-    private final CustomerService service = new CustomerService();
+	private final CustomerService service = new CustomerService();
 
-    private final CustomersTableModel tableModel = new CustomersTableModel();
-    private final JTable table = new JTable(tableModel);
-    private final TableRowSorter<CustomersTableModel> sorter = new TableRowSorter<>(tableModel);
+	private final CustomersTableModel tableModel = new CustomersTableModel();
+	private final JTable table = new JTable(tableModel);
+	private final TableRowSorter<CustomersTableModel> sorter = new TableRowSorter<>(tableModel);
 
-    private final JTextField txtKeyword = new JTextField();
-    private final JComboBox<String> cbGender = new JComboBox<>(new String[] { "All", "M", "F" });
-    private JDatePickerImpl dobFromPicker;
-    private JDatePickerImpl dobToPicker;
+	private final JTextField txtKeyword = new JTextField();
+	private final JComboBox<String> cbGender = new JComboBox<>(new String[] { "All", "M", "F" });
+	private JDatePickerImpl dobFromPicker;
+	private JDatePickerImpl dobToPicker;
 
-    private final JButton addBtn = ThemeComponents.primaryButton("Thêm");
-    private final JButton editBtn = ThemeComponents.softButton("Sửa");
-    private final JButton deleteBtn = ThemeComponents.softButton("Xóa");
-    private final JButton btnFilter = ThemeComponents.primaryButton("Lọc");
-    private final JButton btnReset = ThemeComponents.softButton("Xóa lọc");
+	private final JButton addBtn = ThemeComponents.primaryButton("Thêm");
+	private final JButton editBtn = ThemeComponents.softButton("Sửa");
+	private final JButton deleteBtn = ThemeComponents.softButton("Xóa");
+	private final JButton btnFilter = ThemeComponents.primaryButton("Lọc");
+	private final JButton btnReset = ThemeComponents.softButton("Xóa lọc");
 
-    public CustomersPanel() {
-        setLayout(new BorderLayout());
-        setBackground(ThemeTokens.SURFACE());
+	public CustomersPanel() {
+		setLayout(new BorderLayout());
+		setBackground(ThemeTokens.SURFACE());
 
-        JPanel top = new JPanel();
-        top.setLayout(new BoxLayout(top, BoxLayout.Y_AXIS));
-        top.setOpaque(false);
-        top.add(new HeaderBar("Khách hàng", addBtn, editBtn, deleteBtn));
-        top.add(Box.createVerticalStrut(ThemeTokens.SPACE_12));
-        top.add(buildFiltersCard());
-        add(top, BorderLayout.NORTH);
+		JPanel top = new JPanel();
+		top.setLayout(new BoxLayout(top, BoxLayout.Y_AXIS));
+		top.setOpaque(false);
+		top.add(new HeaderBar("Khách hàng", addBtn, editBtn, deleteBtn));
+		top.add(Box.createVerticalStrut(ThemeTokens.SPACE_12));
+		top.add(buildFiltersCard());
+		add(top, BorderLayout.NORTH);
 
-        ThemeComponents.table(table);
-        ThemeComponents.zebra(table);
-        table.setRowSorter(sorter);
-        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		ThemeComponents.table(table);
+		ThemeComponents.zebra(table);
+		table.setRowSorter(sorter);
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
-        int[] w = { 220, 120, 90, 160, 220, 320 };
-        for (int i = 0; i < w.length && i < table.getColumnModel().getColumnCount(); i++) {
-            table.getColumnModel().getColumn(i).setPreferredWidth(w[i]);
-        }
+		int[] w = { 220, 120, 90, 160, 220, 320 };
+		for (int i = 0; i < w.length && i < table.getColumnModel().getColumnCount(); i++) {
+			table.getColumnModel().getColumn(i).setPreferredWidth(w[i]);
+		}
 
-        JScrollPane sp = ThemeComponents.scroll(table);
-        add(sp, BorderLayout.CENTER);
+		JScrollPane sp = ThemeComponents.scroll(table);
+		add(sp, BorderLayout.CENTER);
 
-        table.getSelectionModel().addListSelectionListener(e -> {
-            boolean sel = table.getSelectedRow() >= 0;
-            editBtn.setEnabled(sel);
-            deleteBtn.setEnabled(sel);
-        });
-        editBtn.setEnabled(false);
-        deleteBtn.setEnabled(false);
+		table.getSelectionModel().addListSelectionListener(e -> {
+			boolean sel = table.getSelectedRow() >= 0;
+			editBtn.setEnabled(sel);
+			deleteBtn.setEnabled(sel);
+		});
+		editBtn.setEnabled(false);
+		deleteBtn.setEnabled(false);
 
-        table.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mouseClicked(java.awt.event.MouseEvent e) {
-                if (e.getClickCount() == 2 && table.getSelectedRow() >= 0)
-                    editCustomer();
-            }
-        });
+		table.addMouseListener(new java.awt.event.MouseAdapter() {
+			@Override
+			public void mouseClicked(java.awt.event.MouseEvent e) {
+				if (e.getClickCount() == 2 && table.getSelectedRow() >= 0) {
+					editCustomer();
+				}
+			}
+		});
 
-        cbGender.setRenderer(new DefaultListCellRenderer() {
-            @Override
-            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected,
-                    boolean cellHasFocus) {
-                Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                String v = String.valueOf(value);
-                setText("All".equals(v) ? "Tất cả" : "M".equals(v) ? "Nam" : "F".equals(v) ? "Nữ" : "");
-                return c;
-            }
-        });
+		cbGender.setRenderer(new DefaultListCellRenderer() {
+			@Override
+			public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected,
+			        boolean cellHasFocus) {
+				Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+				String v = String.valueOf(value);
+				setText("All".equals(v) ? "Tất cả" : "M".equals(v) ? "Nam" : "F".equals(v) ? "Nữ" : "");
+				return c;
+			}
+		});
 
-        Dimension btnSize = new Dimension(100, 36);
-        addBtn.setPreferredSize(btnSize);
-        editBtn.setPreferredSize(btnSize);
-        deleteBtn.setPreferredSize(btnSize);
-        
-        addBtn.addActionListener(e -> addCustomer());
-        editBtn.addActionListener(e -> editCustomer());
-        deleteBtn.addActionListener(e -> deleteCustomer());
-        btnFilter.addActionListener(e -> reloadData());
-        btnReset.addActionListener(e -> {
-            resetFilter();
-            reloadData();
-        });
+		Dimension btnSize = new Dimension(100, 36);
+		addBtn.setPreferredSize(btnSize);
+		editBtn.setPreferredSize(btnSize);
+		deleteBtn.setPreferredSize(btnSize);
 
-        reloadData();
-    }
+		addBtn.addActionListener(e -> addCustomer());
+		editBtn.addActionListener(e -> editCustomer());
+		deleteBtn.addActionListener(e -> deleteCustomer());
+		btnFilter.addActionListener(e -> reloadData());
+		btnReset.addActionListener(e -> {
+			resetFilter();
+			reloadData();
+		});
 
-    private static class DateFormatter extends JFormattedTextField.AbstractFormatter {
-        private final java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
+		reloadData();
+	}
 
-        @Override
-        public Object stringToValue(String text) throws java.text.ParseException {
-            if (text == null || text.isBlank())
-                return null;
-            return sdf.parse(text);
-        }
+	private static class DateFormatter extends JFormattedTextField.AbstractFormatter {
+		private final java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
 
-        @Override
-        public String valueToString(Object value) {
-            if (value == null)
-                return "";
-            Calendar c = (Calendar) value;
-            return sdf.format(c.getTime());
-        }
-    }
+		@Override
+		public Object stringToValue(String text) throws java.text.ParseException {
+			if (text == null || text.isBlank()) {
+				return null;
+			}
+			return sdf.parse(text);
+		}
 
-    private JComponent buildFiltersCard() {
-        JPanel card = ThemeComponents.cardPanel();
-        card.setLayout(new GridBagLayout());
-        GridBagConstraints g = new GridBagConstraints();
-        g.insets = new Insets(ThemeTokens.SPACE_8, ThemeTokens.SPACE_8, ThemeTokens.SPACE_8, ThemeTokens.SPACE_8);
-        g.anchor = GridBagConstraints.WEST;
-        g.fill = GridBagConstraints.HORIZONTAL;
+		@Override
+		public String valueToString(Object value) {
+			if (value == null) {
+				return "";
+			}
+			Calendar c = (Calendar) value;
+			return sdf.format(c.getTime());
+		}
+	}
 
-        int h = 28;
-        Dimension SZ_L = new Dimension(240, h);
-        Dimension SZ_M = new Dimension(140, h);
-        Dimension SZ_S = new Dimension(120, h);
-        Dimension SZ_BTN = new Dimension(88, h);
+	private JComponent buildFiltersCard() {
+		JPanel card = ThemeComponents.cardPanel();
+		card.setLayout(new GridBagLayout());
+		GridBagConstraints g = new GridBagConstraints();
+		g.insets = new Insets(ThemeTokens.SPACE_8, ThemeTokens.SPACE_8, ThemeTokens.SPACE_8, ThemeTokens.SPACE_8);
+		g.anchor = GridBagConstraints.WEST;
+		g.fill = GridBagConstraints.HORIZONTAL;
 
-        txtKeyword.setPreferredSize(SZ_L);
-        cbGender.setPreferredSize(SZ_S);
-        btnFilter.setPreferredSize(SZ_BTN);
-        btnReset.setPreferredSize(SZ_BTN);
+		int h = 28;
+		Dimension SZ_L = new Dimension(240, h);
+		Dimension SZ_M = new Dimension(140, h);
+		Dimension SZ_S = new Dimension(120, h);
+		Dimension SZ_BTN = new Dimension(88, h);
 
-        Properties dp = new Properties();
-        dp.put("text.today", "Hôm nay");
-        dp.put("text.month", "Tháng");
-        dp.put("text.year", "Năm");
+		txtKeyword.setPreferredSize(SZ_L);
+		cbGender.setPreferredSize(SZ_S);
+		btnFilter.setPreferredSize(SZ_BTN);
+		btnReset.setPreferredSize(SZ_BTN);
 
-        UtilDateModel mFrom = new UtilDateModel();
-        JDatePanelImpl pFrom = new JDatePanelImpl(mFrom, dp);
-        dobFromPicker = new JDatePickerImpl(pFrom, new DateFormatter());
-        dobFromPicker.setPreferredSize(SZ_M);
+		Properties dp = new Properties();
+		dp.put("text.today", "Hôm nay");
+		dp.put("text.month", "Tháng");
+		dp.put("text.year", "Năm");
 
-        UtilDateModel mTo = new UtilDateModel();
-        JDatePanelImpl pTo = new JDatePanelImpl(mTo, dp);
-        dobToPicker = new JDatePickerImpl(pTo, new DateFormatter());
-        dobToPicker.setPreferredSize(SZ_M);
+		UtilDateModel mFrom = new UtilDateModel();
+		JDatePanelImpl pFrom = new JDatePanelImpl(mFrom, dp);
+		dobFromPicker = new JDatePickerImpl(pFrom, new DateFormatter());
+		dobFromPicker.setPreferredSize(SZ_M);
 
-        int col = 0;
+		UtilDateModel mTo = new UtilDateModel();
+		JDatePanelImpl pTo = new JDatePanelImpl(mTo, dp);
+		dobToPicker = new JDatePickerImpl(pTo, new DateFormatter());
+		dobToPicker.setPreferredSize(SZ_M);
 
-        g.gridy = 0;
-        g.gridx = col++;
-        card.add(new JLabel("Từ khóa:"), g);
-        g.gridx = col++;
-        g.weightx = 1;
-        card.add(txtKeyword, g);
-        g.gridx = col++;
-        g.weightx = 0;
-        card.add(new JLabel("Giới tính:"), g);
-        g.gridx = col++;
-        card.add(cbGender, g);
-        g.gridx = col++;
-        g.weightx = 1;
-        card.add(Box.createHorizontalStrut(0), g);
-        g.gridx = col++;
-        g.weightx = 0;
-        card.add(btnFilter, g);
-        g.gridx = col++;
-        card.add(btnReset, g);
+		int col = 0;
 
-        col = 0;
-        g.gridy = 1;
-        g.gridx = col++;
-        card.add(new JLabel("Ngày sinh:"), g);
-        g.gridx = col++;
-        card.add(dobFromPicker, g);
-        g.gridx = col++;
-        card.add(new JLabel("–"), g);
-        g.gridx = col++;
-        card.add(dobToPicker, g);
-        g.gridx = col++;
-        g.weightx = 1;
-        card.add(Box.createHorizontalStrut(0), g);
+		g.gridy = 0;
+		g.gridx = col++;
+		card.add(new JLabel("Từ khóa:"), g);
+		g.gridx = col++;
+		g.weightx = 1;
+		card.add(txtKeyword, g);
+		g.gridx = col++;
+		g.weightx = 0;
+		card.add(new JLabel("Giới tính:"), g);
+		g.gridx = col++;
+		card.add(cbGender, g);
+		g.gridx = col++;
+		g.weightx = 1;
+		card.add(Box.createHorizontalStrut(0), g);
+		g.gridx = col++;
+		g.weightx = 0;
+		card.add(btnFilter, g);
+		g.gridx = col++;
+		card.add(btnReset, g);
 
-        return card;
-    }
+		col = 0;
+		g.gridy = 1;
+		g.gridx = col++;
+		card.add(new JLabel("Ngày sinh:"), g);
+		g.gridx = col++;
+		card.add(dobFromPicker, g);
+		g.gridx = col++;
+		card.add(new JLabel("–"), g);
+		g.gridx = col++;
+		card.add(dobToPicker, g);
+		g.gridx = col++;
+		g.weightx = 1;
+		card.add(Box.createHorizontalStrut(0), g);
 
-    private void reloadData() {
-        String kw = txtKeyword.getText().trim();
-        if (kw.isBlank())
-            kw = null;
+		return card;
+	}
 
-        String gender = (String) cbGender.getSelectedItem();
-        if ("All".equals(gender))
-            gender = null;
+	private void reloadData() {
+		String kw = txtKeyword.getText().trim();
+		if (kw.isBlank()) {
+			kw = null;
+		}
 
-        java.util.Date d1 = (java.util.Date) dobFromPicker.getModel().getValue();
-        java.util.Date d2 = (java.util.Date) dobToPicker.getModel().getValue();
-        LocalDate from = d1 == null ? null : d1.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        LocalDate to = d2 == null ? null : d2.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+		String gender = (String) cbGender.getSelectedItem();
+		if ("All".equals(gender)) {
+			gender = null;
+		}
 
-        List<Customer> list;
-        try {
-            list = service.search(kw, gender, from, to);
-        } catch (SecurityException se) {
-            JOptionPane.showMessageDialog(this, se.getMessage(), "Từ chối truy cập", JOptionPane.ERROR_MESSAGE);
-            list = List.of();
-        }
-        tableModel.setData(list);
-    }
+		java.util.Date d1 = (java.util.Date) dobFromPicker.getModel().getValue();
+		java.util.Date d2 = (java.util.Date) dobToPicker.getModel().getValue();
+		LocalDate from = d1 == null ? null : d1.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+		LocalDate to = d2 == null ? null : d2.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
-    private void resetFilter() {
-        txtKeyword.setText("");
-        cbGender.setSelectedIndex(0);
-        dobFromPicker.getModel().setValue(null);
-        dobToPicker.getModel().setValue(null);
-    }
+		List<Customer> list;
+		try {
+			list = service.search(kw, gender, from, to);
+		} catch (SecurityException se) {
+			JOptionPane.showMessageDialog(this, se.getMessage(), "Từ chối truy cập", JOptionPane.ERROR_MESSAGE);
+			list = List.of();
+		}
+		tableModel.setData(list);
+	}
 
-    private void addCustomer() {
-        CustomerFormDialog d = new CustomerFormDialog(null);
-        d.setVisible(true);
-        if (!d.isOk())
-            return;
+	private void resetFilter() {
+		txtKeyword.setText("");
+		cbGender.setSelectedIndex(0);
+		dobFromPicker.getModel().setValue(null);
+		dobToPicker.getModel().setValue(null);
+	}
 
-        Customer c = d.getCustomer();
-        if (service.addCustomer(c)) {
-            reloadData();
-            JOptionPane.showMessageDialog(this, "Thêm khách hàng thành công.");
-        } else {
-            JOptionPane.showMessageDialog(this, "Thêm khách hàng thất bại.", "Lỗi", JOptionPane.ERROR_MESSAGE);
-        }
-    }
+	private void addCustomer() {
+		CustomerFormDialog d = new CustomerFormDialog(null);
+		d.setVisible(true);
+		if (!d.isOk()) {
+			return;
+		}
 
-    private void editCustomer() {
-        int rView = table.getSelectedRow();
-        if (rView < 0)
-            return;
-        Customer origin = tableModel.getAt(table.convertRowIndexToModel(rView));
+		Customer c = d.getCustomer();
+		if (service.addCustomer(c)) {
+			reloadData();
+			JOptionPane.showMessageDialog(this, "Thêm khách hàng thành công.");
+		} else {
+			JOptionPane.showMessageDialog(this, "Thêm khách hàng thất bại.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+		}
+	}
 
-        CustomerFormDialog d = new CustomerFormDialog(origin);
-        d.setVisible(true);
-        if (!d.isOk())
-            return;
+	private void editCustomer() {
+		int rView = table.getSelectedRow();
+		if (rView < 0) {
+			return;
+		}
+		Customer origin = tableModel.getAt(table.convertRowIndexToModel(rView));
 
-        Customer u = d.getCustomer();
-        u.setId(origin.getId());
-        if (service.updateCustomer(u)) {
-            reloadData();
-            JOptionPane.showMessageDialog(this, "Cập nhật khách hàng thành công.");
-        } else {
-            JOptionPane.showMessageDialog(this, "Cập nhật khách hàng thất bại.", "Lỗi", JOptionPane.ERROR_MESSAGE);
-        }
-    }
+		CustomerFormDialog d = new CustomerFormDialog(origin);
+		d.setVisible(true);
+		if (!d.isOk()) {
+			return;
+		}
 
-    private void deleteCustomer() {
-        int rView = table.getSelectedRow();
-        if (rView < 0)
-            return;
-        Customer c = tableModel.getAt(table.convertRowIndexToModel(rView));
-        int ok = JOptionPane.showConfirmDialog(this, "Xóa khách hàng " + c.getFullName() + "?", "Xác nhận xóa",
-                JOptionPane.YES_NO_OPTION);
-        if (ok == JOptionPane.YES_OPTION) {
-            if (service.deleteCustomer(c.getId())) {
-                reloadData();
-                JOptionPane.showMessageDialog(this, "Đã xóa khách hàng.");
-            } else {
-                JOptionPane.showMessageDialog(this, "Xóa khách hàng thất bại.", "Lỗi", JOptionPane.ERROR_MESSAGE);
-            }
-        }
-    }
+		Customer u = d.getCustomer();
+		u.setId(origin.getId());
+		if (service.updateCustomer(u)) {
+			reloadData();
+			JOptionPane.showMessageDialog(this, "Cập nhật khách hàng thành công.");
+		} else {
+			JOptionPane.showMessageDialog(this, "Cập nhật khách hàng thất bại.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+
+	private void deleteCustomer() {
+		int rView = table.getSelectedRow();
+		if (rView < 0) {
+			return;
+		}
+		Customer c = tableModel.getAt(table.convertRowIndexToModel(rView));
+		int ok = JOptionPane.showConfirmDialog(this, "Xóa khách hàng " + c.getFullName() + "?", "Xác nhận xóa",
+		                                       JOptionPane.YES_NO_OPTION);
+		if (ok == JOptionPane.YES_OPTION) {
+			if (service.deleteCustomer(c.getId())) {
+				reloadData();
+				JOptionPane.showMessageDialog(this, "Đã xóa khách hàng.");
+			} else {
+				JOptionPane.showMessageDialog(this, "Xóa khách hàng thất bại.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+			}
+		}
+	}
 }

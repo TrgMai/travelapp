@@ -7,32 +7,32 @@ import com.example.travelapp.security.PermissionGuard;
 import java.util.List;
 
 public class InvoiceService {
-    private final InvoiceDao dao = new InvoiceDao();
-    private final AuditLogService audit = new AuditLogService();
+	private final InvoiceDao dao = new InvoiceDao();
+	private final AuditLogService audit = new AuditLogService();
 
-    public List<Invoice> getByBooking(String bookingId) {
-        PermissionGuard.require("BOOKING_VIEW");
-        return dao.findByBooking(bookingId);
-    }
-    public boolean add(Invoice i) {
-        PermissionGuard.require("BOOKING_EDIT");
-        boolean ok = dao.insert(i);
-        if (ok) audit.log(null, "CREATE", "Invoice", i.getId(),
-                "{\"action\":\"create_invoice\",\"invoiceId\":\"" + i.getId() + "\",\"bookingId\":\"" + i.getBookingId() + "\",\"amount\":" + i.getAmount() + "}");
-        return ok; 
-    }
-    public boolean update(Invoice i) {
-        PermissionGuard.require("BOOKING_EDIT");
-        boolean ok = dao.update(i);
-        if (ok) audit.log(null, "UPDATE", "Invoice", i.getId(),
-                "{\"action\":\"update_invoice\",\"invoiceId\":\"" + i.getId() + "\",\"bookingId\":\"" + i.getBookingId() + "\",\"amount\":" + i.getAmount() + "}");
-        return ok;
-    }
-    public boolean delete(String id) {
-        PermissionGuard.require("BOOKING_EDIT");
-        boolean ok = dao.delete(id);
-        if (ok) audit.log(null, "DELETE", "Invoice", id,
-                "{\"action\":\"delete_invoice\",\"invoiceId\":\"" + id + "\"}");
-        return ok;
-    }
+	public List<Invoice> getByBooking(String bookingId) {
+		PermissionGuard.require("BOOKING_VIEW");
+		return dao.findByBooking(bookingId);
+	}
+	public boolean add(Invoice i) {
+		PermissionGuard.require("BOOKING_EDIT");
+		boolean ok = dao.insert(i);
+		if (ok) audit.log(null, "CREATE", "Invoice", i.getId(),
+			                  "{\"action\":\"create_invoice\",\"invoiceId\":\"" + i.getId() + "\",\"bookingId\":\"" + i.getBookingId() + "\",\"amount\":" + i.getAmount() + "}");
+		return ok;
+	}
+	public boolean update(Invoice i) {
+		PermissionGuard.require("BOOKING_EDIT");
+		boolean ok = dao.update(i);
+		if (ok) audit.log(null, "UPDATE", "Invoice", i.getId(),
+			                  "{\"action\":\"update_invoice\",\"invoiceId\":\"" + i.getId() + "\",\"bookingId\":\"" + i.getBookingId() + "\",\"amount\":" + i.getAmount() + "}");
+		return ok;
+	}
+	public boolean delete(String id) {
+		PermissionGuard.require("BOOKING_EDIT");
+		boolean ok = dao.delete(id);
+		if (ok) audit.log(null, "DELETE", "Invoice", id,
+			                  "{\"action\":\"delete_invoice\",\"invoiceId\":\"" + id + "\"}");
+		return ok;
+	}
 }

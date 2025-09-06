@@ -24,351 +24,365 @@ import java.time.ZoneId;
 import java.util.*;
 
 public class PaymentsPanel extends JPanel {
-    private final PaymentService paymentService = new PaymentService();
-    private final BookingService bookingService = new BookingService();
+	private final PaymentService paymentService = new PaymentService();
+	private final BookingService bookingService = new BookingService();
 
-    private final PaymentsTableModel tableModel = new PaymentsTableModel();
-    private final JTable table = new JTable(tableModel);
-    private final TableRowSorter<PaymentsTableModel> sorter = new TableRowSorter<>(tableModel);
+	private final PaymentsTableModel tableModel = new PaymentsTableModel();
+	private final JTable table = new JTable(tableModel);
+	private final TableRowSorter<PaymentsTableModel> sorter = new TableRowSorter<>(tableModel);
 
-    private final JComboBox<Object> cbBooking = new JComboBox<>();
-    private final JComboBox<String> cbType = new JComboBox<>(new String[] { "All", "CASH", "TRANSFER", "CARD" });
-    private final JTextField txtMinAmount = new JTextField();
-    private final JTextField txtMaxAmount = new JTextField();
-    private JDatePickerImpl dateFromPicker;
-    private JDatePickerImpl dateToPicker;
+	private final JComboBox<Object> cbBooking = new JComboBox<>();
+	private final JComboBox<String> cbType = new JComboBox<>(new String[] { "All", "CASH", "TRANSFER", "CARD" });
+	private final JTextField txtMinAmount = new JTextField();
+	private final JTextField txtMaxAmount = new JTextField();
+	private JDatePickerImpl dateFromPicker;
+	private JDatePickerImpl dateToPicker;
 
-    private final JButton addBtn = ThemeComponents.primaryButton("Thêm");
-    private final JButton editBtn = ThemeComponents.softButton("Sửa");
-    private final JButton deleteBtn = ThemeComponents.softButton("Xóa");
-    private final JButton btnFilter = ThemeComponents.primaryButton("Lọc");
-    private final JButton btnReset = ThemeComponents.softButton("Xóa lọc");
+	private final JButton addBtn = ThemeComponents.primaryButton("Thêm");
+	private final JButton editBtn = ThemeComponents.softButton("Sửa");
+	private final JButton deleteBtn = ThemeComponents.softButton("Xóa");
+	private final JButton btnFilter = ThemeComponents.primaryButton("Lọc");
+	private final JButton btnReset = ThemeComponents.softButton("Xóa lọc");
 
-    public PaymentsPanel() {
-        setLayout(new BorderLayout());
-        setBackground(ThemeTokens.SURFACE());
+	public PaymentsPanel() {
+		setLayout(new BorderLayout());
+		setBackground(ThemeTokens.SURFACE());
 
-        JPanel top = new JPanel();
-        top.setLayout(new BoxLayout(top, BoxLayout.Y_AXIS));
-        top.setOpaque(false);
-        top.add(new HeaderBar("Thanh toán", addBtn, editBtn, deleteBtn));
-        top.add(Box.createVerticalStrut(ThemeTokens.SPACE_12));
-        top.add(buildFiltersCard());
-        add(top, BorderLayout.NORTH);
+		JPanel top = new JPanel();
+		top.setLayout(new BoxLayout(top, BoxLayout.Y_AXIS));
+		top.setOpaque(false);
+		top.add(new HeaderBar("Thanh toán", addBtn, editBtn, deleteBtn));
+		top.add(Box.createVerticalStrut(ThemeTokens.SPACE_12));
+		top.add(buildFiltersCard());
+		add(top, BorderLayout.NORTH);
 
-        ThemeComponents.table(table);
-        ThemeComponents.zebra(table);
-        table.setRowSorter(sorter);
-        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-        TableUtils.applyTheme(table, 2);
-        TableUtils.installMoneyRenderer(table, 2, java.util.Locale.forLanguageTag("vi-VN"), true);
+		ThemeComponents.table(table);
+		ThemeComponents.zebra(table);
+		table.setRowSorter(sorter);
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		TableUtils.applyTheme(table, 2);
+		TableUtils.installMoneyRenderer(table, 2, java.util.Locale.forLanguageTag("vi-VN"), true);
 
-        int[] w = { 140, 160, 160, 380 };
-        for (int i = 0; i < w.length && i < table.getColumnModel().getColumnCount(); i++) {
-            table.getColumnModel().getColumn(i).setPreferredWidth(w[i]);
-        }
+		int[] w = { 140, 160, 160, 380 };
+		for (int i = 0; i < w.length && i < table.getColumnModel().getColumnCount(); i++) {
+			table.getColumnModel().getColumn(i).setPreferredWidth(w[i]);
+		}
 
-        JScrollPane sp = ThemeComponents.scroll(table);
-        add(sp, BorderLayout.CENTER);
+		JScrollPane sp = ThemeComponents.scroll(table);
+		add(sp, BorderLayout.CENTER);
 
-        table.getSelectionModel().addListSelectionListener(e -> {
-            boolean sel = table.getSelectedRow() >= 0;
-            editBtn.setEnabled(sel);
-            deleteBtn.setEnabled(sel);
-        });
-        editBtn.setEnabled(false);
-        deleteBtn.setEnabled(false);
+		table.getSelectionModel().addListSelectionListener(e -> {
+			boolean sel = table.getSelectedRow() >= 0;
+			editBtn.setEnabled(sel);
+			deleteBtn.setEnabled(sel);
+		});
+		editBtn.setEnabled(false);
+		deleteBtn.setEnabled(false);
 
-        table.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mouseClicked(java.awt.event.MouseEvent e) {
-                if (e.getClickCount() == 2 && table.getSelectedRow() >= 0)
-                    editSelected();
-            }
-        });
+		table.addMouseListener(new java.awt.event.MouseAdapter() {
+			@Override
+			public void mouseClicked(java.awt.event.MouseEvent e) {
+				if (e.getClickCount() == 2 && table.getSelectedRow() >= 0) {
+					editSelected();
+				}
+			}
+		});
 
-        cbType.setRenderer(new DefaultListCellRenderer() {
-            @Override
-            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected,
-                    boolean cellHasFocus) {
-                Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                String v = String.valueOf(value);
-                setText("All".equals(v) ? "Tất cả"
-                        : "CASH".equals(v) ? "Tiền mặt"
-                                : "TRANSFER".equals(v) ? "Chuyển khoản" : "CARD".equals(v) ? "Thẻ" : v);
-                return c;
-            }
-        });
+		cbType.setRenderer(new DefaultListCellRenderer() {
+			@Override
+			public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected,
+			        boolean cellHasFocus) {
+				Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+				String v = String.valueOf(value);
+				setText("All".equals(v) ? "Tất cả"
+				        : "CASH".equals(v) ? "Tiền mặt"
+				        : "TRANSFER".equals(v) ? "Chuyển khoản" : "CARD".equals(v) ? "Thẻ" : v);
+				return c;
+			}
+		});
 
-        Dimension btnSize = new Dimension(100, 36);
-        addBtn.setPreferredSize(btnSize);
-        editBtn.setPreferredSize(btnSize);
-        deleteBtn.setPreferredSize(btnSize);
-        
-        addBtn.addActionListener(e -> addPayment());
-        editBtn.addActionListener(e -> editSelected());
-        deleteBtn.addActionListener(e -> deletePayment());
-        btnFilter.addActionListener(e -> reloadData());
-        btnReset.addActionListener(e -> {
-            resetFilter();
-            reloadData();
-        });
+		Dimension btnSize = new Dimension(100, 36);
+		addBtn.setPreferredSize(btnSize);
+		editBtn.setPreferredSize(btnSize);
+		deleteBtn.setPreferredSize(btnSize);
 
-        loadBookings();
-        reloadData();
-    }
+		addBtn.addActionListener(e -> addPayment());
+		editBtn.addActionListener(e -> editSelected());
+		deleteBtn.addActionListener(e -> deletePayment());
+		btnFilter.addActionListener(e -> reloadData());
+		btnReset.addActionListener(e -> {
+			resetFilter();
+			reloadData();
+		});
 
-    private static class DateFormatter extends JFormattedTextField.AbstractFormatter {
-        private final java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
+		loadBookings();
+		reloadData();
+	}
 
-        @Override
-        public Object stringToValue(String text) throws java.text.ParseException {
-            if (text == null || text.isBlank())
-                return null;
-            return sdf.parse(text);
-        }
+	private static class DateFormatter extends JFormattedTextField.AbstractFormatter {
+		private final java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
 
-        @Override
-        public String valueToString(Object value) {
-            if (value == null)
-                return "";
-            Calendar c = (Calendar) value;
-            return sdf.format(c.getTime());
-        }
-    }
+		@Override
+		public Object stringToValue(String text) throws java.text.ParseException {
+			if (text == null || text.isBlank()) {
+				return null;
+			}
+			return sdf.parse(text);
+		}
 
-    private JComponent buildFiltersCard() {
-        JPanel card = ThemeComponents.cardPanel();
-        card.setLayout(new GridBagLayout());
-        GridBagConstraints g = new GridBagConstraints();
-        g.insets = new Insets(ThemeTokens.SPACE_8, ThemeTokens.SPACE_8, ThemeTokens.SPACE_8, ThemeTokens.SPACE_8);
-        g.anchor = GridBagConstraints.WEST;
-        g.fill = GridBagConstraints.HORIZONTAL;
+		@Override
+		public String valueToString(Object value) {
+			if (value == null) {
+				return "";
+			}
+			Calendar c = (Calendar) value;
+			return sdf.format(c.getTime());
+		}
+	}
 
-        int h = 28;
-        Dimension SZ_L = new Dimension(200, h);
-        Dimension SZ_M = new Dimension(140, h);
-        Dimension SZ_S = new Dimension(120, h);
-        Dimension SZ_BTN = new Dimension(88, h);
+	private JComponent buildFiltersCard() {
+		JPanel card = ThemeComponents.cardPanel();
+		card.setLayout(new GridBagLayout());
+		GridBagConstraints g = new GridBagConstraints();
+		g.insets = new Insets(ThemeTokens.SPACE_8, ThemeTokens.SPACE_8, ThemeTokens.SPACE_8, ThemeTokens.SPACE_8);
+		g.anchor = GridBagConstraints.WEST;
+		g.fill = GridBagConstraints.HORIZONTAL;
 
-        cbBooking.setPreferredSize(SZ_L);
-        cbType.setPreferredSize(SZ_S);
-        txtMinAmount.setPreferredSize(SZ_S);
-        txtMaxAmount.setPreferredSize(SZ_S);
-        btnFilter.setPreferredSize(SZ_BTN);
-        btnReset.setPreferredSize(SZ_BTN);
+		int h = 28;
+		Dimension SZ_L = new Dimension(200, h);
+		Dimension SZ_M = new Dimension(140, h);
+		Dimension SZ_S = new Dimension(120, h);
+		Dimension SZ_BTN = new Dimension(88, h);
 
-        Properties dp = new Properties();
-        dp.put("text.today", "Hôm nay");
-        dp.put("text.month", "Tháng");
-        dp.put("text.year", "Năm");
+		cbBooking.setPreferredSize(SZ_L);
+		cbType.setPreferredSize(SZ_S);
+		txtMinAmount.setPreferredSize(SZ_S);
+		txtMaxAmount.setPreferredSize(SZ_S);
+		btnFilter.setPreferredSize(SZ_BTN);
+		btnReset.setPreferredSize(SZ_BTN);
 
-        UtilDateModel mFrom = new UtilDateModel();
-        JDatePanelImpl pFrom = new JDatePanelImpl(mFrom, dp);
-        dateFromPicker = new JDatePickerImpl(pFrom, new DateFormatter());
-        dateFromPicker.setPreferredSize(SZ_M);
+		Properties dp = new Properties();
+		dp.put("text.today", "Hôm nay");
+		dp.put("text.month", "Tháng");
+		dp.put("text.year", "Năm");
 
-        UtilDateModel mTo = new UtilDateModel();
-        JDatePanelImpl pTo = new JDatePanelImpl(mTo, dp);
-        dateToPicker = new JDatePickerImpl(pTo, new DateFormatter());
-        dateToPicker.setPreferredSize(SZ_M);
+		UtilDateModel mFrom = new UtilDateModel();
+		JDatePanelImpl pFrom = new JDatePanelImpl(mFrom, dp);
+		dateFromPicker = new JDatePickerImpl(pFrom, new DateFormatter());
+		dateFromPicker.setPreferredSize(SZ_M);
 
-        int col = 0;
+		UtilDateModel mTo = new UtilDateModel();
+		JDatePanelImpl pTo = new JDatePanelImpl(mTo, dp);
+		dateToPicker = new JDatePickerImpl(pTo, new DateFormatter());
+		dateToPicker.setPreferredSize(SZ_M);
 
-        g.gridy = 0;
-        g.gridx = col++;
-        card.add(new JLabel("Đặt chỗ:"), g);
-        g.gridx = col++;
-        g.weightx = 1;
-        card.add(cbBooking, g);
-        g.gridx = col++;
-        g.weightx = 0;
-        card.add(new JLabel("Hình thức:"), g);
-        g.gridx = col++;
-        card.add(cbType, g);
-        g.gridx = col++;
-        g.weightx = 1;
-        card.add(Box.createHorizontalStrut(0), g);
-        g.gridx = col++;
-        g.weightx = 0;
-        card.add(btnFilter, g);
-        g.gridx = col++;
-        card.add(btnReset, g);
+		int col = 0;
 
-        col = 0;
-        g.gridy = 1;
-        g.gridx = col++;
-        card.add(new JLabel("Ngày:"), g);
-        g.gridx = col++;
-        card.add(dateFromPicker, g);
-        g.gridx = col++;
-        card.add(new JLabel("–"), g);
-        g.gridx = col++;
-        card.add(dateToPicker, g);
-        g.gridx = col++;
-        card.add(new JLabel("Số tiền:"), g);
-        g.gridx = col++;
-        card.add(txtMinAmount, g);
-        g.gridx = col++;
-        card.add(new JLabel("–"), g);
-        g.gridx = col++;
-        card.add(txtMaxAmount, g);
-        g.gridx = col++;
-        g.weightx = 1;
-        card.add(Box.createHorizontalStrut(0), g);
+		g.gridy = 0;
+		g.gridx = col++;
+		card.add(new JLabel("Đặt chỗ:"), g);
+		g.gridx = col++;
+		g.weightx = 1;
+		card.add(cbBooking, g);
+		g.gridx = col++;
+		g.weightx = 0;
+		card.add(new JLabel("Hình thức:"), g);
+		g.gridx = col++;
+		card.add(cbType, g);
+		g.gridx = col++;
+		g.weightx = 1;
+		card.add(Box.createHorizontalStrut(0), g);
+		g.gridx = col++;
+		g.weightx = 0;
+		card.add(btnFilter, g);
+		g.gridx = col++;
+		card.add(btnReset, g);
 
-        return card;
-    }
+		col = 0;
+		g.gridy = 1;
+		g.gridx = col++;
+		card.add(new JLabel("Ngày:"), g);
+		g.gridx = col++;
+		card.add(dateFromPicker, g);
+		g.gridx = col++;
+		card.add(new JLabel("–"), g);
+		g.gridx = col++;
+		card.add(dateToPicker, g);
+		g.gridx = col++;
+		card.add(new JLabel("Số tiền:"), g);
+		g.gridx = col++;
+		card.add(txtMinAmount, g);
+		g.gridx = col++;
+		card.add(new JLabel("–"), g);
+		g.gridx = col++;
+		card.add(txtMaxAmount, g);
+		g.gridx = col++;
+		g.weightx = 1;
+		card.add(Box.createHorizontalStrut(0), g);
 
-    private void loadBookings() {
-        java.util.List<Booking> list;
-        try {
-            list = bookingService.getAllBookings();
-        } catch (SecurityException se) {
-            list = java.util.List.of();
-        }
-        DefaultComboBoxModel<Object> model = new DefaultComboBoxModel<>();
-        model.addElement("Tất cả");
-        for (Booking b : list)
-            model.addElement(b);
-        cbBooking.setModel(model);
-        cbBooking.setRenderer(new DefaultListCellRenderer() {
-            @Override
-            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected,
-                    boolean cellHasFocus) {
-                Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                if (value instanceof Booking b)
-                    setText(b.getId());
-                if (value instanceof String s)
-                    setText(s);
-                return c;
-            }
-        });
-        cbBooking.setSelectedIndex(0);
-    }
+		return card;
+	}
 
-    private void reloadData() {
-        String bookingId = null;
-        Object sel = cbBooking.getSelectedItem();
-        if (sel instanceof Booking b)
-            bookingId = b.getId();
+	private void loadBookings() {
+		java.util.List<Booking> list;
+		try {
+			list = bookingService.getAllBookings();
+		} catch (SecurityException se) {
+			list = java.util.List.of();
+		}
+		DefaultComboBoxModel<Object> model = new DefaultComboBoxModel<>();
+		model.addElement("Tất cả");
+		for (Booking b : list) {
+			model.addElement(b);
+		}
+		cbBooking.setModel(model);
+		cbBooking.setRenderer(new DefaultListCellRenderer() {
+			@Override
+			public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected,
+			        boolean cellHasFocus) {
+				Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+				if (value instanceof Booking b) {
+					setText(b.getId());
+				}
+				if (value instanceof String s) {
+					setText(s);
+				}
+				return c;
+			}
+		});
+		cbBooking.setSelectedIndex(0);
+	}
 
-        String type = (String) cbType.getSelectedItem();
-        if ("All".equals(type))
-            type = null;
+	private void reloadData() {
+		String bookingId = null;
+		Object sel = cbBooking.getSelectedItem();
+		if (sel instanceof Booking b) {
+			bookingId = b.getId();
+		}
 
-        BigDecimal min = null, max = null;
-        try {
-            if (!txtMinAmount.getText().isBlank())
-                min = new BigDecimal(txtMinAmount.getText().trim());
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Số tiền tối thiểu không hợp lệ.");
-            return;
-        }
-        try {
-            if (!txtMaxAmount.getText().isBlank())
-                max = new BigDecimal(txtMaxAmount.getText().trim());
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Số tiền tối đa không hợp lệ.");
-            return;
-        }
+		String type = (String) cbType.getSelectedItem();
+		if ("All".equals(type)) {
+			type = null;
+		}
 
-        java.util.Date f = (java.util.Date) dateFromPicker.getModel().getValue();
-        java.util.Date t = (java.util.Date) dateToPicker.getModel().getValue();
-        LocalDateTime from = f == null ? null
-                : f.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().atStartOfDay();
-        LocalDateTime to = null;
-        if (t != null) {
-            LocalDate ld = t.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-            to = ld.atTime(23, 59, 59);
-        }
+		BigDecimal min = null, max = null;
+		try {
+			if (!txtMinAmount.getText().isBlank()) {
+				min = new BigDecimal(txtMinAmount.getText().trim());
+			}
+		} catch (Exception ex) {
+			JOptionPane.showMessageDialog(this, "Số tiền tối thiểu không hợp lệ.");
+			return;
+		}
+		try {
+			if (!txtMaxAmount.getText().isBlank()) {
+				max = new BigDecimal(txtMaxAmount.getText().trim());
+			}
+		} catch (Exception ex) {
+			JOptionPane.showMessageDialog(this, "Số tiền tối đa không hợp lệ.");
+			return;
+		}
 
-        java.util.List<Payment> list;
-        try {
-            list = paymentService.search(bookingId, type, from, to, min, max);
-        } catch (SecurityException se) {
-            JOptionPane.showMessageDialog(this, se.getMessage(), "Từ chối truy cập", JOptionPane.ERROR_MESSAGE);
-            list = java.util.List.of();
-        }
-        tableModel.setData(list);
-    }
+		java.util.Date f = (java.util.Date) dateFromPicker.getModel().getValue();
+		java.util.Date t = (java.util.Date) dateToPicker.getModel().getValue();
+		LocalDateTime from = f == null ? null
+		                     : f.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().atStartOfDay();
+		LocalDateTime to = null;
+		if (t != null) {
+			LocalDate ld = t.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+			to = ld.atTime(23, 59, 59);
+		}
 
-    private void addPayment() {
-        Object sel = cbBooking.getSelectedItem();
-        if (!(sel instanceof Booking b)) {
-            JOptionPane.showMessageDialog(this, "Vui lòng chọn đặt chỗ.", "Thêm thanh toán",
-                    JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-        PaymentFormDialog d = new PaymentFormDialog();
-        d.setVisible(true);
-        if (!d.isOk())
-            return;
+		java.util.List<Payment> list;
+		try {
+			list = paymentService.search(bookingId, type, from, to, min, max);
+		} catch (SecurityException se) {
+			JOptionPane.showMessageDialog(this, se.getMessage(), "Từ chối truy cập", JOptionPane.ERROR_MESSAGE);
+			list = java.util.List.of();
+		}
+		tableModel.setData(list);
+	}
 
-        Payment p = new Payment();
-        p.setBookingId(b.getId());
-        p.setType(d.getPaymentType());
-        p.setAmount(d.getAmount());
-        p.setPaidAt(d.getPaidAt());
-        p.setNote(d.getNote());
+	private void addPayment() {
+		Object sel = cbBooking.getSelectedItem();
+		if (!(sel instanceof Booking b)) {
+			JOptionPane.showMessageDialog(this, "Vui lòng chọn đặt chỗ.", "Thêm thanh toán",
+			                              JOptionPane.WARNING_MESSAGE);
+			return;
+		}
+		PaymentFormDialog d = new PaymentFormDialog();
+		d.setVisible(true);
+		if (!d.isOk()) {
+			return;
+		}
 
-        if (paymentService.addPayment(p)) {
-            reloadData();
-            JOptionPane.showMessageDialog(this, "Thêm thanh toán thành công.");
-        } else {
-            JOptionPane.showMessageDialog(this, "Thêm thanh toán thất bại.", "Lỗi", JOptionPane.ERROR_MESSAGE);
-        }
-    }
+		Payment p = new Payment();
+		p.setBookingId(b.getId());
+		p.setType(d.getPaymentType());
+		p.setAmount(d.getAmount());
+		p.setPaidAt(d.getPaidAt());
+		p.setNote(d.getNote());
 
-    private void editSelected() {
-        int rowView = table.getSelectedRow();
-        if (rowView < 0)
-            return;
-        Payment origin = tableModel.getAt(table.convertRowIndexToModel(rowView));
-        PaymentFormDialog d = new PaymentFormDialog(origin);
-        d.setVisible(true);
-        if (!d.isOk())
-            return;
+		if (paymentService.addPayment(p)) {
+			reloadData();
+			JOptionPane.showMessageDialog(this, "Thêm thanh toán thành công.");
+		} else {
+			JOptionPane.showMessageDialog(this, "Thêm thanh toán thất bại.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+		}
+	}
 
-        Payment u = new Payment();
-        u.setId(origin.getId());
-        u.setBookingId(origin.getBookingId());
-        u.setType(d.getPaymentType());
-        u.setAmount(d.getAmount());
-        u.setPaidAt(d.getPaidAt());
-        u.setNote(d.getNote());
+	private void editSelected() {
+		int rowView = table.getSelectedRow();
+		if (rowView < 0) {
+			return;
+		}
+		Payment origin = tableModel.getAt(table.convertRowIndexToModel(rowView));
+		PaymentFormDialog d = new PaymentFormDialog(origin);
+		d.setVisible(true);
+		if (!d.isOk()) {
+			return;
+		}
 
-        if (paymentService.updatePayment(u)) {
-            reloadData();
-            JOptionPane.showMessageDialog(this, "Cập nhật thanh toán thành công.");
-        } else {
-            JOptionPane.showMessageDialog(this, "Cập nhật thanh toán thất bại.", "Lỗi", JOptionPane.ERROR_MESSAGE);
-        }
-    }
+		Payment u = new Payment();
+		u.setId(origin.getId());
+		u.setBookingId(origin.getBookingId());
+		u.setType(d.getPaymentType());
+		u.setAmount(d.getAmount());
+		u.setPaidAt(d.getPaidAt());
+		u.setNote(d.getNote());
 
-    private void deletePayment() {
-        int rowView = table.getSelectedRow();
-        if (rowView < 0)
-            return;
-        var p = tableModel.getAt(table.convertRowIndexToModel(rowView));
-        int ok = JOptionPane.showConfirmDialog(this, "Xóa thanh toán?", "Xác nhận xóa", JOptionPane.YES_NO_OPTION);
-        if (ok == JOptionPane.YES_OPTION) {
-            if (paymentService.deletePayment(p.getId())) {
-                reloadData();
-                JOptionPane.showMessageDialog(this, "Đã xóa thanh toán.");
-            } else {
-                JOptionPane.showMessageDialog(this, "Xóa thanh toán thất bại.", "Lỗi", JOptionPane.ERROR_MESSAGE);
-            }
-        }
-    }
+		if (paymentService.updatePayment(u)) {
+			reloadData();
+			JOptionPane.showMessageDialog(this, "Cập nhật thanh toán thành công.");
+		} else {
+			JOptionPane.showMessageDialog(this, "Cập nhật thanh toán thất bại.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+		}
+	}
 
-    private void resetFilter() {
-        cbBooking.setSelectedIndex(0);
-        cbType.setSelectedIndex(0);
-        txtMinAmount.setText("");
-        txtMaxAmount.setText("");
-        dateFromPicker.getModel().setValue(null);
-        dateToPicker.getModel().setValue(null);
-    }
+	private void deletePayment() {
+		int rowView = table.getSelectedRow();
+		if (rowView < 0) {
+			return;
+		}
+		var p = tableModel.getAt(table.convertRowIndexToModel(rowView));
+		int ok = JOptionPane.showConfirmDialog(this, "Xóa thanh toán?", "Xác nhận xóa", JOptionPane.YES_NO_OPTION);
+		if (ok == JOptionPane.YES_OPTION) {
+			if (paymentService.deletePayment(p.getId())) {
+				reloadData();
+				JOptionPane.showMessageDialog(this, "Đã xóa thanh toán.");
+			} else {
+				JOptionPane.showMessageDialog(this, "Xóa thanh toán thất bại.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+			}
+		}
+	}
+
+	private void resetFilter() {
+		cbBooking.setSelectedIndex(0);
+		cbType.setSelectedIndex(0);
+		txtMinAmount.setText("");
+		txtMaxAmount.setText("");
+		dateFromPicker.getModel().setValue(null);
+		dateToPicker.getModel().setValue(null);
+	}
 }

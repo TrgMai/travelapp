@@ -9,44 +9,44 @@ import java.time.LocalDate;
 import java.util.List;
 
 public class CustomerService {
-    private final CustomerDao dao = new CustomerDao();
-    private final AuditLogService audit = new AuditLogService();
+	private final CustomerDao dao = new CustomerDao();
+	private final AuditLogService audit = new AuditLogService();
 
-    public List<Customer> getAllCustomers() {
-        PermissionGuard.require("BOOKING_VIEW");
-        return dao.findAll();
-    }
+	public List<Customer> getAllCustomers() {
+		PermissionGuard.require("BOOKING_VIEW");
+		return dao.findAll();
+	}
 
-    public List<Customer> search(String keyword, String gender, LocalDate dobFrom, LocalDate dobTo) {
-        PermissionGuard.require("BOOKING_VIEW");
-        return dao.search(keyword, gender, dobFrom, dobTo);
-    }
+	public List<Customer> search(String keyword, String gender, LocalDate dobFrom, LocalDate dobTo) {
+		PermissionGuard.require("BOOKING_VIEW");
+		return dao.search(keyword, gender, dobFrom, dobTo);
+	}
 
-    public boolean addCustomer(Customer c) {
-        PermissionGuard.require("BOOKING_CREATE");
-        boolean ok = dao.insert(c);
-        if (ok)
-            audit.log(SecurityContext.getCurrentUser().getId(), "CREATE", "Customer", c.getId(),
-                    "{\"action\":\"create_customer\", \"customerId\":\"" + c.getId() + "\"}");
-        return ok;
-    }
+	public boolean addCustomer(Customer c) {
+		PermissionGuard.require("BOOKING_CREATE");
+		boolean ok = dao.insert(c);
+		if (ok)
+			audit.log(SecurityContext.getCurrentUser().getId(), "CREATE", "Customer", c.getId(),
+			          "{\"action\":\"create_customer\", \"customerId\":\"" + c.getId() + "\"}");
+		return ok;
+	}
 
-    public boolean updateCustomer(Customer c) {
-        PermissionGuard.require("BOOKING_EDIT");
-        boolean ok = dao.update(c);
-        if (ok)
-            audit.log(SecurityContext.getCurrentUser().getId(), "UPDATE", "Customer", c.getId(),
-                    "{\"action\":\"update_customer\", \"customerId\":\"" + c.getId() + "\"}");
-        return ok;
-    }
+	public boolean updateCustomer(Customer c) {
+		PermissionGuard.require("BOOKING_EDIT");
+		boolean ok = dao.update(c);
+		if (ok)
+			audit.log(SecurityContext.getCurrentUser().getId(), "UPDATE", "Customer", c.getId(),
+			          "{\"action\":\"update_customer\", \"customerId\":\"" + c.getId() + "\"}");
+		return ok;
+	}
 
-    public boolean deleteCustomer(String id) {
-        PermissionGuard.require("BOOKING_CANCEL");
-        boolean ok = dao.delete(id);
-        if (ok)
-            audit.log(SecurityContext.getCurrentUser().getId(), "DELETE", "Customer", id,
-                    "{\"action\":\"delete_customer\", \"customerId\":\"" + id + "\"}");
-        return ok;
-    }
+	public boolean deleteCustomer(String id) {
+		PermissionGuard.require("BOOKING_CANCEL");
+		boolean ok = dao.delete(id);
+		if (ok)
+			audit.log(SecurityContext.getCurrentUser().getId(), "DELETE", "Customer", id,
+			          "{\"action\":\"delete_customer\", \"customerId\":\"" + id + "\"}");
+		return ok;
+	}
 
 }
