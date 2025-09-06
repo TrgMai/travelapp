@@ -4,13 +4,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Central configuration of permissions required for each service method.
- * The key is the fully qualified class name followed by the method name
- * (e.g., {@code com.example.travelapp.service.BookingService.getAllBookings}).
- */
 public final class PermissionRegistry {
-
         public static final Map<String, String> PERMISSIONS;
 
         static {
@@ -100,4 +94,3 @@ public final class PermissionRegistry {
         private PermissionRegistry() {
         }
 }
-
