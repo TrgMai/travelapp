@@ -32,6 +32,7 @@ public class ProfileDialog extends JDialog {
 
 	public ProfileDialog(Window parent) {
 		super(parent, "Thông tin cá nhân", ModalityType.APPLICATION_MODAL);
+		setResizable(false);
 		setSize(400, 500);
 		setLocationRelativeTo(parent);
 		getContentPane().setBackground(ThemeTokens.SURFACE());
