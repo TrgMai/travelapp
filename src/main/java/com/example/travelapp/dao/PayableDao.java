@@ -12,24 +12,24 @@ public class PayableDao extends BaseDao {
 	        SELECT *
 	        FROM payables
 	        WHERE booking_id=?
-	                         ORDER BY due_date NULLS LAST, id
-	                         """;
+			ORDER BY due_date NULLS LAST, id
+			""";
 
-	                         private static final String SQL_INSERT = """
-	                                 INSERT INTO payables (id, partner_id, booking_id, amount, due_date, status)
-	                                 VALUES (?, ?, ?, ?, ?, ?)
-	                                 """;
+	private static final String SQL_INSERT = """
+			INSERT INTO payables (id, partner_id, booking_id, amount, due_date, status)
+			VALUES (?, ?, ?, ?, ?, ?)
+			""";
 
-	                                 private static final String SQL_UPDATE = """
-	                                         UPDATE payables
-	                                         SET partner_id=?, amount=?, due_date=?, status=?
-	                                                 WHERE id=?
-	                                                         """;
+	private static final String SQL_UPDATE = """
+			UPDATE payables
+			SET partner_id=?, amount=?, due_date=?, status=?
+			WHERE id=?
+			""";
 
-	                                                         private static final String SQL_DELETE = """
-	                                                                 DELETE FROM payables
-	                                                                 WHERE id=?
-	                                                                         """;
+	private static final String SQL_DELETE = """
+			DELETE FROM payables
+			WHERE id=?
+			""";
 
 	public List<Payable> findByBooking(String bookingId) {
 		List<Payable> list = new ArrayList<>();

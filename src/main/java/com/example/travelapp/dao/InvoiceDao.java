@@ -12,24 +12,24 @@ public class InvoiceDao extends BaseDao {
 	        SELECT *
 	        FROM invoices
 	        WHERE booking_id=?
-	                         ORDER BY issued_at DESC NULLS LAST, no
-	                         """;
+			ORDER BY issued_at DESC NULLS LAST, no
+			""";
 
-	                         private static final String SQL_INSERT = """
-	                                 INSERT INTO invoices (id, booking_id, no, amount, vat, issued_at, pdf_path)
-	                                 VALUES (?, ?, ?, ?, ?, ?, ?)
-	                                 """;
+	private static final String SQL_INSERT = """
+			INSERT INTO invoices (id, booking_id, no, amount, vat, issued_at, pdf_path)
+			VALUES (?, ?, ?, ?, ?, ?, ?)
+			""";
 
-	                                 private static final String SQL_UPDATE = """
-	                                         UPDATE invoices
-	                                         SET no=?, amount=?, vat=?, issued_at=?, pdf_path=?
-	                                                 WHERE id=?
-	                                                         """;
+	private static final String SQL_UPDATE = """
+			UPDATE invoices
+			SET no=?, amount=?, vat=?, issued_at=?, pdf_path=?
+			WHERE id=?
+			""";
 
-	                                                         private static final String SQL_DELETE = """
-	                                                                 DELETE FROM invoices
-	                                                                 WHERE id=?
-	                                                                         """;
+	private static final String SQL_DELETE = """
+			DELETE FROM invoices
+			WHERE id=?
+			""";
 
 	public List<Invoice> findByBooking(String bookingId) {
 		List<Invoice> list = new ArrayList<>();

@@ -12,24 +12,24 @@ public class BookingCustomerDao extends BaseDao {
 	        SELECT booking_id, customer_id, role
 	        FROM booking_customers
 	        WHERE booking_id=?
-	                         ORDER BY customer_id
-	                         """;
+			ORDER BY customer_id
+			""";
 
-	                         private static final String SQL_INSERT = """
-	                                 INSERT INTO booking_customers (booking_id, customer_id, role)
-	                                 VALUES (?, ?, ?)
-	                                 """;
+	private static final String SQL_INSERT = """
+			INSERT INTO booking_customers (booking_id, customer_id, role)
+			VALUES (?, ?, ?)
+			""";
 
-	                                 private static final String SQL_DELETE = """
-	                                         DELETE FROM booking_customers
-	                                         WHERE booking_id=? AND customer_id=?
-	                                                 """;
+	private static final String SQL_DELETE = """
+			DELETE FROM booking_customers
+			WHERE booking_id=? AND customer_id=?
+			""";
 
-	                                                 private static final String SQL_UPDATE_ROLE = """
-	                                                         UPDATE booking_customers
-	                                                         SET role=?
-	                                                                 WHERE booking_id=? AND customer_id=?
-	                                                                         """;
+	private static final String SQL_UPDATE_ROLE = """
+			UPDATE booking_customers
+			SET role=?
+			WHERE booking_id=? AND customer_id=?
+			""";
 
 	public List<BookingCustomer> findByBooking(String bookingId) {
 		List<BookingCustomer> list = new ArrayList<>();

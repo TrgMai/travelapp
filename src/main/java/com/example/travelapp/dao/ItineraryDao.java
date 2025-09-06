@@ -11,18 +11,18 @@ public class ItineraryDao extends BaseDao {
 	        SELECT id, tour_id, day_no, title, place, activity, note
 	        FROM itineraries
 	        WHERE tour_id = ?
-	                        ORDER BY day_no ASC
-	                        """;
+			ORDER BY day_no ASC
+			""";
 
-	                        private static final String SQL_DELETE_BY_TOUR = """
-	                                DELETE FROM itineraries
-	                                WHERE tour_id = ?
-	                                        """;
+	private static final String SQL_DELETE_BY_TOUR = """
+			DELETE FROM itineraries
+			WHERE tour_id = ?
+			""";
 
-	                                        private static final String SQL_INSERT = """
-	                                                INSERT INTO itineraries (id, tour_id, day_no, title, place, activity, note)
-	                                                VALUES (?, ?, ?, ?, ?, ?, ?)
-	                                                """;
+	private static final String SQL_INSERT = """
+			INSERT INTO itineraries (id, tour_id, day_no, title, place, activity, note)
+			VALUES (?, ?, ?, ?, ?, ?, ?)
+			""";
 
 	public List<Itinerary> findByTourId(String tourId) {
 		List<Itinerary> list = new ArrayList<>();

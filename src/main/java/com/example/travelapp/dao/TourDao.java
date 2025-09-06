@@ -14,27 +14,27 @@ public class TourDao extends BaseDao {
 	        ORDER BY created_at DESC
 	        """;
 
-	        private static final String SQL_FIND_BY_ID = """
-	                SELECT id, name, route, days, base_price, description, cover_image_url, created_at
-	                FROM tours
-	                WHERE id = ?
-	                           """;
+	private static final String SQL_FIND_BY_ID = """
+			SELECT id, name, route, days, base_price, description, cover_image_url, created_at
+			FROM tours
+			WHERE id = ?
+			""";
 
-	                           private static final String SQL_INSERT = """
-	                                   INSERT INTO tours (id, name, route, days, base_price, description, cover_image_url, created_at)
-	                                   VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-	                                   """;
+	private static final String SQL_INSERT = """
+			INSERT INTO tours (id, name, route, days, base_price, description, cover_image_url, created_at)
+			VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+			""";
 
-	                                   private static final String SQL_UPDATE = """
-	                                           UPDATE tours
-	                                           SET name = ?, route = ?, days = ?, base_price = ?, description = ?, cover_image_url = ?
-	                                                   WHERE id = ?
-	                                                           """;
+	private static final String SQL_UPDATE = """
+			UPDATE tours
+			SET name = ?, route = ?, days = ?, base_price = ?, description = ?, cover_image_url = ?
+			WHERE id = ?
+			""";
 
-	                                                           private static final String SQL_DELETE = """
-	                                                                   DELETE FROM tours
-	                                                                   WHERE id = ?
-	                                                                           """;
+	private static final String SQL_DELETE = """
+			DELETE FROM tours
+			WHERE id = ?
+			""";
 
 	public List<Tour> findAll() {
 		List<Tour> list = new ArrayList<>();

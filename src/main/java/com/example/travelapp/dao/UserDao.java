@@ -14,39 +14,39 @@ public class UserDao extends BaseDao {
 	        p.code AS pcode
 	        FROM users u
 	        LEFT JOIN user_roles ur ON ur.user_id = u.id
-	                LEFT JOIN roles r ON r.id = ur.role_id
-	                        LEFT JOIN role_permissions rp ON rp.role_id = r.id
-	                                LEFT JOIN permissions p ON p.id = rp.permission_id
-	                                        WHERE u.username = ?
-	                                                """;
+			LEFT JOIN roles r ON r.id = ur.role_id
+			LEFT JOIN role_permissions rp ON rp.role_id = r.id
+			LEFT JOIN permissions p ON p.id = rp.permission_id
+			WHERE u.username = ?
+			""";
 
-	                                                private static final String SQL_FIND_ALL = """
-	                                                        SELECT u.id AS uid, u.username, u.password_hash, u.full_name, u.email, u.phone, u.status, u.created_at,
-	                                                        r.id AS rid, r.code AS rcode, r.name AS rname,
-	                                                        p.code AS pcode
-	                                                        FROM users u
-	                                                        LEFT JOIN user_roles ur ON ur.user_id = u.id
-	                                                                LEFT JOIN roles r ON r.id = ur.role_id
-	                                                                        LEFT JOIN role_permissions rp ON rp.role_id = r.id
-	                                                                                LEFT JOIN permissions p ON p.id = rp.permission_id
-	                                                                                        ORDER BY u.username
-	                                                                                        """;
+	private static final String SQL_FIND_ALL = """
+			SELECT u.id AS uid, u.username, u.password_hash, u.full_name, u.email, u.phone, u.status, u.created_at,
+			r.id AS rid, r.code AS rcode, r.name AS rname,
+			p.code AS pcode
+			FROM users u
+			LEFT JOIN user_roles ur ON ur.user_id = u.id
+			LEFT JOIN roles r ON r.id = ur.role_id
+			LEFT JOIN role_permissions rp ON rp.role_id = r.id
+			LEFT JOIN permissions p ON p.id = rp.permission_id
+			ORDER BY u.username
+			""";
 
-	                                                                                        private static final String SQL_INSERT = """
-	                                                                                                INSERT INTO users (id, username, password_hash, full_name, email, phone, status, created_at)
-	                                                                                                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-	                                                                                                """;
+	private static final String SQL_INSERT = """
+			INSERT INTO users (id, username, password_hash, full_name, email, phone, status, created_at)
+			VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+			""";
 
-	                                                                                                private static final String SQL_UPDATE = """
-	                                                                                                        UPDATE users
-	                                                                                                        SET password_hash = ?, full_name = ?, email = ?, phone = ?, status = ?
-	                                                                                                                WHERE id = ?
-	                                                                                                                        """;
+	private static final String SQL_UPDATE = """
+			UPDATE users
+			SET password_hash = ?, full_name = ?, email = ?, phone = ?, status = ?
+			WHERE id = ?
+			""";
 
-	                                                                                                                        private static final String SQL_DELETE = """
-	                                                                                                                                DELETE FROM users
-	                                                                                                                                WHERE id = ?
-	                                                                                                                                        """;
+	private static final String SQL_DELETE = """
+			DELETE FROM users
+			WHERE id = ?
+			""";
 
 	public User findByUsername(String username) {
 		User user = null;

@@ -83,20 +83,13 @@ public class DashboardPanel extends JPanel {
 		endDate.setEditor(new JSpinner.DateEditor(endDate, "dd/MM/yyyy"));
 		((JSpinner.DateEditor) endDate.getEditor()).getTextField().setColumns(8);
 
-		addL(filters, gc, new JLabel("Khoảng ngày"));
+		addL(filters, gc, new JLabel("Từ"));
 		JPanel range = new JPanel(new FlowLayout(FlowLayout.LEFT, ThemeTokens.SPACE_6, 0));
 		range.setOpaque(false);
 		range.add(startDate);
 		range.add(new JLabel("đến"));
 		range.add(endDate);
 		filters.add(range, pos(gc));
-
-		GridBagConstraints stretchR = pos(gc);
-		stretchR.weightx = 1;
-		stretchR.fill = GridBagConstraints.HORIZONTAL;
-		filters.add(Box.createHorizontalStrut(1), stretchR);
-
-		newRow(gc);
 
 		addL(filters, gc, new JLabel("Thanh toán"));
 		JPanel types = new JPanel(new FlowLayout(FlowLayout.LEFT, ThemeTokens.SPACE_8, 0));
@@ -111,7 +104,7 @@ public class DashboardPanel extends JPanel {
 		stretch.fill = GridBagConstraints.HORIZONTAL;
 		filters.add(Box.createHorizontalStrut(1), stretch);
 
-		JButton applyBtn = ThemeComponents.primaryButton("Áp dụng");
+		JButton applyBtn = ThemeComponents.primaryButton("Lọc");
 		filters.add(applyBtn, pos(gc));
 
 		JPanel kpiPanel = new JPanel(new GridLayout(1, 3, ThemeTokens.SPACE_16, 0));

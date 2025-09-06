@@ -13,11 +13,11 @@ public class PartnerDao extends BaseDao {
 	        ORDER BY name ASC
 	        """;
 
-	        private static final String SQL_FIND_BY_ID = """
-	                SELECT id, type, name, contact, phone, email, tax_no, address, note
-	                FROM partners
-	                WHERE id = ?
-	                           """;
+	private static final String SQL_FIND_BY_ID = """
+			SELECT id, type, name, contact, phone, email, tax_no, address, note
+			FROM partners
+			WHERE id = ?
+			""";
 
 	public List<Partner> findAll() throws SQLException {
 		try (Connection cn = getConnection();

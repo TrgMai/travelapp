@@ -14,11 +14,11 @@ public class ServiceDao extends BaseDao {
 	        ORDER BY name ASC
 	        """;
 
-	        private static final String SQL_FIND_BY_ID = """
-	                SELECT id, partner_id, type, name, unit_price, capacity, note
-	                FROM services
-	                WHERE id = ?
-	                           """;
+	private static final String SQL_FIND_BY_ID = """
+			SELECT id, partner_id, type, name, unit_price, capacity, note
+			FROM services
+			WHERE id = ?
+			""";
 
 	public List<Service> findAll() throws SQLException {
 		try (Connection c = getConnection();

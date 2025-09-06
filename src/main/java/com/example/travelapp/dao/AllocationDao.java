@@ -12,24 +12,24 @@ public class AllocationDao extends BaseDao {
 	        SELECT *
 	        FROM allocations
 	        WHERE booking_id=?
-	                         ORDER BY day_no, id
-	                         """;
+			ORDER BY day_no, id
+			""";
 
-	                         private static final String SQL_INSERT = """
-	                                 INSERT INTO allocations (id, booking_id, day_no, service_id, detail)
-	                                 VALUES (?, ?, ?, ?, CAST(? AS JSONB))
-	                                 """;
+	private static final String SQL_INSERT = """
+			INSERT INTO allocations (id, booking_id, day_no, service_id, detail)
+			VALUES (?, ?, ?, ?, CAST(? AS JSONB))
+			""";
 
-	                                 private static final String SQL_UPDATE = """
-	                                         UPDATE allocations
-	                                         SET day_no=?, service_id=?, detail=CAST(? AS JSONB)
-	                                                 WHERE id=?
-	                                                         """;
+	private static final String SQL_UPDATE = """
+			UPDATE allocations
+			SET day_no=?, service_id=?, detail=CAST(? AS JSONB)
+			WHERE id=?
+			""";
 
-	                                                         private static final String SQL_DELETE = """
-	                                                                 DELETE FROM allocations
-	                                                                 WHERE id=?
-	                                                                         """;
+	private static final String SQL_DELETE = """
+			DELETE FROM allocations
+			WHERE id=?
+			""";
 
 	public List<Allocation> findByBooking(String bookingId) {
 		List<Allocation> list = new ArrayList<>();

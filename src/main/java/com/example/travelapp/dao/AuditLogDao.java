@@ -14,12 +14,12 @@ public class AuditLogDao extends BaseDao {
 	        VALUES (?, ?, ?, ?, ?, ?, CAST(? AS jsonb))
 	        """;
 
-	        private static final String SQL_LIST_RECENT = """
-	                SELECT id, user_id, action, entity, entity_id, at, meta
-	                FROM audit_logs
-	                ORDER BY at DESC
-	                LIMIT ?
-	                """;
+	private static final String SQL_LIST_RECENT = """
+			SELECT id, user_id, action, entity, entity_id, at, meta
+			FROM audit_logs
+			ORDER BY at DESC
+			LIMIT ?
+			""";
 
 	public boolean insert(AuditLog log) {
 		try (Connection conn = getConnection();

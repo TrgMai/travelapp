@@ -16,27 +16,27 @@ public class CustomerDao extends BaseDao {
 	        ORDER BY created_at DESC
 	        """;
 
-	        private static final String SQL_FIND_BY_ID = """
-	                SELECT id, full_name, dob, gender, id_type, id_no, phone, email, note, created_at
-	                FROM customers
-	                WHERE id = ?
-	                           """;
+	private static final String SQL_FIND_BY_ID = """
+			SELECT id, full_name, dob, gender, id_type, id_no, phone, email, note, created_at
+			FROM customers
+			WHERE id = ?
+			""";
 
-	                           private static final String SQL_INSERT = """
-	                                   INSERT INTO customers (id, full_name, dob, gender, id_type, id_no, phone, email, note, created_at)
-	                                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-	                                   """;
+	private static final String SQL_INSERT = """
+			INSERT INTO customers (id, full_name, dob, gender, id_type, id_no, phone, email, note, created_at)
+			VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+			""";
 
-	                                   private static final String SQL_UPDATE = """
-	                                           UPDATE customers
-	                                           SET full_name = ?, dob = ?, gender = ?, id_type = ?, id_no = ?, phone = ?, email = ?, note = ?
-	                                                   WHERE id = ?
-	                                                           """;
+	private static final String SQL_UPDATE = """
+			UPDATE customers
+			SET full_name = ?, dob = ?, gender = ?, id_type = ?, id_no = ?, phone = ?, email = ?, note = ?
+			WHERE id = ?
+			""";
 
-	                                                           private static final String SQL_DELETE = """
-	                                                                   DELETE FROM customers
-	                                                                   WHERE id = ?
-	                                                                           """;
+	private static final String SQL_DELETE = """
+			DELETE FROM customers
+			WHERE id = ?
+					""";
 
 	public List<Customer> findAll() {
 		List<Customer> list = new ArrayList<>();

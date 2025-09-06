@@ -16,40 +16,40 @@ public class PaymentDao extends BaseDao {
 	        ORDER BY paid_at DESC
 	        """;
 
-	        private static final String SQL_FIND_BY_ID = """
-	                SELECT id, booking_id, type, amount, paid_at, note
-	                FROM payments
-	                WHERE id = ?
-	                           """;
+	private static final String SQL_FIND_BY_ID = """
+			SELECT id, booking_id, type, amount, paid_at, note
+			FROM payments
+			WHERE id = ?
+			""";
 
-	                           private static final String SQL_INSERT = """
-	                                   INSERT INTO payments (id, booking_id, type, amount, paid_at, note)
-	                                   VALUES (?, ?, ?, ?, ?, ?)
-	                                   """;
+	private static final String SQL_INSERT = """
+			INSERT INTO payments (id, booking_id, type, amount, paid_at, note)
+			VALUES (?, ?, ?, ?, ?, ?)
+			""";
 
-	                                   private static final String SQL_UPDATE = """
-	                                           UPDATE payments
-	                                           SET booking_id = ?, type = ?, amount = ?, paid_at = ?, note = ?
-	                                                   WHERE id = ?
-	                                                           """;
+	private static final String SQL_UPDATE = """
+			UPDATE payments
+			SET booking_id = ?, type = ?, amount = ?, paid_at = ?, note = ?
+			WHERE id = ?
+			""";
 
-	                                                           private static final String SQL_DELETE = """
-	                                                                   DELETE FROM payments
-	                                                                   WHERE id = ?
-	                                                                           """;
+	private static final String SQL_DELETE = """
+			DELETE FROM payments
+			WHERE id = ?
+			""";
 
-	                                                                           private static final String SQL_FIND_BY_BOOKING = """
-	                                                                                   SELECT id, booking_id, type, amount, paid_at, note
-	                                                                                   FROM payments
-	                                                                                   WHERE booking_id = ?
-	                                                                                           ORDER BY paid_at DESC
-	                                                                                           """;
+	private static final String SQL_FIND_BY_BOOKING = """
+			SELECT id, booking_id, type, amount, paid_at, note
+			FROM payments
+			WHERE booking_id = ?
+			ORDER BY paid_at DESC
+			""";
 
-	                                                                                           private static final String SQL_SEARCH = """
-	                                                                                                   SELECT id, booking_id, type, amount, paid_at, note
-	                                                                                                   FROM payments
-	                                                                                                   WHERE 1=1
-	                                                                                                           """;
+	private static final String SQL_SEARCH = """
+			SELECT id, booking_id, type, amount, paid_at, note
+			FROM payments
+			WHERE 1=1
+			""";
 
 	public List<Payment> findAll() {
 		List<Payment> list = new ArrayList<>();
