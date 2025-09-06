@@ -11,7 +11,7 @@ public class ServiceService {
 	private final ServiceDao dao = new ServiceDao();
 
 	public List<Service> getAllServices() {
-		PermissionGuard.require("SERVICE_VIEW");
+		PermissionGuard.require();
 		try {
 			var list = dao.findAll();
 			list.sort(Comparator.comparing(Service::getName, String.CASE_INSENSITIVE_ORDER));
@@ -22,7 +22,7 @@ public class ServiceService {
 	}
 
 	public Service getById(String id) {
-		PermissionGuard.require("SERVICE_VIEW");
+		PermissionGuard.require();
 		try {
 			return dao.findById(id);
 		} catch (Exception e) {

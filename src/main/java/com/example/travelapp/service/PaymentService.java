@@ -14,22 +14,22 @@ public class PaymentService {
 	private final AuditLogService audit = new AuditLogService();
 
 	public List<Payment> getAllPayments() {
-		PermissionGuard.require("PAYMENT_RECORD");
+		PermissionGuard.require();
 		return dao.findAll();
 	}
 
 	public List<Payment> getByBooking(String bookingId) {
-		PermissionGuard.require("PAYMENT_VIEW");
+		PermissionGuard.require();
 		return dao.findByBooking(bookingId);
 	}
 
 	public List<Payment> search(String bookingId, String type, LocalDateTime from, LocalDateTime to, BigDecimal minAmount, BigDecimal maxAmount) {
-		PermissionGuard.require("PAYMENT_VIEW");
+		PermissionGuard.require();
 		return dao.search(bookingId, type, from, to, minAmount, maxAmount);
 	}
 
 	public boolean addPayment(Payment p) {
-		PermissionGuard.require("PAYMENT_RECORD");
+		PermissionGuard.require();
 		boolean ok = dao.insert(p);
 		if (ok)
 			audit.log(SecurityContext.getCurrentUser().getId(), "CREATE", "Payment", p.getId(),
@@ -38,7 +38,7 @@ public class PaymentService {
 	}
 
 	public boolean updatePayment(Payment p) {
-		PermissionGuard.require("PAYMENT_RECORD");
+		PermissionGuard.require();
 		boolean ok = dao.update(p);
 		if (ok)
 			audit.log(SecurityContext.getCurrentUser().getId(), "UPDATE", "Payment", p.getId(),
@@ -47,7 +47,7 @@ public class PaymentService {
 	}
 
 	public boolean deletePayment(String id) {
-		PermissionGuard.require("PAYMENT_RECORD");
+		PermissionGuard.require();
 		boolean ok = dao.delete(id);
 		if (ok)
 			audit.log(SecurityContext.getCurrentUser().getId(), "DELETE", "Payment", id,

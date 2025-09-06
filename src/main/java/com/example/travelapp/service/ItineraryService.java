@@ -12,12 +12,12 @@ public class ItineraryService {
 	private final AuditLogService audit = new AuditLogService();
 
 	public List<Itinerary> getByTour(String tourId) {
-		PermissionGuard.require("TOUR_VIEW");
+		PermissionGuard.require();
 		return dao.findByTourId(tourId);
 	}
 
 	public void saveForTour(String tourId, List<Itinerary> items) {
-		PermissionGuard.require("TOUR_EDIT");
+		PermissionGuard.require();
 		dao.replaceAllForTour(tourId, items);
 		audit.log(SecurityContext.getCurrentUser().getId(), "UPDATE", "Itinerary", tourId,
 		          "{\"action\":\"update_itineraries\",\"tourId\":\"" + tourId + "\",\"count\":" + items.size() + "}");

@@ -11,25 +11,25 @@ public class ExpenseService {
 	private final AuditLogService audit = new AuditLogService();
 
 	public List<Expense> getByBooking(String bookingId) {
-		PermissionGuard.require("BOOKING_VIEW");
+		PermissionGuard.require();
 		return dao.findByBooking(bookingId);
 	}
 	public boolean add(Expense e) {
-		PermissionGuard.require("BOOKING_EDIT");
+		PermissionGuard.require();
 		boolean ok = dao.insert(e);
 		if (ok) audit.log(null, "CREATE", "Expense", e.getId(),
 			                  "{\"action\":\"create_expense\",\"expenseId\":\"" + e.getId() + "\",\"bookingId\":\"" + e.getBookingId() + "\",\"amount\":" + e.getAmount() + "}");
 		return ok;
 	}
 	public boolean update(Expense e) {
-		PermissionGuard.require("BOOKING_EDIT");
+		PermissionGuard.require();
 		boolean ok = dao.update(e);
 		if (ok) audit.log(null, "UPDATE", "Expense", e.getId(),
 			                  "{\"action\":\"update_expense\",\"expenseId\":\"" + e.getId() + "\",\"bookingId\":\"" + e.getBookingId() + "\",\"amount\":" + e.getAmount() + "}");
 		return ok;
 	}
 	public boolean delete(String id) {
-		PermissionGuard.require("BOOKING_EDIT");
+		PermissionGuard.require();
 		boolean ok = dao.delete(id);
 		if (ok) audit.log(null, "DELETE", "Expense", id,
 			                  "{\"action\":\"delete_expense\",\"expenseId\":\"" + id + "\"}");

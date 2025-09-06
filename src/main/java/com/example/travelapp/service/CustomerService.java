@@ -13,17 +13,17 @@ public class CustomerService {
 	private final AuditLogService audit = new AuditLogService();
 
 	public List<Customer> getAllCustomers() {
-		PermissionGuard.require("BOOKING_VIEW");
+		PermissionGuard.require();
 		return dao.findAll();
 	}
 
 	public List<Customer> search(String keyword, String gender, LocalDate dobFrom, LocalDate dobTo) {
-		PermissionGuard.require("BOOKING_VIEW");
+		PermissionGuard.require();
 		return dao.search(keyword, gender, dobFrom, dobTo);
 	}
 
 	public boolean addCustomer(Customer c) {
-		PermissionGuard.require("BOOKING_CREATE");
+		PermissionGuard.require();
 		boolean ok = dao.insert(c);
 		if (ok)
 			audit.log(SecurityContext.getCurrentUser().getId(), "CREATE", "Customer", c.getId(),
@@ -32,7 +32,7 @@ public class CustomerService {
 	}
 
 	public boolean updateCustomer(Customer c) {
-		PermissionGuard.require("BOOKING_EDIT");
+		PermissionGuard.require();
 		boolean ok = dao.update(c);
 		if (ok)
 			audit.log(SecurityContext.getCurrentUser().getId(), "UPDATE", "Customer", c.getId(),
@@ -41,7 +41,7 @@ public class CustomerService {
 	}
 
 	public boolean deleteCustomer(String id) {
-		PermissionGuard.require("BOOKING_CANCEL");
+		PermissionGuard.require();
 		boolean ok = dao.delete(id);
 		if (ok)
 			audit.log(SecurityContext.getCurrentUser().getId(), "DELETE", "Customer", id,

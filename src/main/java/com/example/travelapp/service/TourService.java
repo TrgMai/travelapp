@@ -12,17 +12,17 @@ public class TourService {
 	private final AuditLogService audit = new AuditLogService();
 
 	public List<Tour> getAllTours() {
-		PermissionGuard.require("TOUR_VIEW");
+		PermissionGuard.require();
 		return dao.findAll();
 	}
 
 	public Tour getById(String id) {
-		PermissionGuard.require("TOUR_VIEW");
+		PermissionGuard.require();
 		return dao.findById(id);
 	}
 
 	public boolean addTour(Tour t) {
-		PermissionGuard.require("TOUR_CREATE");
+		PermissionGuard.require();
 		boolean ok = dao.insert(t);
 		if (ok)
 			audit.log(SecurityContext.getCurrentUser().getId(), "CREATE", "Tour", t.getId(),
@@ -31,7 +31,7 @@ public class TourService {
 	}
 
 	public boolean updateTour(Tour t) {
-		PermissionGuard.require("TOUR_EDIT");
+		PermissionGuard.require();
 		boolean ok = dao.update(t);
 		if (ok)
 			audit.log(SecurityContext.getCurrentUser().getId(), "UPDATE", "Tour", t.getId(),
@@ -40,7 +40,7 @@ public class TourService {
 	}
 
 	public boolean deleteTour(String id) {
-		PermissionGuard.require("TOUR_DELETE");
+		PermissionGuard.require();
 		boolean ok = dao.delete(id);
 		if (ok)
 			audit.log(SecurityContext.getCurrentUser().getId(), "DELETE", "Tour", id,

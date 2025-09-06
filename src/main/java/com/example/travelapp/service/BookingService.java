@@ -13,12 +13,12 @@ public class BookingService {
 	private final AuditLogService audit = new AuditLogService();
 
 	public List<Booking> getAllBookings() {
-		PermissionGuard.require("BOOKING_VIEW");
+		PermissionGuard.require();
 		return dao.findAll();
 	}
 
 	public boolean addBooking(Booking b) {
-		PermissionGuard.require("BOOKING_CREATE");
+		PermissionGuard.require();
 		boolean ok = dao.insert(b);
 		if (ok)
 			audit.log(SecurityContext.getCurrentUser().getId(), "CREATE", "Booking", b.getId(),
@@ -27,7 +27,7 @@ public class BookingService {
 	}
 
 	public boolean updateBooking(Booking b) {
-		PermissionGuard.require("BOOKING_EDIT");
+		PermissionGuard.require();
 		boolean ok = dao.update(b);
 		if (ok)
 			audit.log(SecurityContext.getCurrentUser().getId(), "UPDATE", "Booking", b.getId(),
@@ -36,7 +36,7 @@ public class BookingService {
 	}
 
 	public boolean deleteBooking(String id) {
-		PermissionGuard.require("BOOKING_CANCEL");
+		PermissionGuard.require();
 		boolean ok = dao.delete(id);
 		if (ok)
 			audit.log(SecurityContext.getCurrentUser().getId(), "DELETE", "Booking", id,
@@ -45,7 +45,7 @@ public class BookingService {
 	}
 
 	public List<Booking> search(String keyword, String status, BigDecimal min, BigDecimal max) {
-		PermissionGuard.require("BOOKING_VIEW");
+		PermissionGuard.require();
 		return dao.search(keyword, status, min, max);
 	}
 }

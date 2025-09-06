@@ -16,17 +16,17 @@ public class UserManagementService {
 	private final AuditLogService audit = new AuditLogService();
 
 	public List<User> getAllUsers() {
-		PermissionGuard.require("USER_MANAGE");
+		PermissionGuard.require();
 		return userDao.findAll();
 	}
 
 	public List<Role> getAllRoles() {
-		PermissionGuard.require("USER_MANAGE");
+		PermissionGuard.require();
 		return roleDao.findAll();
 	}
 
 	public boolean addUser(User u, Set<String> roleIds) {
-		PermissionGuard.require("USER_MANAGE");
+		PermissionGuard.require();
 		if (!userDao.insert(u)) {
 			return false;
 		}
@@ -44,7 +44,7 @@ public class UserManagementService {
 	}
 
 	public boolean updateUser(User u, Set<String> roleIds) {
-		PermissionGuard.require("USER_MANAGE");
+		PermissionGuard.require();
 		if (!userDao.update(u)) {
 			return false;
 		}
@@ -68,7 +68,7 @@ public class UserManagementService {
 	}
 
 	public boolean deleteUser(String id) {
-		PermissionGuard.require("USER_MANAGE");
+		PermissionGuard.require();
 		if (!deleteRoles(id)) {
 			return false;
 		}

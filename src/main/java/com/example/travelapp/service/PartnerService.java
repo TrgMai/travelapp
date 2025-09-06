@@ -11,7 +11,7 @@ public class PartnerService {
 	private final PartnerDao dao = new PartnerDao();
 
 	public List<Partner> getAllPartners() {
-		PermissionGuard.require("PARTNER_VIEW");
+		PermissionGuard.require();
 		try {
 			return dao.findAll();
 		} catch (SQLException e) {
@@ -20,7 +20,7 @@ public class PartnerService {
 	}
 
 	public Partner getById(String id) {
-		PermissionGuard.require("PARTNER_VIEW");
+		PermissionGuard.require();
 		try {
 			return dao.findById(id);
 		} catch (SQLException e) {

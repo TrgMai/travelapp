@@ -11,12 +11,12 @@ public class AllocationService {
 	private final AuditLogService audit = new AuditLogService();
 
 	public List<Allocation> getByBooking(String bookingId) {
-		PermissionGuard.require("BOOKING_VIEW");
+		PermissionGuard.require();
 		return dao.findByBooking(bookingId);
 	}
 
 	public boolean add(Allocation a) {
-		PermissionGuard.require("BOOKING_EDIT");
+		PermissionGuard.require();
 		boolean ok = dao.insert(a);
 		if (ok)
 			audit.log(null, "CREATE", "Allocation", a.getId(),
@@ -26,7 +26,7 @@ public class AllocationService {
 	}
 
 	public boolean update(Allocation a) {
-		PermissionGuard.require("BOOKING_EDIT");
+		PermissionGuard.require();
 		boolean ok = dao.update(a);
 		if (ok)
 			audit.log(null, "UPDATE", "Allocation", a.getId(),
@@ -36,7 +36,7 @@ public class AllocationService {
 	}
 
 	public boolean delete(String id) {
-		PermissionGuard.require("BOOKING_EDIT");
+		PermissionGuard.require();
 		boolean ok = dao.delete(id);
 		if (ok)
 			audit.log(null, "DELETE", "Allocation", id,

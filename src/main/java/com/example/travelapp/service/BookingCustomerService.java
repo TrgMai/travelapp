@@ -11,12 +11,12 @@ public class BookingCustomerService {
 	private final AuditLogService audit = new AuditLogService();
 
 	public List<BookingCustomer> getByBooking(String bookingId) {
-		PermissionGuard.require("BOOKING_VIEW");
+		PermissionGuard.require();
 		return dao.findByBooking(bookingId);
 	}
 
 	public boolean add(String bookingId, String customerId, String role) {
-		PermissionGuard.require("BOOKING_EDIT");
+		PermissionGuard.require();
 		boolean ok = dao.add(bookingId, customerId, role);
 		if (ok)
 			audit.log(null, "UPDATE", "BookingCustomer", bookingId,
@@ -26,7 +26,7 @@ public class BookingCustomerService {
 	}
 
 	public boolean remove(String bookingId, String customerId) {
-		PermissionGuard.require("BOOKING_EDIT");
+		PermissionGuard.require();
 		boolean ok = dao.remove(bookingId, customerId);
 		if (ok)
 			audit.log(null, "UPDATE", "BookingCustomer", bookingId,
@@ -36,7 +36,7 @@ public class BookingCustomerService {
 	}
 
 	public boolean updateRole(String bookingId, String customerId, String role) {
-		PermissionGuard.require("BOOKING_EDIT");
+		PermissionGuard.require();
 		boolean ok = dao.updateRole(bookingId, customerId, role);
 		if (ok)
 			audit.log(null, "UPDATE", "BookingCustomer", bookingId,
