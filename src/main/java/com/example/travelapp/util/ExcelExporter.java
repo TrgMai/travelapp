@@ -9,9 +9,6 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-/**
- * Utility to export data from a JTable to an Excel file.
- */
 public final class ExcelExporter {
     private ExcelExporter() {}
 

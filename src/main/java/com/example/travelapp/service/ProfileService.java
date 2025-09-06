@@ -68,7 +68,6 @@ public class ProfileService {
                 Image circle = ImageUtils.makeCircular(img, size);
                 return new ImageIcon(circle);
             } catch (IOException e) {
-                // ignore read error
             }
         }
         return null;

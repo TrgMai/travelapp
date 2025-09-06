@@ -183,7 +183,6 @@ public class ProfileDialog extends JDialog {
                 try {
                     service.saveAvatar(selectedImage);
                 } catch (Exception ex) {
-                    // ignore error
                 }
             }
             updated = true;

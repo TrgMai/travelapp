@@ -6,7 +6,6 @@ import java.awt.image.BufferedImage;
 
 public class ImageUtils {
     private ImageUtils() {
-        // utility class
     }
 
     public static Image makeCircular(Image image, int size) {
