@@ -51,10 +51,9 @@ public class ExpensesTableModel extends AbstractTableModel {
 		return switch (c) {
 		case 0 -> x.getCategory();
 		case 1 -> x.getAmount();
-		case 2 -> x.getSpentAt() == null ? "" :
-				x.getSpentAt().format(df);
+		case 2 -> x.getSpentAt() == null ? "" : x.getSpentAt().format(df);
 		case 3 -> x.getNote();
-			default -> "";
+		default -> "";
 		};
 	}
 }

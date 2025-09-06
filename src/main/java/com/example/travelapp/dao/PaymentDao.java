@@ -11,10 +11,10 @@ import java.util.List;
 public class PaymentDao extends BaseDao {
 
 	private static final String SQL_FIND_ALL = """
-	        SELECT id, booking_id, type, amount, paid_at, note
-	        FROM payments
-	        ORDER BY paid_at DESC
-	        """;
+			SELECT id, booking_id, type, amount, paid_at, note
+			FROM payments
+			ORDER BY paid_at DESC
+			""";
 
 	private static final String SQL_FIND_BY_ID = """
 			SELECT id, booking_id, type, amount, paid_at, note
@@ -53,9 +53,7 @@ public class PaymentDao extends BaseDao {
 
 	public List<Payment> findAll() {
 		List<Payment> list = new ArrayList<>();
-		try (Connection conn = getConnection();
-			        PreparedStatement ps = conn.prepareStatement(SQL_FIND_ALL);
-			        ResultSet rs = ps.executeQuery()) {
+		try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(SQL_FIND_ALL); ResultSet rs = ps.executeQuery()) {
 			while (rs.next()) {
 				Payment p = map(rs);
 				if (p.getPaidAt() == null) {
@@ -70,8 +68,7 @@ public class PaymentDao extends BaseDao {
 	}
 
 	public Payment findById(String id) {
-		try (Connection conn = getConnection();
-			        PreparedStatement ps = conn.prepareStatement(SQL_FIND_BY_ID)) {
+		try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(SQL_FIND_BY_ID)) {
 			ps.setString(1, id);
 			try (ResultSet rs = ps.executeQuery()) {
 				if (rs.next()) {
@@ -90,8 +87,7 @@ public class PaymentDao extends BaseDao {
 
 	public List<Payment> findByBooking(String bookingId) {
 		List<Payment> list = new ArrayList<>();
-		try (Connection conn = getConnection();
-			        PreparedStatement ps = conn.prepareStatement(SQL_FIND_BY_BOOKING)) {
+		try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(SQL_FIND_BY_BOOKING)) {
 			ps.setString(1, bookingId);
 			try (ResultSet rs = ps.executeQuery()) {
 				while (rs.next()) {
@@ -104,8 +100,7 @@ public class PaymentDao extends BaseDao {
 		return list;
 	}
 
-	public List<Payment> search(String bookingId, String type, LocalDateTime from, LocalDateTime to,
-	                            BigDecimal minAmount, BigDecimal maxAmount) {
+	public List<Payment> search(String bookingId, String type, LocalDateTime from, LocalDateTime to, BigDecimal minAmount, BigDecimal maxAmount) {
 		StringBuilder sql = new StringBuilder(SQL_SEARCH);
 		List<Object> params = new ArrayList<>();
 
@@ -136,8 +131,7 @@ public class PaymentDao extends BaseDao {
 		sql.append(" ORDER BY paid_at DESC");
 
 		List<Payment> list = new ArrayList<>();
-		try (Connection c = getConnection();
-			        PreparedStatement ps = c.prepareStatement(sql.toString())) {
+		try (Connection c = getConnection(); PreparedStatement ps = c.prepareStatement(sql.toString())) {
 			for (int i = 0; i < params.size(); i++) {
 				ps.setObject(i + 1, params.get(i));
 			}
@@ -153,8 +147,7 @@ public class PaymentDao extends BaseDao {
 	}
 
 	public boolean insert(Payment p) {
-		try (Connection conn = getConnection();
-			        PreparedStatement ps = conn.prepareStatement(SQL_INSERT)) {
+		try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(SQL_INSERT)) {
 			if (p.getId() != null) {
 				ps.setString(1, p.getId());
 			} else {
@@ -163,8 +156,7 @@ public class PaymentDao extends BaseDao {
 			ps.setString(2, p.getBookingId());
 			ps.setString(3, p.getType());
 			ps.setBigDecimal(4, p.getAmount());
-			ps.setTimestamp(5, p.getPaidAt() != null ? Timestamp.valueOf(p.getPaidAt())
-			                : new Timestamp(System.currentTimeMillis()));
+			ps.setTimestamp(5, p.getPaidAt() != null ? Timestamp.valueOf(p.getPaidAt()) : new Timestamp(System.currentTimeMillis()));
 			ps.setString(6, p.getNote());
 			return ps.executeUpdate() == 1;
 		} catch (SQLException e) {
@@ -174,13 +166,11 @@ public class PaymentDao extends BaseDao {
 	}
 
 	public boolean update(Payment p) {
-		try (Connection conn = getConnection();
-			        PreparedStatement ps = conn.prepareStatement(SQL_UPDATE)) {
+		try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(SQL_UPDATE)) {
 			ps.setString(1, p.getBookingId());
 			ps.setString(2, p.getType());
 			ps.setBigDecimal(3, p.getAmount());
-			ps.setTimestamp(4, p.getPaidAt() != null ? Timestamp.valueOf(p.getPaidAt())
-			                : new Timestamp(System.currentTimeMillis()));
+			ps.setTimestamp(4, p.getPaidAt() != null ? Timestamp.valueOf(p.getPaidAt()) : new Timestamp(System.currentTimeMillis()));
 			ps.setString(5, p.getNote());
 			ps.setString(6, p.getId());
 			return ps.executeUpdate() == 1;
@@ -191,8 +181,7 @@ public class PaymentDao extends BaseDao {
 	}
 
 	public boolean delete(String id) {
-		try (Connection conn = getConnection();
-			        PreparedStatement ps = conn.prepareStatement(SQL_DELETE)) {
+		try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(SQL_DELETE)) {
 			ps.setString(1, id);
 			return ps.executeUpdate() == 1;
 		} catch (SQLException e) {

@@ -52,10 +52,9 @@ public class InvoicesTableModel extends AbstractTableModel {
 		case 0 -> x.getNo();
 		case 1 -> x.getAmount();
 		case 2 -> x.getVat();
-		case 3 -> x.getIssuedAt() == null ? "" :
-				x.getIssuedAt().format(dt);
+		case 3 -> x.getIssuedAt() == null ? "" : x.getIssuedAt().format(dt);
 		case 4 -> x.getPdfPath();
-			default -> "";
+		default -> "";
 		};
 	}
 }

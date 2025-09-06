@@ -9,9 +9,9 @@ import java.util.List;
 
 public class PayableDao extends BaseDao {
 	private static final String SQL_FIND_BY_BOOKING = """
-	        SELECT *
-	        FROM payables
-	        WHERE booking_id=?
+			SELECT *
+			FROM payables
+			WHERE booking_id=?
 			ORDER BY due_date NULLS LAST, id
 			""";
 
@@ -33,8 +33,7 @@ public class PayableDao extends BaseDao {
 
 	public List<Payable> findByBooking(String bookingId) {
 		List<Payable> list = new ArrayList<>();
-		try (Connection c = getConnection();
-			        PreparedStatement ps = c.prepareStatement(SQL_FIND_BY_BOOKING)) {
+		try (Connection c = getConnection(); PreparedStatement ps = c.prepareStatement(SQL_FIND_BY_BOOKING)) {
 			ps.setString(1, bookingId);
 			try (ResultSet rs = ps.executeQuery()) {
 				while (rs.next()) {
@@ -49,8 +48,7 @@ public class PayableDao extends BaseDao {
 	}
 
 	public boolean insert(Payable p) {
-		try (Connection c = getConnection();
-			        PreparedStatement ps = c.prepareStatement(SQL_INSERT)) {
+		try (Connection c = getConnection(); PreparedStatement ps = c.prepareStatement(SQL_INSERT)) {
 			if (p.getId() != null) {
 				ps.setString(1, p.getId());
 			} else {
@@ -73,8 +71,7 @@ public class PayableDao extends BaseDao {
 	}
 
 	public boolean update(Payable p) {
-		try (Connection c = getConnection();
-			        PreparedStatement ps = c.prepareStatement(SQL_UPDATE)) {
+		try (Connection c = getConnection(); PreparedStatement ps = c.prepareStatement(SQL_UPDATE)) {
 			ps.setString(1, p.getPartnerId());
 			ps.setBigDecimal(2, p.getAmount());
 			if (p.getDueDate() != null) {
@@ -92,8 +89,7 @@ public class PayableDao extends BaseDao {
 	}
 
 	public boolean delete(String id) {
-		try (Connection c = getConnection();
-			        PreparedStatement ps = c.prepareStatement(SQL_DELETE)) {
+		try (Connection c = getConnection(); PreparedStatement ps = c.prepareStatement(SQL_DELETE)) {
 			ps.setString(1, id);
 			return ps.executeUpdate() > 0;
 		} catch (SQLException e) {

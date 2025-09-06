@@ -22,8 +22,7 @@ public class DataSourceProvider {
 	public static synchronized DataSource getDataSource() {
 		if (dataSource == null) {
 			Properties props = new Properties();
-			try (InputStream in = DataSourceProvider.class.getClassLoader()
-				                      .getResourceAsStream("application.properties")) {
+			try (InputStream in = DataSourceProvider.class.getClassLoader().getResourceAsStream("application.properties")) {
 				if (in != null) {
 					props.load(in);
 				}

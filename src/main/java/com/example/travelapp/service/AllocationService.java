@@ -19,9 +19,7 @@ public class AllocationService {
 		PermissionGuard.require();
 		boolean ok = dao.insert(a);
 		if (ok)
-			audit.log(null, "CREATE", "Allocation", a.getId(),
-			          "{\"action\":\"create_allocation\",\"allocationId\":\"" + a.getId() + "\",\"bookingId\":\""
-			          + a.getBookingId() + "\",\"ServiceId\":\"" + a.getServiceId() + "\"}");
+			audit.log(null, "CREATE", "Allocation", a.getId(), "{\"action\":\"create_allocation\",\"allocationId\":\"" + a.getId() + "\",\"bookingId\":\"" + a.getBookingId() + "\",\"ServiceId\":\"" + a.getServiceId() + "\"}");
 		return ok;
 	}
 
@@ -29,9 +27,7 @@ public class AllocationService {
 		PermissionGuard.require();
 		boolean ok = dao.update(a);
 		if (ok)
-			audit.log(null, "UPDATE", "Allocation", a.getId(),
-			          "{\"action\":\"update_allocation\",\"allocationId\":\"" + a.getId() + "\",\"bookingId\":\""
-			          + a.getBookingId() + "\",\"ServiceId\":\"" + a.getServiceId() + "\"}");
+			audit.log(null, "UPDATE", "Allocation", a.getId(), "{\"action\":\"update_allocation\",\"allocationId\":\"" + a.getId() + "\",\"bookingId\":\"" + a.getBookingId() + "\",\"ServiceId\":\"" + a.getServiceId() + "\"}");
 		return ok;
 	}
 
@@ -39,8 +35,7 @@ public class AllocationService {
 		PermissionGuard.require();
 		boolean ok = dao.delete(id);
 		if (ok)
-			audit.log(null, "DELETE", "Allocation", id,
-			          "{\"action\":\"delete_allocation\",\"allocationId\":\"" + id + "\"}");
+			audit.log(null, "DELETE", "Allocation", id, "{\"action\":\"delete_allocation\",\"allocationId\":\"" + id + "\"}");
 		return ok;
 	}
 }

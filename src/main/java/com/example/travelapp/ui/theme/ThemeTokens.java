@@ -89,12 +89,7 @@ public final class ThemeTokens {
 	}
 
 	public static Color[] CHART_PALETTE() {
-		return new Color[] {
-		           PRIMARY(), SUCCESS(), WARNING(), DANGER(),
-		           tint(PRIMARY(), .25f), tint(SUCCESS(), .25f),
-		           shade(WARNING(), .15f), shade(PRIMARY(), .15f),
-		           tint(DANGER(), .25f), shade(SUCCESS(), .15f)
-		       };
+		return new Color[] { PRIMARY(), SUCCESS(), WARNING(), DANGER(), tint(PRIMARY(), .25f), tint(SUCCESS(), .25f), shade(WARNING(), .15f), shade(PRIMARY(), .15f), tint(DANGER(), .25f), shade(SUCCESS(), .15f) };
 	}
 
 	private static Color tint(Color c, float f) {

@@ -27,8 +27,7 @@ public class TopBar extends JPanel {
 		rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.X_AXIS));
 
 		userLabel = new JLabel();
-		userLabel.setFont(
-		    new Font(ThemeTokens.FONT_FAMILY, ThemeTokens.FONT_WEIGHT_REGULAR, ThemeTokens.FONT_SIZE_BASE));
+		userLabel.setFont(new Font(ThemeTokens.FONT_FAMILY, ThemeTokens.FONT_WEIGHT_REGULAR, ThemeTokens.FONT_SIZE_BASE));
 		userLabel.setForeground(ThemeTokens.TEXT());
 
 		rightPanel.add(userLabel);

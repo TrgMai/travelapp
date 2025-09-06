@@ -9,10 +9,10 @@ import java.util.List;
 public class ServiceDao extends BaseDao {
 
 	private static final String SQL_FIND_ALL = """
-	        SELECT id, partner_id, type, name, unit_price, capacity, note
-	        FROM services
-	        ORDER BY name ASC
-	        """;
+			SELECT id, partner_id, type, name, unit_price, capacity, note
+			FROM services
+			ORDER BY name ASC
+			""";
 
 	private static final String SQL_FIND_BY_ID = """
 			SELECT id, partner_id, type, name, unit_price, capacity, note
@@ -21,9 +21,7 @@ public class ServiceDao extends BaseDao {
 			""";
 
 	public List<Service> findAll() throws SQLException {
-		try (Connection c = getConnection();
-			        PreparedStatement ps = c.prepareStatement(SQL_FIND_ALL);
-			        ResultSet rs = ps.executeQuery()) {
+		try (Connection c = getConnection(); PreparedStatement ps = c.prepareStatement(SQL_FIND_ALL); ResultSet rs = ps.executeQuery()) {
 			List<Service> out = new ArrayList<>();
 			while (rs.next()) {
 				out.add(map(rs));
@@ -33,8 +31,7 @@ public class ServiceDao extends BaseDao {
 	}
 
 	public Service findById(String id) throws SQLException {
-		try (Connection c = getConnection();
-			        PreparedStatement ps = c.prepareStatement(SQL_FIND_BY_ID)) {
+		try (Connection c = getConnection(); PreparedStatement ps = c.prepareStatement(SQL_FIND_BY_ID)) {
 			ps.setString(1, id);
 			try (ResultSet rs = ps.executeQuery()) {
 				return rs.next() ? map(rs) : null;

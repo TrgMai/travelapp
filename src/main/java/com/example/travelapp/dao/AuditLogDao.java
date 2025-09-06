@@ -10,9 +10,9 @@ import java.util.List;
 
 public class AuditLogDao extends BaseDao {
 	private static final String SQL_INSERT = """
-	        INSERT INTO audit_logs (id, user_id, action, entity, entity_id, at, meta)
-	        VALUES (?, ?, ?, ?, ?, ?, CAST(? AS jsonb))
-	        """;
+			INSERT INTO audit_logs (id, user_id, action, entity, entity_id, at, meta)
+			VALUES (?, ?, ?, ?, ?, ?, CAST(? AS jsonb))
+			""";
 
 	private static final String SQL_LIST_RECENT = """
 			SELECT id, user_id, action, entity, entity_id, at, meta
@@ -22,8 +22,7 @@ public class AuditLogDao extends BaseDao {
 			""";
 
 	public boolean insert(AuditLog log) {
-		try (Connection conn = getConnection();
-			        PreparedStatement ps = conn.prepareStatement(SQL_INSERT)) {
+		try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(SQL_INSERT)) {
 
 			if (log.getId() != null) {
 				ps.setString(1, log.getId());
@@ -53,8 +52,7 @@ public class AuditLogDao extends BaseDao {
 
 	public List<AuditLog> listRecent(int limit) {
 		List<AuditLog> out = new ArrayList<>();
-		try (Connection conn = getConnection();
-			        PreparedStatement ps = conn.prepareStatement(SQL_LIST_RECENT)) {
+		try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(SQL_LIST_RECENT)) {
 
 			ps.setInt(1, Math.max(1, limit));
 			try (ResultSet rs = ps.executeQuery()) {

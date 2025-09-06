@@ -25,8 +25,7 @@ public class TourService {
 		PermissionGuard.require();
 		boolean ok = dao.insert(t);
 		if (ok)
-			audit.log(SecurityContext.getCurrentUser().getId(), "CREATE", "Tour", t.getId(),
-			          "{\"action\":\"create_tour\", \"tourId\":\"" + t.getId() + "\"}");
+			audit.log(SecurityContext.getCurrentUser().getId(), "CREATE", "Tour", t.getId(), "{\"action\":\"create_tour\", \"tourId\":\"" + t.getId() + "\"}");
 		return ok;
 	}
 
@@ -34,8 +33,7 @@ public class TourService {
 		PermissionGuard.require();
 		boolean ok = dao.update(t);
 		if (ok)
-			audit.log(SecurityContext.getCurrentUser().getId(), "UPDATE", "Tour", t.getId(),
-			          "{\"action\":\"update_tour\", \"tourId\":\"" + t.getId() + "\"}");
+			audit.log(SecurityContext.getCurrentUser().getId(), "UPDATE", "Tour", t.getId(), "{\"action\":\"update_tour\", \"tourId\":\"" + t.getId() + "\"}");
 		return ok;
 	}
 
@@ -43,8 +41,7 @@ public class TourService {
 		PermissionGuard.require();
 		boolean ok = dao.delete(id);
 		if (ok)
-			audit.log(SecurityContext.getCurrentUser().getId(), "DELETE", "Tour", id,
-			          "{\"action\":\"delete_tour\", \"tourId\":\"" + id + "\"}");
+			audit.log(SecurityContext.getCurrentUser().getId(), "DELETE", "Tour", id, "{\"action\":\"delete_tour\", \"tourId\":\"" + id + "\"}");
 		return ok;
 	}
 

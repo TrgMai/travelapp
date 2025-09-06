@@ -9,9 +9,9 @@ import java.util.List;
 
 public class AllocationDao extends BaseDao {
 	private static final String SQL_FIND_BY_BOOKING = """
-	        SELECT *
-	        FROM allocations
-	        WHERE booking_id=?
+			SELECT *
+			FROM allocations
+			WHERE booking_id=?
 			ORDER BY day_no, id
 			""";
 
@@ -33,8 +33,7 @@ public class AllocationDao extends BaseDao {
 
 	public List<Allocation> findByBooking(String bookingId) {
 		List<Allocation> list = new ArrayList<>();
-		try (Connection c = getConnection();
-			        PreparedStatement ps = c.prepareStatement(SQL_FIND_BY_BOOKING)) {
+		try (Connection c = getConnection(); PreparedStatement ps = c.prepareStatement(SQL_FIND_BY_BOOKING)) {
 			ps.setString(1, bookingId);
 			try (ResultSet rs = ps.executeQuery()) {
 				while (rs.next()) {
@@ -49,8 +48,7 @@ public class AllocationDao extends BaseDao {
 	}
 
 	public boolean insert(Allocation a) {
-		try (Connection c = getConnection();
-			        PreparedStatement ps = c.prepareStatement(SQL_INSERT)) {
+		try (Connection c = getConnection(); PreparedStatement ps = c.prepareStatement(SQL_INSERT)) {
 			if (a.getId() != null) {
 				ps.setString(1, a.getId());
 			} else {
@@ -72,8 +70,7 @@ public class AllocationDao extends BaseDao {
 	}
 
 	public boolean update(Allocation a) {
-		try (Connection c = getConnection();
-			        PreparedStatement ps = c.prepareStatement(SQL_UPDATE)) {
+		try (Connection c = getConnection(); PreparedStatement ps = c.prepareStatement(SQL_UPDATE)) {
 			if (a.getDayNo() != null) {
 				ps.setInt(1, a.getDayNo());
 			} else {
@@ -90,8 +87,7 @@ public class AllocationDao extends BaseDao {
 	}
 
 	public boolean delete(String id) {
-		try (Connection c = getConnection();
-			        PreparedStatement ps = c.prepareStatement(SQL_DELETE)) {
+		try (Connection c = getConnection(); PreparedStatement ps = c.prepareStatement(SQL_DELETE)) {
 			ps.setString(1, id);
 			return ps.executeUpdate() > 0;
 		} catch (SQLException e) {

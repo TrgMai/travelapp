@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
-
 public class Tour {
 	private String id;
 	private String name;
@@ -20,9 +19,7 @@ public class Tour {
 	public Tour() {
 	}
 
-	public Tour(String id, String name, String route, int days,
-	            BigDecimal basePrice, String description, String coverImageUrl,
-	            LocalDateTime createdAt) {
+	public Tour(String id, String name, String route, int days, BigDecimal basePrice, String description, String coverImageUrl, LocalDateTime createdAt) {
 		this.id = id;
 		this.name = name;
 		this.route = route;

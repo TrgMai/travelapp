@@ -14,16 +14,11 @@ import java.util.Map;
 
 public class BookingDetailsTab extends JPanel {
 	private final JComboBox<Tour> tourCombo;
-	private final JComboBox<String> statusCombo = new JComboBox<>(
-	    new String[] { "REQUESTED", "CONFIRMED", "COMPLETED", "CANCELED" });
+	private final JComboBox<String> statusCombo = new JComboBox<>(new String[] { "REQUESTED", "CONFIRMED", "COMPLETED", "CANCELED" });
 	private final MoneyField priceField = new MoneyField();
 	private final JTextArea noteArea = new JTextArea(3, 20);
 
-	private static final Map<String, String> VI_STATUS = Map.of(
-	            "REQUESTED", "Đang yêu cầu",
-	            "CONFIRMED", "Đã xác nhận",
-	            "COMPLETED", "Hoàn thành",
-	            "CANCELED", "Đã hủy");
+	private static final Map<String, String> VI_STATUS = Map.of("REQUESTED", "Đang yêu cầu", "CONFIRMED", "Đã xác nhận", "COMPLETED", "Hoàn thành", "CANCELED", "Đã hủy");
 
 	public BookingDetailsTab(List<Tour> tours) {
 		setLayout(new BorderLayout(ThemeTokens.SPACE_12, ThemeTokens.SPACE_12));
@@ -32,8 +27,7 @@ public class BookingDetailsTab extends JPanel {
 		tourCombo = new JComboBox<>(tours.toArray(new Tour[0]));
 		tourCombo.setRenderer(new DefaultListCellRenderer() {
 			@Override
-			public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected,
-			        boolean cellHasFocus) {
+			public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
 				super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 				if (value instanceof Tour t) {
 					setText(t.getId() + " - " + t.getName());
@@ -45,8 +39,7 @@ public class BookingDetailsTab extends JPanel {
 
 		statusCombo.setRenderer(new DefaultListCellRenderer() {
 			@Override
-			public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected,
-			        boolean cellHasFocus) {
+			public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
 				super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 				if (value instanceof String s) {
 					setText(VI_STATUS.getOrDefault(s, s));
@@ -85,8 +78,7 @@ public class BookingDetailsTab extends JPanel {
 
 		JPanel card = ThemeComponents.cardPanel();
 		card.setLayout(new BorderLayout());
-		card.setBorder(new EmptyBorder(ThemeTokens.SPACE_12, ThemeTokens.SPACE_12, ThemeTokens.SPACE_12,
-		                               ThemeTokens.SPACE_12));
+		card.setBorder(new EmptyBorder(ThemeTokens.SPACE_12, ThemeTokens.SPACE_12, ThemeTokens.SPACE_12, ThemeTokens.SPACE_12));
 		card.add(form, BorderLayout.CENTER);
 
 		add(card, BorderLayout.CENTER);
@@ -120,8 +112,7 @@ public class BookingDetailsTab extends JPanel {
 
 	public boolean validateInputs(Component parent) {
 		if (!(tourCombo.getSelectedItem() instanceof Tour)) {
-			JOptionPane.showMessageDialog(parent, "Vui lòng chọn chuyến đi", "Kiểm tra dữ liệu",
-			                              JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(parent, "Vui lòng chọn chuyến đi", "Kiểm tra dữ liệu", JOptionPane.WARNING_MESSAGE);
 			return false;
 		}
 		return true;

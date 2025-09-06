@@ -19,10 +19,10 @@ import java.awt.*;
 import java.util.List;
 
 public class BookingEditorDialog extends JDialog {
-        private final BookingDetailsTab detailsTab;
-        private PaymentsTab paymentsTab;
-        private boolean ok = false;
-        private final Booking existing;
+	private final BookingDetailsTab detailsTab;
+	private PaymentsTab paymentsTab;
+	private boolean ok = false;
+	private final Booking existing;
 
 	public BookingEditorDialog(Booking existing) {
 		this.existing = existing;
@@ -41,28 +41,28 @@ public class BookingEditorDialog extends JDialog {
 			tours = List.of();
 		}
 
-                detailsTab = new BookingDetailsTab(tours);
+		detailsTab = new BookingDetailsTab(tours);
 
-                JTabbedPane tabs = new JTabbedPane();
-                tabs.setBackground(ThemeTokens.SURFACE());
-                tabs.setForeground(ThemeTokens.TEXT());
-                tabs.addTab("Thông tin chung", detailsTab);
+		JTabbedPane tabs = new JTabbedPane();
+		tabs.setBackground(ThemeTokens.SURFACE());
+		tabs.setForeground(ThemeTokens.TEXT());
+		tabs.addTab("Thông tin chung", detailsTab);
 
-                if (existing != null && existing.getId() != null) {
-                        String bookingId = existing.getId();
-                        if (SecurityContext.hasPermission("BOOKING_VIEW")) {
-                                tabs.addTab("Khách hàng", new BookingCustomersTab(bookingId));
-                                tabs.addTab("Hóa đơn", new InvoicesTab(bookingId));
-                                tabs.addTab("Chi phí", new ExpensesTab(bookingId));
-                                tabs.addTab("Công nợ phải trả", new PayablesTab(bookingId));
-                                tabs.addTab("Phân bổ dịch vụ", new AllocationsTab(bookingId));
-                        }
-                        if (SecurityContext.hasPermission("PAYMENT_VIEW")) {
-                                paymentsTab = new PaymentsTab(bookingId);
-                                tabs.addTab("Thanh toán", paymentsTab);
-                        }
-                }
-                add(tabs, BorderLayout.CENTER);
+		if (existing != null && existing.getId() != null) {
+			String bookingId = existing.getId();
+			if (SecurityContext.hasPermission("BOOKING_VIEW")) {
+				tabs.addTab("Khách hàng", new BookingCustomersTab(bookingId));
+				tabs.addTab("Hóa đơn", new InvoicesTab(bookingId));
+				tabs.addTab("Chi phí", new ExpensesTab(bookingId));
+				tabs.addTab("Công nợ phải trả", new PayablesTab(bookingId));
+				tabs.addTab("Phân bổ dịch vụ", new AllocationsTab(bookingId));
+			}
+			if (SecurityContext.hasPermission("PAYMENT_VIEW")) {
+				paymentsTab = new PaymentsTab(bookingId);
+				tabs.addTab("Thanh toán", paymentsTab);
+			}
+		}
+		add(tabs, BorderLayout.CENTER);
 
 		JPanel actions = new JPanel(new FlowLayout(FlowLayout.RIGHT, ThemeTokens.SPACE_8, ThemeTokens.SPACE_12));
 		actions.setOpaque(true);

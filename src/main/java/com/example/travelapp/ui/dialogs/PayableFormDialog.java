@@ -27,11 +27,7 @@ public class PayableFormDialog extends JDialog {
 	private final UtilDateModel dateModel = new UtilDateModel();
 	private final JDatePickerImpl datePicker;
 
-	public JComboBox<StatusItem> cbStatus = new JComboBox<>(new StatusItem[] {
-	            new StatusItem("PENDING", "Chờ duyệt"),
-	            new StatusItem("APPROVED", "Đã duyệt"),
-	            new StatusItem("PAID", "Đã thanh toán")
-	        });
+	public JComboBox<StatusItem> cbStatus = new JComboBox<>(new StatusItem[] { new StatusItem("PENDING", "Chờ duyệt"), new StatusItem("APPROVED", "Đã duyệt"), new StatusItem("PAID", "Đã thanh toán") });
 
 	public boolean ok;
 
@@ -76,8 +72,7 @@ public class PayableFormDialog extends JDialog {
 		JPanel card = ThemeComponents.cardPanel();
 		card.setLayout(new BorderLayout());
 		card.add(form, BorderLayout.CENTER);
-		card.setBorder(new EmptyBorder(ThemeTokens.SPACE_12, ThemeTokens.SPACE_12, ThemeTokens.SPACE_12,
-		                               ThemeTokens.SPACE_12));
+		card.setBorder(new EmptyBorder(ThemeTokens.SPACE_12, ThemeTokens.SPACE_12, ThemeTokens.SPACE_12, ThemeTokens.SPACE_12));
 		add(card, BorderLayout.CENTER);
 
 		JPanel actions = new JPanel(new FlowLayout(FlowLayout.RIGHT, ThemeTokens.SPACE_8, ThemeTokens.SPACE_12));

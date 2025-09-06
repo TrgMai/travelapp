@@ -32,8 +32,7 @@ public class PaymentService {
 		PermissionGuard.require();
 		boolean ok = dao.insert(p);
 		if (ok)
-			audit.log(SecurityContext.getCurrentUser().getId(), "CREATE", "Payment", p.getId(),
-			          "{\"action\":\"create_payment\", \"paymentId\":\"" + p.getId() + "\"}");
+			audit.log(SecurityContext.getCurrentUser().getId(), "CREATE", "Payment", p.getId(), "{\"action\":\"create_payment\", \"paymentId\":\"" + p.getId() + "\"}");
 		return ok;
 	}
 
@@ -41,8 +40,7 @@ public class PaymentService {
 		PermissionGuard.require();
 		boolean ok = dao.update(p);
 		if (ok)
-			audit.log(SecurityContext.getCurrentUser().getId(), "UPDATE", "Payment", p.getId(),
-			          "{\"action\":\"update_payment\", \"paymentId\":\"" + p.getId() + "\"}");
+			audit.log(SecurityContext.getCurrentUser().getId(), "UPDATE", "Payment", p.getId(), "{\"action\":\"update_payment\", \"paymentId\":\"" + p.getId() + "\"}");
 		return ok;
 	}
 
@@ -50,8 +48,7 @@ public class PaymentService {
 		PermissionGuard.require();
 		boolean ok = dao.delete(id);
 		if (ok)
-			audit.log(SecurityContext.getCurrentUser().getId(), "DELETE", "Payment", id,
-			          "{\"action\":\"delete_payment\", \"paymentId\":\"" + id + "\"}");
+			audit.log(SecurityContext.getCurrentUser().getId(), "DELETE", "Payment", id, "{\"action\":\"delete_payment\", \"paymentId\":\"" + id + "\"}");
 		return ok;
 	}
 

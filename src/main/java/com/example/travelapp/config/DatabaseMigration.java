@@ -11,12 +11,7 @@ public class DatabaseMigration {
 
 	public static void migrate() {
 		DataSource dataSource = DataSourceProvider.getDataSource();
-		Flyway flyway = Flyway.configure()
-		                .dataSource(dataSource)
-		                .locations("classpath:db/migration")
-		                .baselineOnMigrate(true)
-		                .baselineVersion("0")
-		                .load();
+		Flyway flyway = Flyway.configure().dataSource(dataSource).locations("classpath:db/migration").baselineOnMigrate(true).baselineVersion("0").load();
 		LOGGER.info("Applying database migrations...");
 		flyway.migrate();
 		LOGGER.info("Database migration completed.");

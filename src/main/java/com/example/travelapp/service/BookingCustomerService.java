@@ -19,9 +19,7 @@ public class BookingCustomerService {
 		PermissionGuard.require();
 		boolean ok = dao.add(bookingId, customerId, role);
 		if (ok)
-			audit.log(null, "UPDATE", "BookingCustomer", bookingId,
-			          "{\"action\":\"add_booking_customer\",\"bookingId\":\"" + bookingId + "\",\"customerId\":\""
-			          + customerId + "\",\"role\":\"" + role + "\"}");
+			audit.log(null, "UPDATE", "BookingCustomer", bookingId, "{\"action\":\"add_booking_customer\",\"bookingId\":\"" + bookingId + "\",\"customerId\":\"" + customerId + "\",\"role\":\"" + role + "\"}");
 		return ok;
 	}
 
@@ -29,9 +27,7 @@ public class BookingCustomerService {
 		PermissionGuard.require();
 		boolean ok = dao.remove(bookingId, customerId);
 		if (ok)
-			audit.log(null, "UPDATE", "BookingCustomer", bookingId,
-			          "{\"action\":\"remove_booking_customer\",\"bookingId\":\"" + bookingId + "\",\"customerId\":\""
-			          + customerId + "\"}");
+			audit.log(null, "UPDATE", "BookingCustomer", bookingId, "{\"action\":\"remove_booking_customer\",\"bookingId\":\"" + bookingId + "\",\"customerId\":\"" + customerId + "\"}");
 		return ok;
 	}
 
@@ -39,9 +35,7 @@ public class BookingCustomerService {
 		PermissionGuard.require();
 		boolean ok = dao.updateRole(bookingId, customerId, role);
 		if (ok)
-			audit.log(null, "UPDATE", "BookingCustomer", bookingId,
-			          "{\"action\":\"update_booking_customer_role\",\"bookingId\":\"" + bookingId + "\",\"customerId\":\""
-			          + customerId + "\",\"role\":\"" + role + "\"}");
+			audit.log(null, "UPDATE", "BookingCustomer", bookingId, "{\"action\":\"update_booking_customer_role\",\"bookingId\":\"" + bookingId + "\",\"customerId\":\"" + customerId + "\",\"role\":\"" + role + "\"}");
 		return ok;
 	}
 }

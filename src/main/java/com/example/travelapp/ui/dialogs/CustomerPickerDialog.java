@@ -30,8 +30,7 @@ public class CustomerPickerDialog extends JDialog {
 		getContentPane().setBackground(ThemeTokens.SURFACE());
 
 		JPanel top = new JPanel(new BorderLayout(ThemeTokens.SPACE_8, ThemeTokens.SPACE_8));
-		top.setBorder(new EmptyBorder(ThemeTokens.SPACE_12, ThemeTokens.SPACE_12, ThemeTokens.SPACE_12,
-		                              ThemeTokens.SPACE_12));
+		top.setBorder(new EmptyBorder(ThemeTokens.SPACE_12, ThemeTokens.SPACE_12, ThemeTokens.SPACE_12, ThemeTokens.SPACE_12));
 		top.setOpaque(true);
 		top.setBackground(ThemeTokens.SURFACE());
 		JLabel lblSearch = new JLabel("Tìm kiếm");
@@ -49,8 +48,7 @@ public class CustomerPickerDialog extends JDialog {
 			public Component getListCellRendererComponent(JList<?> l, Object v, int i, boolean sel, boolean focus) {
 				Component c = super.getListCellRendererComponent(l, v, i, sel, focus);
 				if (v instanceof Customer cust) {
-					setText(cust.getId() + " - " + cust.getFullName()
-					        + (cust.getPhone() == null ? "" : " (" + cust.getPhone() + ")"));
+					setText(cust.getId() + " - " + cust.getFullName() + (cust.getPhone() == null ? "" : " (" + cust.getPhone() + ")"));
 				}
 				setForeground(sel ? UIManager.getColor("Component.selectionForeground") : ThemeTokens.TEXT());
 				setBackground(sel ? UIManager.getColor("Component.selectionBackground") : ThemeTokens.SURFACE());
@@ -111,8 +109,7 @@ public class CustomerPickerDialog extends JDialog {
 		String kw = txtSearch.getText().trim().toLowerCase(Locale.ROOT);
 		model.clear();
 		for (Customer c : svc.getAllCustomers()) {
-			String hay = (c.getId() + " " + c.getFullName() + " " + c.getPhone() + " " + c.getEmail())
-			             .toLowerCase(Locale.ROOT);
+			String hay = (c.getId() + " " + c.getFullName() + " " + c.getPhone() + " " + c.getEmail()).toLowerCase(Locale.ROOT);
 			if (kw.isEmpty() || hay.contains(kw)) {
 				model.addElement(c);
 			}

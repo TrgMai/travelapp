@@ -84,8 +84,7 @@ public class InvoiceFormDialog extends JDialog {
 		JPanel card = ThemeComponents.cardPanel();
 		card.setLayout(new BorderLayout());
 		card.add(form, BorderLayout.CENTER);
-		card.setBorder(new EmptyBorder(ThemeTokens.SPACE_12, ThemeTokens.SPACE_12, ThemeTokens.SPACE_12,
-		                               ThemeTokens.SPACE_12));
+		card.setBorder(new EmptyBorder(ThemeTokens.SPACE_12, ThemeTokens.SPACE_12, ThemeTokens.SPACE_12, ThemeTokens.SPACE_12));
 		add(card, BorderLayout.CENTER);
 
 		JPanel actions = new JPanel(new FlowLayout(FlowLayout.RIGHT, ThemeTokens.SPACE_8, ThemeTokens.SPACE_12));

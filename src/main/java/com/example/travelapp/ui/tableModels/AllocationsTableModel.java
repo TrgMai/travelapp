@@ -44,7 +44,7 @@ public class AllocationsTableModel extends AbstractTableModel {
 		case 0 -> x.getDayNo();
 		case 1 -> x.getServiceId();
 		case 2 -> x.getDetailJson();
-			default -> "";
+		default -> "";
 		};
 	}
 }

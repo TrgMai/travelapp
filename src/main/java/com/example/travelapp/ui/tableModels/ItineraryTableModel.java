@@ -82,7 +82,7 @@ public class ItineraryTableModel extends AbstractTableModel {
 		case 2 -> x.place;
 		case 3 -> x.activity;
 		case 4 -> x.note;
-			default -> null;
+		default -> null;
 		};
 	}
 

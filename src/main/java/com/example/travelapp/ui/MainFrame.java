@@ -17,17 +17,17 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class MainFrame extends JFrame {
-        private final CardLayout cardLayout = new CardLayout();
-        private final JPanel centerPanel = new JPanel(cardLayout);
-        private final Map<String, JPanel> panelRegistry = new LinkedHashMap<>();
+	private final CardLayout cardLayout = new CardLayout();
+	private final JPanel centerPanel = new JPanel(cardLayout);
+	private final Map<String, JPanel> panelRegistry = new LinkedHashMap<>();
 
-        private final JLabel headerTitle = new JLabel("Tổng quan");
-        private final ButtonGroup navGroup = new ButtonGroup();
-        private final JPanel navContainer = new JPanel();
-        private JLabel avatarLabel;
-        private JLabel nameLabel;
-        private JLabel roleLabel;
-        private JPanel profilePanel;
+	private final JLabel headerTitle = new JLabel("Tổng quan");
+	private final ButtonGroup navGroup = new ButtonGroup();
+	private final JPanel navContainer = new JPanel();
+	private JLabel avatarLabel;
+	private JLabel nameLabel;
+	private JLabel roleLabel;
+	private JPanel profilePanel;
 
 	public MainFrame() {
 		super("Hệ thống quản lý du lịch");
@@ -44,8 +44,7 @@ public class MainFrame extends JFrame {
 
 		JPanel content = new JPanel(new BorderLayout());
 		content.setOpaque(false);
-		content.setBorder(new EmptyBorder(ThemeTokens.SPACE_20, ThemeTokens.SPACE_20, ThemeTokens.SPACE_20,
-		                                  ThemeTokens.SPACE_20));
+		content.setBorder(new EmptyBorder(ThemeTokens.SPACE_20, ThemeTokens.SPACE_20, ThemeTokens.SPACE_20, ThemeTokens.SPACE_20));
 		root.add(content, BorderLayout.CENTER);
 
 		JPanel header = new JPanel(new BorderLayout());
@@ -58,10 +57,7 @@ public class MainFrame extends JFrame {
 
 		JPanel contentCard = new JPanel(new BorderLayout());
 		contentCard.setBackground(ThemeTokens.SURFACE());
-		contentCard.setBorder(BorderFactory.createCompoundBorder(
-		                          new LineBorder(ThemeTokens.BORDER(), 1, false),
-		                          new EmptyBorder(ThemeTokens.SPACE_16, ThemeTokens.SPACE_16, ThemeTokens.SPACE_16,
-		                                  ThemeTokens.SPACE_16)));
+		contentCard.setBorder(BorderFactory.createCompoundBorder(new LineBorder(ThemeTokens.BORDER(), 1, false), new EmptyBorder(ThemeTokens.SPACE_16, ThemeTokens.SPACE_16, ThemeTokens.SPACE_16, ThemeTokens.SPACE_16)));
 		content.add(contentCard, BorderLayout.CENTER);
 
 		centerPanel.setOpaque(false);
@@ -81,9 +77,9 @@ public class MainFrame extends JFrame {
 		if (SecurityContext.hasPermission("BOOKING_VIEW")) {
 			addNavItem("Đặt chỗ", BootstrapIcons.CALENDAR_CHECK, null);
 		}
-                if (SecurityContext.hasPermission("PAYMENT_VIEW")) {
-                        addNavItem("Thanh toán", BootstrapIcons.CREDIT_CARD, null);
-                }
+		if (SecurityContext.hasPermission("PAYMENT_VIEW")) {
+			addNavItem("Thanh toán", BootstrapIcons.CREDIT_CARD, null);
+		}
 		if (SecurityContext.hasPermission("USER_MANAGE")) {
 			addNavItem("Quản trị", BootstrapIcons.GEAR, null);
 		}
@@ -99,8 +95,7 @@ public class MainFrame extends JFrame {
 		JPanel sidebar = new JPanel(new BorderLayout());
 		sidebar.setPreferredSize(new Dimension(280, 0));
 		sidebar.setBackground(ThemeTokens.SURFACE());
-		sidebar.setBorder(new EmptyBorder(ThemeTokens.SPACE_20, ThemeTokens.SPACE_16, ThemeTokens.SPACE_20,
-		                                  ThemeTokens.SPACE_16));
+		sidebar.setBorder(new EmptyBorder(ThemeTokens.SPACE_20, ThemeTokens.SPACE_16, ThemeTokens.SPACE_20, ThemeTokens.SPACE_16));
 
 		JPanel brand = new JPanel(new FlowLayout(FlowLayout.LEFT, ThemeTokens.SPACE_8, 0));
 		brand.setOpaque(true);
@@ -155,9 +150,7 @@ public class MainFrame extends JFrame {
 		navWrapper.setBackground(ThemeTokens.SURFACE());
 		navWrapper.add(navContainer, BorderLayout.NORTH);
 
-		JScrollPane sp = new JScrollPane(navWrapper,
-		                                 ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
-		                                 ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		JScrollPane sp = new JScrollPane(navWrapper, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		sp.setBorder(BorderFactory.createEmptyBorder());
 		sp.getViewport().setOpaque(true);
 		sp.getViewport().setBackground(ThemeTokens.SURFACE());
@@ -166,60 +159,57 @@ public class MainFrame extends JFrame {
 		return sp;
 	}
 
-        private JPanel buildProfile() {
-                profilePanel = new JPanel(new BorderLayout());
-                profilePanel.setOpaque(false);
-                profilePanel.setBorder(new EmptyBorder(ThemeTokens.SPACE_12, 0, ThemeTokens.SPACE_12, 0));
+	private JPanel buildProfile() {
+		profilePanel = new JPanel(new BorderLayout());
+		profilePanel.setOpaque(false);
+		profilePanel.setBorder(new EmptyBorder(ThemeTokens.SPACE_12, 0, ThemeTokens.SPACE_12, 0));
 
-                avatarLabel = new JLabel();
-                avatarLabel.setHorizontalAlignment(SwingConstants.CENTER);
-                profilePanel.add(avatarLabel, BorderLayout.NORTH);
+		avatarLabel = new JLabel();
+		avatarLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		profilePanel.add(avatarLabel, BorderLayout.NORTH);
 
-                JPanel info = new JPanel();
-                info.setOpaque(false);
-                info.setLayout(new BoxLayout(info, BoxLayout.Y_AXIS));
+		JPanel info = new JPanel();
+		info.setOpaque(false);
+		info.setLayout(new BoxLayout(info, BoxLayout.Y_AXIS));
 
-                nameLabel = new JLabel();
-                nameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-                nameLabel.setFont(new Font(ThemeTokens.FONT_FAMILY, ThemeTokens.FONT_WEIGHT_BOLD, ThemeTokens.FONT_SIZE_BASE));
-                nameLabel.setForeground(ThemeTokens.TEXT());
+		nameLabel = new JLabel();
+		nameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+		nameLabel.setFont(new Font(ThemeTokens.FONT_FAMILY, ThemeTokens.FONT_WEIGHT_BOLD, ThemeTokens.FONT_SIZE_BASE));
+		nameLabel.setForeground(ThemeTokens.TEXT());
 
-                roleLabel = new JLabel();
-                roleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-                roleLabel.setFont(new Font(ThemeTokens.FONT_FAMILY, ThemeTokens.FONT_WEIGHT_REGULAR, ThemeTokens.FONT_SIZE_SM));
-                roleLabel.setForeground(ThemeTokens.MUTED());
+		roleLabel = new JLabel();
+		roleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+		roleLabel.setFont(new Font(ThemeTokens.FONT_FAMILY, ThemeTokens.FONT_WEIGHT_REGULAR, ThemeTokens.FONT_SIZE_SM));
+		roleLabel.setForeground(ThemeTokens.MUTED());
 
-                info.add(Box.createVerticalStrut(ThemeTokens.SPACE_8));
-                info.add(nameLabel);
-                info.add(Box.createVerticalStrut(ThemeTokens.SPACE_4));
-                info.add(roleLabel);
+		info.add(Box.createVerticalStrut(ThemeTokens.SPACE_8));
+		info.add(nameLabel);
+		info.add(Box.createVerticalStrut(ThemeTokens.SPACE_4));
+		info.add(roleLabel);
 
-                profilePanel.add(info, BorderLayout.CENTER);
+		profilePanel.add(info, BorderLayout.CENTER);
 
-                refreshProfileInfo();
+		refreshProfileInfo();
 
-                profilePanel.addMouseListener(new java.awt.event.MouseAdapter() {
-                        @Override
-                        public void mouseClicked(java.awt.event.MouseEvent e) {
-                                showProfileDialog();
-                        }
-                });
-                return profilePanel;
-        }
+		profilePanel.addMouseListener(new java.awt.event.MouseAdapter() {
+			@Override
+			public void mouseClicked(java.awt.event.MouseEvent e) {
+				showProfileDialog();
+			}
+		});
+		return profilePanel;
+	}
 
 	private JPanel buildLogoutRow() {
 		JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT, ThemeTokens.SPACE_8, 0));
 		row.setOpaque(true);
 		row.setBackground(ThemeTokens.SURFACE());
 
-		JButton logout = new JButton("Đăng xuất",
-		                             FontIcon.of(BootstrapIcons.BOX_ARROW_RIGHT, 18, ThemeTokens.PRIMARY()));
+		JButton logout = new JButton("Đăng xuất", FontIcon.of(BootstrapIcons.BOX_ARROW_RIGHT, 18, ThemeTokens.PRIMARY()));
 		logout.setFocusPainted(false);
 		logout.setBackground(ThemeTokens.SURFACE_ALT());
 		logout.setOpaque(true);
-		logout.setBorder(BorderFactory.createCompoundBorder(
-		                     new LineBorder(ThemeTokens.BORDER(), 1, false),
-		                     new EmptyBorder(ThemeTokens.SPACE_8, ThemeTokens.SPACE_12, ThemeTokens.SPACE_8, ThemeTokens.SPACE_12)));
+		logout.setBorder(BorderFactory.createCompoundBorder(new LineBorder(ThemeTokens.BORDER(), 1, false), new EmptyBorder(ThemeTokens.SPACE_8, ThemeTokens.SPACE_12, ThemeTokens.SPACE_8, ThemeTokens.SPACE_12)));
 		logout.setForeground(ThemeTokens.TEXT());
 		logout.addActionListener(e -> onLogout());
 
@@ -228,41 +218,41 @@ public class MainFrame extends JFrame {
 		return row;
 	}
 
-        private void addNavItem(String name, BootstrapIcons icon, JPanel panel) {
-                navContainer.add(createNavButton(name, icon));
-                if (panel != null) {
-                        panelRegistry.put(name, panel);
-                }
-        }
+	private void addNavItem(String name, BootstrapIcons icon, JPanel panel) {
+		navContainer.add(createNavButton(name, icon));
+		if (panel != null) {
+			panelRegistry.put(name, panel);
+		}
+	}
 
-        private void refreshProfileInfo() {
-                if (nameLabel != null) {
-                        nameLabel.setText(getUserName());
-                }
-                if (roleLabel != null) {
-                        roleLabel.setText(getUserRole());
-                }
-                if (avatarLabel != null) {
-                        var u = SecurityContext.getCurrentUser();
-                        if (u != null) {
-                                ImageIcon icon = ProfileService.loadAvatar(u.getId(), 36);
-                                if (icon != null) {
-                                        avatarLabel.setIcon(icon);
-                                        avatarLabel.setText("");
-                                } else {
-                                        avatarLabel.setIcon(FontIcon.of(BootstrapIcons.PERSON_CIRCLE, 36, ThemeTokens.PRIMARY()));
-                                }
-                        }
-                }
-        }
+	private void refreshProfileInfo() {
+		if (nameLabel != null) {
+			nameLabel.setText(getUserName());
+		}
+		if (roleLabel != null) {
+			roleLabel.setText(getUserRole());
+		}
+		if (avatarLabel != null) {
+			var u = SecurityContext.getCurrentUser();
+			if (u != null) {
+				ImageIcon icon = ProfileService.loadAvatar(u.getId(), 36);
+				if (icon != null) {
+					avatarLabel.setIcon(icon);
+					avatarLabel.setText("");
+				} else {
+					avatarLabel.setIcon(FontIcon.of(BootstrapIcons.PERSON_CIRCLE, 36, ThemeTokens.PRIMARY()));
+				}
+			}
+		}
+	}
 
-        private void showProfileDialog() {
-                ProfileDialog d = new ProfileDialog(this);
-                d.setVisible(true);
-                if (d.isUpdated()) {
-                        refreshProfileInfo();
-                }
-        }
+	private void showProfileDialog() {
+		ProfileDialog d = new ProfileDialog(this);
+		d.setVisible(true);
+		if (d.isUpdated()) {
+			refreshProfileInfo();
+		}
+	}
 
 	private AbstractButton createNavButton(String text, BootstrapIcons iconDef) {
 		FontIcon icon = FontIcon.of(iconDef, 18, ThemeTokens.TEXT());
@@ -279,29 +269,20 @@ public class MainFrame extends JFrame {
 		btn.setFont(new Font(ThemeTokens.FONT_FAMILY, ThemeTokens.FONT_WEIGHT_REGULAR, ThemeTokens.FONT_SIZE_BASE));
 		btn.setForeground(ThemeTokens.TEXT());
 		btn.setBackground(ThemeTokens.SURFACE_ALT());
-		btn.setBorder(BorderFactory.createCompoundBorder(
-		                  new LineBorder(ThemeTokens.BORDER(), 1, false),
-		                  new EmptyBorder(ThemeTokens.SPACE_12, ThemeTokens.SPACE_16, ThemeTokens.SPACE_12,
-		                                  ThemeTokens.SPACE_16)));
+		btn.setBorder(BorderFactory.createCompoundBorder(new LineBorder(ThemeTokens.BORDER(), 1, false), new EmptyBorder(ThemeTokens.SPACE_12, ThemeTokens.SPACE_16, ThemeTokens.SPACE_12, ThemeTokens.SPACE_16)));
 
 		btn.addChangeListener(e -> {
 			FontIcon fi = (FontIcon) btn.getIcon();
 			if (btn.isSelected()) {
 				btn.setBackground(ThemeTokens.HOVER());
-				btn.setBorder(BorderFactory.createCompoundBorder(
-				                  new LineBorder(ThemeTokens.PRIMARY(), 1, false),
-				                  new EmptyBorder(ThemeTokens.SPACE_12, ThemeTokens.SPACE_16, ThemeTokens.SPACE_12,
-				                                  ThemeTokens.SPACE_16)));
+				btn.setBorder(BorderFactory.createCompoundBorder(new LineBorder(ThemeTokens.PRIMARY(), 1, false), new EmptyBorder(ThemeTokens.SPACE_12, ThemeTokens.SPACE_16, ThemeTokens.SPACE_12, ThemeTokens.SPACE_16)));
 				fi.setIconColor(ThemeTokens.PRIMARY());
 			} else if (btn.getModel().isRollover()) {
 				btn.setBackground(ThemeTokens.HOVER());
 				fi.setIconColor(ThemeTokens.TEXT());
 			} else {
 				btn.setBackground(ThemeTokens.SURFACE_ALT());
-				btn.setBorder(BorderFactory.createCompoundBorder(
-				                  new LineBorder(ThemeTokens.BORDER(), 1, false),
-				                  new EmptyBorder(ThemeTokens.SPACE_12, ThemeTokens.SPACE_16, ThemeTokens.SPACE_12,
-				                                  ThemeTokens.SPACE_16)));
+				btn.setBorder(BorderFactory.createCompoundBorder(new LineBorder(ThemeTokens.BORDER(), 1, false), new EmptyBorder(ThemeTokens.SPACE_12, ThemeTokens.SPACE_16, ThemeTokens.SPACE_12, ThemeTokens.SPACE_16)));
 				fi.setIconColor(ThemeTokens.TEXT());
 			}
 		});
@@ -324,7 +305,7 @@ public class MainFrame extends JFrame {
 			case "Đặt chỗ" -> new BookingsPanel();
 			case "Thanh toán" -> new PaymentsPanel();
 			case "Quản trị" -> new AdminPanel();
-				default -> new JPanel();
+			default -> new JPanel();
 			};
 			panelRegistry.put(name, panel);
 			centerPanel.add(panel, name);
@@ -333,11 +314,7 @@ public class MainFrame extends JFrame {
 	}
 
 	private void onLogout() {
-		int choice = JOptionPane.showConfirmDialog(
-		                 this,
-		                 "Bạn có chắc muốn đăng xuất?",
-		                 "Đăng xuất",
-		                 JOptionPane.YES_NO_OPTION);
+		int choice = JOptionPane.showConfirmDialog(this, "Bạn có chắc muốn đăng xuất?", "Đăng xuất", JOptionPane.YES_NO_OPTION);
 		if (choice == JOptionPane.YES_OPTION) {
 			new com.example.travelapp.service.UserService().logout();
 			SwingUtilities.invokeLater(() -> new LoginFrame().setVisible(true));

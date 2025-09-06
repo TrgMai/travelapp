@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-
 public class User {
 	private String id;
 	private String username;
@@ -20,8 +19,7 @@ public class User {
 	public User() {
 	}
 
-	public User(String id, String username, String passwordHash, String fullName, String email, String phone,
-	            String status, LocalDateTime createdAt) {
+	public User(String id, String username, String passwordHash, String fullName, String email, String phone, String status, LocalDateTime createdAt) {
 		this.id = id;
 		this.username = username;
 		this.passwordHash = passwordHash;
@@ -103,7 +101,6 @@ public class User {
 	public void setRoles(Set<Role> roles) {
 		this.roles = roles;
 	}
-
 
 	public Set<String> getPermissions() {
 		Set<String> perms = new HashSet<>();

@@ -14,25 +14,28 @@ public class PayableService {
 		PermissionGuard.require();
 		return dao.findByBooking(bookingId);
 	}
+
 	public boolean add(Payable p) {
 		PermissionGuard.require();
 		boolean ok = dao.insert(p);
-		if (ok) audit.log(null, "CREATE", "Payable", p.getId(),
-			                  "{\"action\":\"create_payable\",\"payableId\":\"" + p.getId() + "\",\"bookingId\":\"" + p.getBookingId() + "\",\"amount\":" + p.getAmount() + "}");
+		if (ok)
+			audit.log(null, "CREATE", "Payable", p.getId(), "{\"action\":\"create_payable\",\"payableId\":\"" + p.getId() + "\",\"bookingId\":\"" + p.getBookingId() + "\",\"amount\":" + p.getAmount() + "}");
 		return ok;
 	}
+
 	public boolean update(Payable p) {
 		PermissionGuard.require();
 		boolean ok = dao.update(p);
-		if (ok) audit.log(null, "UPDATE", "Payable", p.getId(),
-			                  "{\"action\":\"update_payable\",\"payableId\":\"" + p.getId() + "\",\"bookingId\":\"" + p.getBookingId() + "\",\"amount\":" + p.getAmount() + "}");
+		if (ok)
+			audit.log(null, "UPDATE", "Payable", p.getId(), "{\"action\":\"update_payable\",\"payableId\":\"" + p.getId() + "\",\"bookingId\":\"" + p.getBookingId() + "\",\"amount\":" + p.getAmount() + "}");
 		return ok;
 	}
+
 	public boolean delete(String id) {
 		PermissionGuard.require();
 		boolean ok = dao.delete(id);
-		if (ok) audit.log(null, "DELETE", "Payable", id,
-			                  "{\"action\":\"delete_payable\",\"payableId\":\"" + id + "\"}");
+		if (ok)
+			audit.log(null, "DELETE", "Payable", id, "{\"action\":\"delete_payable\",\"payableId\":\"" + id + "\"}");
 		return ok;
 	}
 }

@@ -46,7 +46,7 @@ public class BookingTableModel extends AbstractTableModel {
 	public Class<?> getColumnClass(int c) {
 		return switch (c) {
 		case 3 -> BigDecimal.class;
-			default -> String.class;
+		default -> String.class;
 		};
 	}
 
@@ -58,9 +58,8 @@ public class BookingTableModel extends AbstractTableModel {
 		case 1 -> tourResolver.apply(b.getTourId());
 		case 2 -> b.getStatus();
 		case 3 -> b.getTotalPrice();
-		case 4 -> b.getCreatedAt() == null ? "" :
-				b.getCreatedAt().format(dtf);
-			default -> null;
+		case 4 -> b.getCreatedAt() == null ? "" : b.getCreatedAt().format(dtf);
+		default -> null;
 		};
 	}
 }

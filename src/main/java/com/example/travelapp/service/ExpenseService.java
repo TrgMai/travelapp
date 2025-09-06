@@ -14,25 +14,28 @@ public class ExpenseService {
 		PermissionGuard.require();
 		return dao.findByBooking(bookingId);
 	}
+
 	public boolean add(Expense e) {
 		PermissionGuard.require();
 		boolean ok = dao.insert(e);
-		if (ok) audit.log(null, "CREATE", "Expense", e.getId(),
-			                  "{\"action\":\"create_expense\",\"expenseId\":\"" + e.getId() + "\",\"bookingId\":\"" + e.getBookingId() + "\",\"amount\":" + e.getAmount() + "}");
+		if (ok)
+			audit.log(null, "CREATE", "Expense", e.getId(), "{\"action\":\"create_expense\",\"expenseId\":\"" + e.getId() + "\",\"bookingId\":\"" + e.getBookingId() + "\",\"amount\":" + e.getAmount() + "}");
 		return ok;
 	}
+
 	public boolean update(Expense e) {
 		PermissionGuard.require();
 		boolean ok = dao.update(e);
-		if (ok) audit.log(null, "UPDATE", "Expense", e.getId(),
-			                  "{\"action\":\"update_expense\",\"expenseId\":\"" + e.getId() + "\",\"bookingId\":\"" + e.getBookingId() + "\",\"amount\":" + e.getAmount() + "}");
+		if (ok)
+			audit.log(null, "UPDATE", "Expense", e.getId(), "{\"action\":\"update_expense\",\"expenseId\":\"" + e.getId() + "\",\"bookingId\":\"" + e.getBookingId() + "\",\"amount\":" + e.getAmount() + "}");
 		return ok;
 	}
+
 	public boolean delete(String id) {
 		PermissionGuard.require();
 		boolean ok = dao.delete(id);
-		if (ok) audit.log(null, "DELETE", "Expense", id,
-			                  "{\"action\":\"delete_expense\",\"expenseId\":\"" + id + "\"}");
+		if (ok)
+			audit.log(null, "DELETE", "Expense", id, "{\"action\":\"delete_expense\",\"expenseId\":\"" + id + "\"}");
 		return ok;
 	}
 }

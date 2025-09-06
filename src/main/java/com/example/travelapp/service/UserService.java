@@ -23,13 +23,11 @@ public class UserService {
 		}
 		if (passwordEncoder.matches(password, user.getPasswordHash())) {
 			SecurityContext.setCurrentUser(user);
-			audit.log(user.getId(), "AUTH", "User", user.getId(),
-			          "{\"action\":\"login_success\",\"userId\":\"" + user.getId() + "\"}");
+			audit.log(user.getId(), "AUTH", "User", user.getId(), "{\"action\":\"login_success\",\"userId\":\"" + user.getId() + "\"}");
 			LOGGER.info("User {} authenticated", login);
 			return user;
 		}
-		audit.log("system", "AUTH", "User", user.getId(),
-		          "{\"action\":\"login_failed\",\"userId\":\"" + user.getId() + "\"}");
+		audit.log("system", "AUTH", "User", user.getId(), "{\"action\":\"login_failed\",\"userId\":\"" + user.getId() + "\"}");
 		LOGGER.info("Failed login attempt for {}", login);
 		return null;
 	}
@@ -37,8 +35,7 @@ public class UserService {
 	public void logout() {
 		User current = SecurityContext.getCurrentUser();
 		if (current != null) {
-			audit.log(current.getId(), "AUTH", "User", current.getId(),
-			          "{\"action\":\"logout\",\"userId\":\"" + current.getId() + "\"}");
+			audit.log(current.getId(), "AUTH", "User", current.getId(), "{\"action\":\"logout\",\"userId\":\"" + current.getId() + "\"}");
 		}
 		SecurityContext.clear();
 	}

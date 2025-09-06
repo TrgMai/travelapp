@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-
 public class Payment {
 	private String id;
 	private String bookingId;

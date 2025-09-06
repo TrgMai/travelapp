@@ -23,8 +23,7 @@ public class UserDetailsTab extends JPanel {
 		setOpaque(true);
 		setBackground(ThemeTokens.SURFACE());
 		setLayout(new GridBagLayout());
-		setBorder(new EmptyBorder(ThemeTokens.SPACE_16, ThemeTokens.SPACE_16, ThemeTokens.SPACE_16,
-		                          ThemeTokens.SPACE_16));
+		setBorder(new EmptyBorder(ThemeTokens.SPACE_16, ThemeTokens.SPACE_16, ThemeTokens.SPACE_16, ThemeTokens.SPACE_16));
 
 		statusCombo.setRenderer(new DefaultListCellRenderer() {
 			@Override
@@ -122,13 +121,11 @@ public class UserDetailsTab extends JPanel {
 
 	public boolean validateInputs(Component parent, boolean requirePassword) {
 		if (usernameField.getText().trim().isEmpty()) {
-			JOptionPane.showMessageDialog(parent, "Vui lòng nhập tên đăng nhập", "Kiểm tra dữ liệu",
-			                              JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(parent, "Vui lòng nhập tên đăng nhập", "Kiểm tra dữ liệu", JOptionPane.WARNING_MESSAGE);
 			return false;
 		}
 		if (requirePassword && (passwordField.getPassword() == null || passwordField.getPassword().length == 0)) {
-			JOptionPane.showMessageDialog(parent, "Vui lòng nhập mật khẩu", "Kiểm tra dữ liệu",
-			                              JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(parent, "Vui lòng nhập mật khẩu", "Kiểm tra dữ liệu", JOptionPane.WARNING_MESSAGE);
 			return false;
 		}
 		return true;

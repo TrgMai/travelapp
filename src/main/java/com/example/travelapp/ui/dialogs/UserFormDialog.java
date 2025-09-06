@@ -32,8 +32,7 @@ public class UserFormDialog extends JDialog {
 		if (existing != null) {
 			detailsTab.loadFrom(existing);
 			detailsTab.disableUsername();
-			var selectedIds = existing.getRoles() == null ? java.util.Set.<String>of()
-			                  : existing.getRoles().stream().map(Role::getId).collect(Collectors.toSet());
+			var selectedIds = existing.getRoles() == null ? java.util.Set.<String>of() : existing.getRoles().stream().map(Role::getId).collect(Collectors.toSet());
 			detailsTab.preselectRoleIds(selectedIds);
 		}
 

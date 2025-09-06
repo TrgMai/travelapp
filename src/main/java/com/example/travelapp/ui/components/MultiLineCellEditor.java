@@ -14,17 +14,10 @@ public class MultiLineCellEditor extends AbstractCellEditor implements TableCell
 	public MultiLineCellEditor() {
 		area.setLineWrap(true);
 		area.setWrapStyleWord(true);
-		area.setBorder(new EmptyBorder(
-		                   ThemeTokens.SPACE_4,
-		                   ThemeTokens.SPACE_8,
-		                   ThemeTokens.SPACE_4,
-		                   ThemeTokens.SPACE_8));
+		area.setBorder(new EmptyBorder(ThemeTokens.SPACE_4, ThemeTokens.SPACE_8, ThemeTokens.SPACE_4, ThemeTokens.SPACE_8));
 		area.setBackground(ThemeTokens.SURFACE());
 		area.setForeground(ThemeTokens.TEXT());
-		area.setFont(new Font(
-		                 ThemeTokens.FONT_FAMILY,
-		                 ThemeTokens.FONT_WEIGHT_REGULAR,
-		                 ThemeTokens.FONT_SIZE_BASE));
+		area.setFont(new Font(ThemeTokens.FONT_FAMILY, ThemeTokens.FONT_WEIGHT_REGULAR, ThemeTokens.FONT_SIZE_BASE));
 
 		sp.setBorder(null);
 		sp.setViewportBorder(null);
@@ -36,8 +29,7 @@ public class MultiLineCellEditor extends AbstractCellEditor implements TableCell
 	}
 
 	@Override
-	public Component getTableCellEditorComponent(JTable table, Object value,
-	        boolean isSelected, int row, int column) {
+	public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
 		area.setText(value == null ? "" : value.toString());
 		SwingUtilities.invokeLater(() -> {
 			int prefH = area.getPreferredSize().height + ThemeTokens.SPACE_4;

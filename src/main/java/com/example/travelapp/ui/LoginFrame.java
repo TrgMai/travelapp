@@ -190,9 +190,7 @@ public class LoginFrame extends JFrame {
 		forgot.addMouseListener(new java.awt.event.MouseAdapter() {
 			@Override
 			public void mouseClicked(java.awt.event.MouseEvent e) {
-				JOptionPane.showMessageDialog(LoginFrame.this,
-				                              "Vui lòng liên hệ với Admin để cập nhật lại mật khẩu.",
-				                              "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showMessageDialog(LoginFrame.this, "Vui lòng liên hệ với Admin để cập nhật lại mật khẩu.", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
 		rf.add(forgot, BorderLayout.EAST);
@@ -229,10 +227,7 @@ public class LoginFrame extends JFrame {
 				}
 			}
 		});
-		getRootPane().registerKeyboardAction(
-		    ev -> dispose(),
-		    KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
-		    JComponent.WHEN_IN_FOCUSED_WINDOW);
+		getRootPane().registerKeyboardAction(ev -> dispose(), KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_IN_FOCUSED_WINDOW);
 
 		setMinimumSize(new Dimension(880, 600));
 		pack();
@@ -322,25 +317,19 @@ public class LoginFrame extends JFrame {
 	}
 
 	private void styleInput(JTextField f) {
-		f.setBorder(BorderFactory.createCompoundBorder(
-		                new LineBorder(ThemeTokens.BORDER(), 1, false),
-		                new EmptyBorder(6, 10, 6, 10)));
+		f.setBorder(BorderFactory.createCompoundBorder(new LineBorder(ThemeTokens.BORDER(), 1, false), new EmptyBorder(6, 10, 6, 10)));
 		f.setBackground(ThemeTokens.SURFACE());
 		f.setForeground(ThemeTokens.TEXT());
 		f.setCaretColor(ThemeTokens.TEXT());
 		f.addFocusListener(new java.awt.event.FocusAdapter() {
 			@Override
 			public void focusGained(java.awt.event.FocusEvent e) {
-				f.setBorder(BorderFactory.createCompoundBorder(
-				                new LineBorder(ThemeTokens.PRIMARY(), 1, false),
-				                new EmptyBorder(6, 10, 6, 10)));
+				f.setBorder(BorderFactory.createCompoundBorder(new LineBorder(ThemeTokens.PRIMARY(), 1, false), new EmptyBorder(6, 10, 6, 10)));
 			}
 
 			@Override
 			public void focusLost(java.awt.event.FocusEvent e) {
-				f.setBorder(BorderFactory.createCompoundBorder(
-				                new LineBorder(ThemeTokens.BORDER(), 1, false),
-				                new EmptyBorder(6, 10, 6, 10)));
+				f.setBorder(BorderFactory.createCompoundBorder(new LineBorder(ThemeTokens.BORDER(), 1, false), new EmptyBorder(6, 10, 6, 10)));
 			}
 		});
 	}
@@ -418,8 +407,7 @@ public class LoginFrame extends JFrame {
 					g2.drawImage(image, dx, dy, dw, dh, this);
 				}
 			} else {
-				GradientPaint gp = new GradientPaint(0, 0, ThemeTokens.PRIMARY(), 0, getHeight(),
-				                                     ThemeTokens.PRIMARY_HOVER());
+				GradientPaint gp = new GradientPaint(0, 0, ThemeTokens.PRIMARY(), 0, getHeight(), ThemeTokens.PRIMARY_HOVER());
 				g2.setPaint(gp);
 				g2.fillRect(0, 0, getWidth(), getHeight());
 			}

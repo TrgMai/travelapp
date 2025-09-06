@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-
 public class Customer {
 	private String id;
 	private String fullName;
@@ -20,8 +19,7 @@ public class Customer {
 	public Customer() {
 	}
 
-	public Customer(String id, String fullName, LocalDate dob, String gender, String idType, String idNo,
-	                String phone, String email, String note, LocalDateTime createdAt) {
+	public Customer(String id, String fullName, LocalDate dob, String gender, String idType, String idNo, String phone, String email, String note, LocalDateTime createdAt) {
 		this.id = id;
 		this.fullName = fullName;
 		this.dob = dob;

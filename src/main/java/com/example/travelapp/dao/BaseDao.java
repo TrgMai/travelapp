@@ -29,10 +29,7 @@ public abstract class BaseDao {
 			StackTraceElement baseMethod = stack[2];
 			StackTraceElement caller = stack[3];
 
-			logger.info("{} called -> {}.{}(line {}) | caller: {}.{}(line {})",
-			            method,
-			            baseMethod.getClassName(), baseMethod.getMethodName(), baseMethod.getLineNumber(),
-			            caller.getClassName(), caller.getMethodName(), caller.getLineNumber());
+			logger.info("{} called -> {}.{}(line {}) | caller: {}.{}(line {})", method, baseMethod.getClassName(), baseMethod.getMethodName(), baseMethod.getLineNumber(), caller.getClassName(), caller.getMethodName(), caller.getLineNumber());
 		}
 	}
 

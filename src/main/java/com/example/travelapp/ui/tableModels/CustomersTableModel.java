@@ -40,14 +40,12 @@ public class CustomersTableModel extends AbstractTableModel {
 		var x = data.get(r);
 		return switch (c) {
 		case 0 -> x.getFullName();
-		case 1 -> x.getDob() == null ? "" :
-				x.getDob().format(dt);
-		case 2 -> "M".equals(x.getGender()) ? "Nam" : "F"
-				.equals(x.getGender()) ? "Nữ" : "";
+		case 1 -> x.getDob() == null ? "" : x.getDob().format(dt);
+		case 2 -> "M".equals(x.getGender()) ? "Nam" : "F".equals(x.getGender()) ? "Nữ" : "";
 		case 3 -> x.getPhone();
 		case 4 -> x.getEmail();
 		case 5 -> x.getNote();
-			default -> null;
+		default -> null;
 		};
 	}
 }

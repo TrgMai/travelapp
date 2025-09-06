@@ -102,12 +102,10 @@ public class PaymentFormDialog extends JDialog {
 
 			cbType.setRenderer(new DefaultListCellRenderer() {
 				@Override
-				public Component getListCellRendererComponent(JList<?> list, Object value, int index,
-				        boolean isSelected, boolean cellHasFocus) {
+				public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
 					Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 					String v = String.valueOf(value);
-					setText("CASH".equals(v) ? "Tiền mặt"
-					        : "TRANSFER".equals(v) ? "Chuyển khoản" : "CARD".equals(v) ? "Thẻ" : v);
+					setText("CASH".equals(v) ? "Tiền mặt" : "TRANSFER".equals(v) ? "Chuyển khoản" : "CARD".equals(v) ? "Thẻ" : v);
 					return c;
 				}
 			});
@@ -227,8 +225,7 @@ public class PaymentFormDialog extends JDialog {
 
 		boolean validateInputs(Component parent) {
 			if (amount.getBigDecimal() == null) {
-				JOptionPane.showMessageDialog(parent, "Vui lòng nhập số tiền", "Kiểm tra dữ liệu",
-				                              JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(parent, "Vui lòng nhập số tiền", "Kiểm tra dữ liệu", JOptionPane.WARNING_MESSAGE);
 				return false;
 			}
 			return true;

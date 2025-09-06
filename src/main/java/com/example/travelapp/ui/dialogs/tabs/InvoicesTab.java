@@ -54,26 +54,25 @@ public class InvoicesTab extends JPanel {
 		}
 
 		JScrollPane sp = ThemeComponents.scroll(table);
-		sp.setBorder(new EmptyBorder(ThemeTokens.SPACE_12, ThemeTokens.SPACE_12, ThemeTokens.SPACE_12,
-		                             ThemeTokens.SPACE_12));
+		sp.setBorder(new EmptyBorder(ThemeTokens.SPACE_12, ThemeTokens.SPACE_12, ThemeTokens.SPACE_12, ThemeTokens.SPACE_12));
 		add(sp, BorderLayout.CENTER);
 
-                final java.awt.event.MouseAdapter noPerm = new java.awt.event.MouseAdapter() {
-                        @Override
-                        public void mouseClicked(java.awt.event.MouseEvent e) {
-                                showNoPermission();
-                        }
-                };
-                boolean canEdit = SecurityContext.hasPermission("BOOKING_EDIT");
-                if (canEdit) {
-                        btnAdd.addActionListener(e -> onAdd());
-                        btnDelete.addActionListener(e -> onDelete());
-                } else {
-                        btnAdd.setEnabled(false);
-                        btnDelete.setEnabled(false);
-                        btnAdd.addMouseListener(noPerm);
-                        btnDelete.addMouseListener(noPerm);
-                }
+		final java.awt.event.MouseAdapter noPerm = new java.awt.event.MouseAdapter() {
+			@Override
+			public void mouseClicked(java.awt.event.MouseEvent e) {
+				showNoPermission();
+			}
+		};
+		boolean canEdit = SecurityContext.hasPermission("BOOKING_EDIT");
+		if (canEdit) {
+			btnAdd.addActionListener(e -> onAdd());
+			btnDelete.addActionListener(e -> onDelete());
+		} else {
+			btnAdd.setEnabled(false);
+			btnDelete.setEnabled(false);
+			btnAdd.addMouseListener(noPerm);
+			btnDelete.addMouseListener(noPerm);
+		}
 		reload();
 	}
 
@@ -81,12 +80,12 @@ public class InvoicesTab extends JPanel {
 		model.setData(service.getByBooking(bookingId));
 	}
 
-        private void onAdd() {
-                if (!SecurityContext.hasPermission("BOOKING_EDIT")) {
-                        showNoPermission();
-                        return;
-                }
-                InvoiceFormDialog d = new InvoiceFormDialog();
+	private void onAdd() {
+		if (!SecurityContext.hasPermission("BOOKING_EDIT")) {
+			showNoPermission();
+			return;
+		}
+		InvoiceFormDialog d = new InvoiceFormDialog();
 		d.setVisible(true);
 		if (!d.ok) {
 			return;
@@ -94,8 +93,7 @@ public class InvoicesTab extends JPanel {
 
 		String no = d.txtNo.getText().trim();
 		if (no.isEmpty()) {
-			JOptionPane.showMessageDialog(this, "Vui lòng nhập số hóa đơn", "Thiếu dữ liệu",
-			                              JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(this, "Vui lòng nhập số hóa đơn", "Thiếu dữ liệu", JOptionPane.WARNING_MESSAGE);
 			return;
 		}
 
@@ -108,8 +106,7 @@ public class InvoicesTab extends JPanel {
 				Files.copy(d.selectedFile.toPath(), dest, StandardCopyOption.REPLACE_EXISTING);
 				System.out.println("PDF saved to: " + dest.toAbsolutePath());
 			} catch (Exception ex) {
-				JOptionPane.showMessageDialog(this, "Không thể lưu file PDF: " + ex.getMessage(),
-				                              "Lỗi", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(this, "Không thể lưu file PDF: " + ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
 				return;
 			}
 		}
@@ -129,31 +126,29 @@ public class InvoicesTab extends JPanel {
 		}
 	}
 
-        private void onDelete() {
-                if (!SecurityContext.hasPermission("BOOKING_EDIT")) {
-                        showNoPermission();
-                        return;
-                }
-                int r = table.getSelectedRow();
-                if (r < 0) {
-                        return;
-                }
-                var inv = model.getAt(table.convertRowIndexToModel(r));
-                int ok = JOptionPane.showConfirmDialog(this, "Xóa hóa đơn " + inv.getNo() + "?", "Xác nhận",
-                                                       JOptionPane.YES_NO_OPTION);
-                if (ok != JOptionPane.YES_OPTION) {
-                        return;
-                }
+	private void onDelete() {
+		if (!SecurityContext.hasPermission("BOOKING_EDIT")) {
+			showNoPermission();
+			return;
+		}
+		int r = table.getSelectedRow();
+		if (r < 0) {
+			return;
+		}
+		var inv = model.getAt(table.convertRowIndexToModel(r));
+		int ok = JOptionPane.showConfirmDialog(this, "Xóa hóa đơn " + inv.getNo() + "?", "Xác nhận", JOptionPane.YES_NO_OPTION);
+		if (ok != JOptionPane.YES_OPTION) {
+			return;
+		}
 
-                if (service.delete(inv.getId())) {
-                        reload();
-                } else {
-                        JOptionPane.showMessageDialog(this, "Xóa thất bại", "Lỗi", JOptionPane.ERROR_MESSAGE);
-                }
-        }
+		if (service.delete(inv.getId())) {
+			reload();
+		} else {
+			JOptionPane.showMessageDialog(this, "Xóa thất bại", "Lỗi", JOptionPane.ERROR_MESSAGE);
+		}
+	}
 
-        private void showNoPermission() {
-                JOptionPane.showMessageDialog(this, "Bạn không có quyền thực hiện thao tác này.",
-                                              "Từ chối truy cập", JOptionPane.ERROR_MESSAGE);
-        }
+	private void showNoPermission() {
+		JOptionPane.showMessageDialog(this, "Bạn không có quyền thực hiện thao tác này.", "Từ chối truy cập", JOptionPane.ERROR_MESSAGE);
+	}
 }

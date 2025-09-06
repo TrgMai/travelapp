@@ -9,9 +9,9 @@ import java.util.List;
 
 public class ExpenseDao extends BaseDao {
 	private static final String SQL_FIND_BY_BOOKING = """
-	        SELECT *
-	        FROM expenses
-	        WHERE booking_id=?
+			SELECT *
+			FROM expenses
+			WHERE booking_id=?
 			ORDER BY spent_at DESC NULLS LAST, id
 			""";
 
@@ -33,8 +33,7 @@ public class ExpenseDao extends BaseDao {
 
 	public List<Expense> findByBooking(String bookingId) {
 		List<Expense> list = new ArrayList<>();
-		try (Connection c = getConnection();
-			        PreparedStatement ps = c.prepareStatement(SQL_FIND_BY_BOOKING)) {
+		try (Connection c = getConnection(); PreparedStatement ps = c.prepareStatement(SQL_FIND_BY_BOOKING)) {
 			ps.setString(1, bookingId);
 			try (ResultSet rs = ps.executeQuery()) {
 				while (rs.next()) {
@@ -49,8 +48,7 @@ public class ExpenseDao extends BaseDao {
 	}
 
 	public boolean insert(Expense epx) {
-		try (Connection c = getConnection();
-			        PreparedStatement ps = c.prepareStatement(SQL_INSERT)) {
+		try (Connection c = getConnection(); PreparedStatement ps = c.prepareStatement(SQL_INSERT)) {
 			if (epx.getId() != null) {
 				ps.setString(1, epx.getId());
 			} else {
@@ -74,8 +72,7 @@ public class ExpenseDao extends BaseDao {
 	}
 
 	public boolean update(Expense epx) {
-		try (Connection c = getConnection();
-			        PreparedStatement ps = c.prepareStatement(SQL_UPDATE)) {
+		try (Connection c = getConnection(); PreparedStatement ps = c.prepareStatement(SQL_UPDATE)) {
 			ps.setString(1, epx.getGuideId());
 			ps.setBigDecimal(2, epx.getAmount());
 			ps.setString(3, epx.getCategory());
@@ -94,8 +91,7 @@ public class ExpenseDao extends BaseDao {
 	}
 
 	public boolean delete(String id) {
-		try (Connection c = getConnection();
-			        PreparedStatement ps = c.prepareStatement(SQL_DELETE)) {
+		try (Connection c = getConnection(); PreparedStatement ps = c.prepareStatement(SQL_DELETE)) {
 			ps.setString(1, id);
 			return ps.executeUpdate() > 0;
 		} catch (SQLException e) {

@@ -96,8 +96,7 @@ public class AllocationFormDialog extends JDialog {
 		JPanel card = ThemeComponents.cardPanel();
 		card.setLayout(new BorderLayout());
 		card.add(form, BorderLayout.CENTER);
-		card.setBorder(new EmptyBorder(ThemeTokens.SPACE_12, ThemeTokens.SPACE_12, ThemeTokens.SPACE_12,
-		                               ThemeTokens.SPACE_12));
+		card.setBorder(new EmptyBorder(ThemeTokens.SPACE_12, ThemeTokens.SPACE_12, ThemeTokens.SPACE_12, ThemeTokens.SPACE_12));
 		add(card, BorderLayout.CENTER);
 
 		JPanel actions = new JPanel(new FlowLayout(FlowLayout.RIGHT, ThemeTokens.SPACE_8, ThemeTokens.SPACE_12));
@@ -201,8 +200,7 @@ public class AllocationFormDialog extends JDialog {
 		private final Color odd = new Color(240, 244, 250);
 
 		@Override
-		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
-		        boolean hasFocus, int row, int column) {
+		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
 			Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 			if (!isSelected) {
 				c.setBackground(row % 2 == 0 ? even : odd);

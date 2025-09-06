@@ -8,10 +8,10 @@ import java.util.List;
 
 public class PartnerDao extends BaseDao {
 	private static final String SQL_FIND_ALL = """
-	        SELECT id, type, name, contact, phone, email, tax_no, address, note
-	        FROM partners
-	        ORDER BY name ASC
-	        """;
+			SELECT id, type, name, contact, phone, email, tax_no, address, note
+			FROM partners
+			ORDER BY name ASC
+			""";
 
 	private static final String SQL_FIND_BY_ID = """
 			SELECT id, type, name, contact, phone, email, tax_no, address, note
@@ -20,9 +20,7 @@ public class PartnerDao extends BaseDao {
 			""";
 
 	public List<Partner> findAll() throws SQLException {
-		try (Connection cn = getConnection();
-			        PreparedStatement ps = cn.prepareStatement(SQL_FIND_ALL);
-			        ResultSet rs = ps.executeQuery()) {
+		try (Connection cn = getConnection(); PreparedStatement ps = cn.prepareStatement(SQL_FIND_ALL); ResultSet rs = ps.executeQuery()) {
 
 			List<Partner> out = new ArrayList<>();
 			while (rs.next()) {
@@ -33,8 +31,7 @@ public class PartnerDao extends BaseDao {
 	}
 
 	public Partner findById(String id) throws SQLException {
-		try (Connection cn = getConnection();
-			        PreparedStatement ps = cn.prepareStatement(SQL_FIND_BY_ID)) {
+		try (Connection cn = getConnection(); PreparedStatement ps = cn.prepareStatement(SQL_FIND_BY_ID)) {
 
 			ps.setString(1, id);
 			try (ResultSet rs = ps.executeQuery()) {

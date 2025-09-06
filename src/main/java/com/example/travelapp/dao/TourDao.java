@@ -9,10 +9,10 @@ import java.util.List;
 
 public class TourDao extends BaseDao {
 	private static final String SQL_FIND_ALL = """
-	        SELECT id, name, route, days, base_price, description, cover_image_url, created_at
-	        FROM tours
-	        ORDER BY created_at DESC
-	        """;
+			SELECT id, name, route, days, base_price, description, cover_image_url, created_at
+			FROM tours
+			ORDER BY created_at DESC
+			""";
 
 	private static final String SQL_FIND_BY_ID = """
 			SELECT id, name, route, days, base_price, description, cover_image_url, created_at
@@ -38,9 +38,7 @@ public class TourDao extends BaseDao {
 
 	public List<Tour> findAll() {
 		List<Tour> list = new ArrayList<>();
-		try (Connection conn = getConnection();
-			        PreparedStatement ps = conn.prepareStatement(SQL_FIND_ALL);
-			        ResultSet rs = ps.executeQuery()) {
+		try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(SQL_FIND_ALL); ResultSet rs = ps.executeQuery()) {
 			while (rs.next()) {
 				list.add(map(rs));
 			}
@@ -51,8 +49,7 @@ public class TourDao extends BaseDao {
 	}
 
 	public Tour findById(String id) {
-		try (Connection conn = getConnection();
-			        PreparedStatement ps = conn.prepareStatement(SQL_FIND_BY_ID)) {
+		try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(SQL_FIND_BY_ID)) {
 			ps.setString(1, id);
 			try (ResultSet rs = ps.executeQuery()) {
 				if (rs.next()) {
@@ -66,8 +63,7 @@ public class TourDao extends BaseDao {
 	}
 
 	public boolean insert(Tour t) {
-		try (Connection conn = getConnection();
-			        PreparedStatement ps = conn.prepareStatement(SQL_INSERT)) {
+		try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(SQL_INSERT)) {
 			if (t.getId() != null) {
 				ps.setString(1, t.getId());
 			} else {
@@ -79,8 +75,7 @@ public class TourDao extends BaseDao {
 			ps.setBigDecimal(5, t.getBasePrice());
 			ps.setString(6, t.getDescription());
 			ps.setString(7, t.getCoverImageUrl());
-			ps.setTimestamp(8, t.getCreatedAt() != null ? Timestamp.valueOf(t.getCreatedAt())
-			                : new Timestamp(System.currentTimeMillis()));
+			ps.setTimestamp(8, t.getCreatedAt() != null ? Timestamp.valueOf(t.getCreatedAt()) : new Timestamp(System.currentTimeMillis()));
 			return ps.executeUpdate() == 1;
 		} catch (SQLException e) {
 			logger.error("insert tour", e);
@@ -89,8 +84,7 @@ public class TourDao extends BaseDao {
 	}
 
 	public boolean update(Tour t) {
-		try (Connection conn = getConnection();
-			        PreparedStatement ps = conn.prepareStatement(SQL_UPDATE)) {
+		try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(SQL_UPDATE)) {
 			ps.setString(1, t.getName());
 			ps.setString(2, t.getRoute());
 			ps.setInt(3, t.getDays());
@@ -106,8 +100,7 @@ public class TourDao extends BaseDao {
 	}
 
 	public boolean delete(String id) {
-		try (Connection conn = getConnection();
-			        PreparedStatement ps = conn.prepareStatement(SQL_DELETE)) {
+		try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(SQL_DELETE)) {
 			ps.setString(1, id);
 			return ps.executeUpdate() == 1;
 		} catch (SQLException e) {

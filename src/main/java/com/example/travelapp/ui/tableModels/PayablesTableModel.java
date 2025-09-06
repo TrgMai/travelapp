@@ -51,10 +51,9 @@ public class PayablesTableModel extends AbstractTableModel {
 		return switch (c) {
 		case 0 -> x.getPartnerId();
 		case 1 -> x.getAmount();
-		case 2 -> x.getDueDate() == null ? "" :
-				x.getDueDate().format(df);
+		case 2 -> x.getDueDate() == null ? "" : x.getDueDate().format(df);
 		case 3 -> x.getStatus();
-			default -> "";
+		default -> "";
 		};
 	}
 }

@@ -35,8 +35,7 @@ public final class TableUtils {
 					comp.setBackground((r % 2 == 0) ? ThemeTokens.SURFACE() : ThemeTokens.TABLE_STRIPE());
 				}
 				if (comp instanceof JComponent jc)
-					jc.setBorder(new EmptyBorder(ThemeTokens.SPACE_4, ThemeTokens.SPACE_8, ThemeTokens.SPACE_4,
-					                             ThemeTokens.SPACE_8));
+					jc.setBorder(new EmptyBorder(ThemeTokens.SPACE_4, ThemeTokens.SPACE_8, ThemeTokens.SPACE_4, ThemeTokens.SPACE_8));
 				return comp;
 			}
 		};
@@ -44,8 +43,7 @@ public final class TableUtils {
 
 		DefaultTableCellRenderer right = new DefaultTableCellRenderer();
 		right.setHorizontalAlignment(SwingConstants.RIGHT);
-		right.setBorder(
-		    new EmptyBorder(ThemeTokens.SPACE_4, ThemeTokens.SPACE_8, ThemeTokens.SPACE_4, ThemeTokens.SPACE_12));
+		right.setBorder(new EmptyBorder(ThemeTokens.SPACE_4, ThemeTokens.SPACE_8, ThemeTokens.SPACE_4, ThemeTokens.SPACE_12));
 		for (int c : rightAlignedCols) {
 			if (c >= 0 && c < table.getColumnModel().getColumnCount()) {
 				table.getColumnModel().getColumn(c).setCellRenderer(right);
@@ -65,8 +63,7 @@ public final class TableUtils {
 			this.fmt = showSymbol ? NumberFormat.getCurrencyInstance(locale) : NumberFormat.getNumberInstance(locale);
 			this.showSymbol = showSymbol;
 			setHorizontalAlignment(SwingConstants.RIGHT);
-			setBorder(new EmptyBorder(ThemeTokens.SPACE_4, ThemeTokens.SPACE_8, ThemeTokens.SPACE_4,
-			                          ThemeTokens.SPACE_12));
+			setBorder(new EmptyBorder(ThemeTokens.SPACE_4, ThemeTokens.SPACE_8, ThemeTokens.SPACE_4, ThemeTokens.SPACE_12));
 		}
 
 		@Override

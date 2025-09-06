@@ -26,8 +26,7 @@ public class CustomerService {
 		PermissionGuard.require();
 		boolean ok = dao.insert(c);
 		if (ok)
-			audit.log(SecurityContext.getCurrentUser().getId(), "CREATE", "Customer", c.getId(),
-			          "{\"action\":\"create_customer\", \"customerId\":\"" + c.getId() + "\"}");
+			audit.log(SecurityContext.getCurrentUser().getId(), "CREATE", "Customer", c.getId(), "{\"action\":\"create_customer\", \"customerId\":\"" + c.getId() + "\"}");
 		return ok;
 	}
 
@@ -35,8 +34,7 @@ public class CustomerService {
 		PermissionGuard.require();
 		boolean ok = dao.update(c);
 		if (ok)
-			audit.log(SecurityContext.getCurrentUser().getId(), "UPDATE", "Customer", c.getId(),
-			          "{\"action\":\"update_customer\", \"customerId\":\"" + c.getId() + "\"}");
+			audit.log(SecurityContext.getCurrentUser().getId(), "UPDATE", "Customer", c.getId(), "{\"action\":\"update_customer\", \"customerId\":\"" + c.getId() + "\"}");
 		return ok;
 	}
 
@@ -44,8 +42,7 @@ public class CustomerService {
 		PermissionGuard.require();
 		boolean ok = dao.delete(id);
 		if (ok)
-			audit.log(SecurityContext.getCurrentUser().getId(), "DELETE", "Customer", id,
-			          "{\"action\":\"delete_customer\", \"customerId\":\"" + id + "\"}");
+			audit.log(SecurityContext.getCurrentUser().getId(), "DELETE", "Customer", id, "{\"action\":\"delete_customer\", \"customerId\":\"" + id + "\"}");
 		return ok;
 	}
 

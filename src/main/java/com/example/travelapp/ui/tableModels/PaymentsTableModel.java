@@ -40,7 +40,7 @@ public class PaymentsTableModel extends AbstractTableModel {
 	public Class<?> getColumnClass(int c) {
 		return switch (c) {
 		case 2 -> BigDecimal.class;
-			default -> String.class;
+		default -> String.class;
 		};
 	}
 
@@ -49,11 +49,10 @@ public class PaymentsTableModel extends AbstractTableModel {
 		var p = data.get(r);
 		return switch (c) {
 		case 0 -> p.getType();
-		case 1 -> p.getPaidAt() == null ? "" :
-				p.getPaidAt().format(dt);
+		case 1 -> p.getPaidAt() == null ? "" : p.getPaidAt().format(dt);
 		case 2 -> p.getAmount();
 		case 3 -> p.getNote();
-			default -> null;
+		default -> null;
 		};
 	}
 }

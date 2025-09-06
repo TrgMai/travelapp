@@ -21,8 +21,7 @@ public class TourDetailsTab extends JPanel {
 		setOpaque(true);
 		setBackground(ThemeTokens.SURFACE());
 		setLayout(new GridBagLayout());
-		setBorder(new EmptyBorder(ThemeTokens.SPACE_16, ThemeTokens.SPACE_16, ThemeTokens.SPACE_16,
-		                          ThemeTokens.SPACE_16));
+		setBorder(new EmptyBorder(ThemeTokens.SPACE_16, ThemeTokens.SPACE_16, ThemeTokens.SPACE_16, ThemeTokens.SPACE_16));
 
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.insets = new Insets(ThemeTokens.SPACE_8, ThemeTokens.SPACE_8, ThemeTokens.SPACE_8, ThemeTokens.SPACE_8);
@@ -52,8 +51,7 @@ public class TourDetailsTab extends JPanel {
 		descriptionArea.setWrapStyleWord(true);
 		descriptionArea.setForeground(ThemeTokens.TEXT());
 		descriptionArea.setBackground(ThemeTokens.SURFACE());
-		descriptionArea.setBorder(
-		    new EmptyBorder(ThemeTokens.SPACE_8, ThemeTokens.SPACE_8, ThemeTokens.SPACE_8, ThemeTokens.SPACE_8));
+		descriptionArea.setBorder(new EmptyBorder(ThemeTokens.SPACE_8, ThemeTokens.SPACE_8, ThemeTokens.SPACE_8, ThemeTokens.SPACE_8));
 		JScrollPane sp = ThemeComponents.scroll(descriptionArea);
 		sp.setPreferredSize(new Dimension(0, 120));
 
@@ -121,8 +119,7 @@ public class TourDetailsTab extends JPanel {
 	public boolean validateInputs(Component parent) {
 		String name = nameField.getText().trim();
 		if (name.isEmpty()) {
-			JOptionPane.showMessageDialog(parent, "Vui lòng nhập tên chuyến đi", "Kiểm tra dữ liệu",
-			                              JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(parent, "Vui lòng nhập tên chuyến đi", "Kiểm tra dữ liệu", JOptionPane.WARNING_MESSAGE);
 			return false;
 		}
 		return true;
@@ -172,8 +169,7 @@ public class TourDetailsTab extends JPanel {
 			de.getTextField().setForeground(ThemeTokens.TEXT());
 			de.getTextField().setBackground(ThemeTokens.SURFACE());
 			de.getTextField().setCaretColor(ThemeTokens.TEXT());
-			de.getTextField().setFont(
-			    new Font(ThemeTokens.FONT_FAMILY, ThemeTokens.FONT_WEIGHT_REGULAR, ThemeTokens.FONT_SIZE_BASE));
+			de.getTextField().setFont(new Font(ThemeTokens.FONT_FAMILY, ThemeTokens.FONT_WEIGHT_REGULAR, ThemeTokens.FONT_SIZE_BASE));
 		}
 	}
 

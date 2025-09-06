@@ -29,13 +29,11 @@ public class CustomerDetailsTab extends JPanel {
 		setOpaque(true);
 		setBackground(ThemeTokens.SURFACE());
 		setLayout(new GridBagLayout());
-		setBorder(new EmptyBorder(ThemeTokens.SPACE_16, ThemeTokens.SPACE_16, ThemeTokens.SPACE_16,
-		                          ThemeTokens.SPACE_16));
+		setBorder(new EmptyBorder(ThemeTokens.SPACE_16, ThemeTokens.SPACE_16, ThemeTokens.SPACE_16, ThemeTokens.SPACE_16));
 
 		genderField.setRenderer(new DefaultListCellRenderer() {
 			@Override
-			public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected,
-			        boolean cellHasFocus) {
+			public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
 				Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 				String v = String.valueOf(value);
 				setText("M".equals(v) ? "Nam" : "F".equals(v) ? "Nữ" : "");
@@ -162,8 +160,7 @@ public class CustomerDetailsTab extends JPanel {
 
 	public boolean validateInputs(Component parent) {
 		if (nameField.getText().trim().isEmpty()) {
-			JOptionPane.showMessageDialog(parent, "Vui lòng nhập họ tên", "Kiểm tra dữ liệu",
-			                              JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(parent, "Vui lòng nhập họ tên", "Kiểm tra dữ liệu", JOptionPane.WARNING_MESSAGE);
 			return false;
 		}
 		return true;

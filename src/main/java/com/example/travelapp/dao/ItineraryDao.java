@@ -8,9 +8,9 @@ import java.util.List;
 
 public class ItineraryDao extends BaseDao {
 	private static final String SQL_FIND_BY_TOUR = """
-	        SELECT id, tour_id, day_no, title, place, activity, note
-	        FROM itineraries
-	        WHERE tour_id = ?
+			SELECT id, tour_id, day_no, title, place, activity, note
+			FROM itineraries
+			WHERE tour_id = ?
 			ORDER BY day_no ASC
 			""";
 
@@ -26,8 +26,7 @@ public class ItineraryDao extends BaseDao {
 
 	public List<Itinerary> findByTourId(String tourId) {
 		List<Itinerary> list = new ArrayList<>();
-		try (Connection c = getConnection();
-			        PreparedStatement ps = c.prepareStatement(SQL_FIND_BY_TOUR)) {
+		try (Connection c = getConnection(); PreparedStatement ps = c.prepareStatement(SQL_FIND_BY_TOUR)) {
 			ps.setString(1, tourId);
 			try (ResultSet rs = ps.executeQuery()) {
 				while (rs.next()) {

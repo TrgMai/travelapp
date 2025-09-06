@@ -9,11 +9,11 @@ import java.util.*;
 
 public class UserDao extends BaseDao {
 	private static final String SQL_FIND_BY_USERNAME = """
-	        SELECT u.id AS uid, u.username, u.password_hash, u.full_name, u.email, u.phone, u.status, u.created_at,
-	        r.id AS rid, r.code AS rcode, r.name AS rname,
-	        p.code AS pcode
-	        FROM users u
-	        LEFT JOIN user_roles ur ON ur.user_id = u.id
+			SELECT u.id AS uid, u.username, u.password_hash, u.full_name, u.email, u.phone, u.status, u.created_at,
+			r.id AS rid, r.code AS rcode, r.name AS rname,
+			p.code AS pcode
+			FROM users u
+			LEFT JOIN user_roles ur ON ur.user_id = u.id
 			LEFT JOIN roles r ON r.id = ur.role_id
 			LEFT JOIN role_permissions rp ON rp.role_id = r.id
 			LEFT JOIN permissions p ON p.id = rp.permission_id
@@ -37,17 +37,17 @@ public class UserDao extends BaseDao {
 			VALUES (?, ?, ?, ?, ?, ?, ?, ?)
 			""";
 
-        private static final String SQL_UPDATE = """
-                        UPDATE users
-                        SET password_hash = ?, full_name = ?, email = ?, phone = ?, status = ?
-                        WHERE id = ?
-                        """;
+	private static final String SQL_UPDATE = """
+			UPDATE users
+			SET password_hash = ?, full_name = ?, email = ?, phone = ?, status = ?
+			WHERE id = ?
+			""";
 
-        private static final String SQL_UPDATE_PROFILE = """
-                        UPDATE users
-                        SET username = ?, password_hash = ?, full_name = ?, email = ?, phone = ?
-                        WHERE id = ?
-                        """;
+	private static final String SQL_UPDATE_PROFILE = """
+			UPDATE users
+			SET username = ?, password_hash = ?, full_name = ?, email = ?, phone = ?
+			WHERE id = ?
+			""";
 
 	private static final String SQL_DELETE = """
 			DELETE FROM users
@@ -57,8 +57,7 @@ public class UserDao extends BaseDao {
 	public User findByUsername(String username) {
 		User user = null;
 		Map<String, Role> rolesMap = new LinkedHashMap<>();
-		try (Connection conn = getConnection();
-			        PreparedStatement ps = conn.prepareStatement(SQL_FIND_BY_USERNAME)) {
+		try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(SQL_FIND_BY_USERNAME)) {
 			ps.setString(1, username);
 			try (ResultSet rs = ps.executeQuery()) {
 				while (rs.next()) {
@@ -93,9 +92,7 @@ public class UserDao extends BaseDao {
 
 	public List<User> findAll() {
 		List<User> out = new ArrayList<>();
-		try (Connection conn = getConnection();
-			        PreparedStatement ps = conn.prepareStatement(SQL_FIND_ALL);
-			        ResultSet rs = ps.executeQuery()) {
+		try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(SQL_FIND_ALL); ResultSet rs = ps.executeQuery()) {
 			Map<String, User> userMap = new LinkedHashMap<>();
 			Map<String, Role> roleCache = new HashMap<>();
 			while (rs.next()) {
@@ -130,8 +127,7 @@ public class UserDao extends BaseDao {
 	}
 
 	public boolean insert(User user) {
-		try (Connection conn = getConnection();
-			        PreparedStatement ps = conn.prepareStatement(SQL_INSERT)) {
+		try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(SQL_INSERT)) {
 			if (user.getId() != null) {
 				ps.setString(1, user.getId());
 			} else {
@@ -143,8 +139,7 @@ public class UserDao extends BaseDao {
 			ps.setString(5, user.getEmail());
 			ps.setString(6, user.getPhone());
 			ps.setString(7, user.getStatus());
-			ps.setTimestamp(8, user.getCreatedAt() != null ? Timestamp.valueOf(user.getCreatedAt())
-			                : new Timestamp(System.currentTimeMillis()));
+			ps.setTimestamp(8, user.getCreatedAt() != null ? Timestamp.valueOf(user.getCreatedAt()) : new Timestamp(System.currentTimeMillis()));
 			return ps.executeUpdate() == 1;
 		} catch (SQLException e) {
 			logger.error("insert user", e);
@@ -152,41 +147,38 @@ public class UserDao extends BaseDao {
 		}
 	}
 
-        public boolean update(User user) {
-                try (Connection conn = getConnection();
-                                PreparedStatement ps = conn.prepareStatement(SQL_UPDATE)) {
-                        ps.setString(1, user.getPasswordHash());
+	public boolean update(User user) {
+		try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(SQL_UPDATE)) {
+			ps.setString(1, user.getPasswordHash());
 			ps.setString(2, user.getFullName());
 			ps.setString(3, user.getEmail());
 			ps.setString(4, user.getPhone());
 			ps.setString(5, user.getStatus());
 			ps.setString(6, user.getId());
-                        return ps.executeUpdate() == 1;
-                } catch (SQLException e) {
-                        logger.error("update user", e);
-                        return false;
-                }
-        }
+			return ps.executeUpdate() == 1;
+		} catch (SQLException e) {
+			logger.error("update user", e);
+			return false;
+		}
+	}
 
-        public boolean updateProfile(User user) {
-                try (Connection conn = getConnection();
-                                PreparedStatement ps = conn.prepareStatement(SQL_UPDATE_PROFILE)) {
-                        ps.setString(1, user.getUsername());
-                        ps.setString(2, user.getPasswordHash());
-                        ps.setString(3, user.getFullName());
-                        ps.setString(4, user.getEmail());
-                        ps.setString(5, user.getPhone());
-                        ps.setString(6, user.getId());
-                        return ps.executeUpdate() == 1;
-                } catch (SQLException e) {
-                        logger.error("update profile", e);
-                        return false;
-                }
-        }
+	public boolean updateProfile(User user) {
+		try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(SQL_UPDATE_PROFILE)) {
+			ps.setString(1, user.getUsername());
+			ps.setString(2, user.getPasswordHash());
+			ps.setString(3, user.getFullName());
+			ps.setString(4, user.getEmail());
+			ps.setString(5, user.getPhone());
+			ps.setString(6, user.getId());
+			return ps.executeUpdate() == 1;
+		} catch (SQLException e) {
+			logger.error("update profile", e);
+			return false;
+		}
+	}
 
 	public boolean delete(String id) {
-		try (Connection conn = getConnection();
-			        PreparedStatement ps = conn.prepareStatement(SQL_DELETE)) {
+		try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(SQL_DELETE)) {
 			ps.setString(1, id);
 			return ps.executeUpdate() == 1;
 		} catch (SQLException e) {

@@ -60,7 +60,7 @@ public class BookingCustomersTableModel extends AbstractTableModel {
 		case 0 -> x.customerId;
 		case 1 -> x.customerName;
 		case 2 -> x.role;
-			default -> "";
+		default -> "";
 		};
 	}
 }

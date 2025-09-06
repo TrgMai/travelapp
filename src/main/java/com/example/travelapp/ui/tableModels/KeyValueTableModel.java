@@ -123,7 +123,7 @@ public class KeyValueTableModel extends AbstractTableModel {
 			case '\n' -> out.append("\\n");
 			case '\r' -> out.append("\\r");
 			case '\t' -> out.append("\\t");
-				default -> out.append(c);
+			default -> out.append(c);
 			}
 		}
 		return out.toString();

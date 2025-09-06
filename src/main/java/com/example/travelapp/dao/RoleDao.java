@@ -8,16 +8,14 @@ import java.util.List;
 
 public class RoleDao extends BaseDao {
 	private static final String SQL_FIND_ALL = """
-	        SELECT id, code, name
-	        FROM roles
-	        ORDER BY code
-	        """;
+			SELECT id, code, name
+			FROM roles
+			ORDER BY code
+			""";
 
 	public List<Role> findAll() {
 		List<Role> list = new ArrayList<>();
-		try (Connection conn = getConnection();
-			        PreparedStatement ps = conn.prepareStatement(SQL_FIND_ALL);
-			        ResultSet rs = ps.executeQuery()) {
+		try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(SQL_FIND_ALL); ResultSet rs = ps.executeQuery()) {
 			while (rs.next()) {
 				list.add(map(rs));
 			}

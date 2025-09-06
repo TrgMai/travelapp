@@ -11,10 +11,10 @@ import java.util.List;
 
 public class BookingDao extends BaseDao {
 	private static final String SQL_FIND_ALL = """
-	        SELECT id, tour_id, status, total_price, note, created_at, updated_at
-	        FROM bookings
-	        ORDER BY created_at DESC
-	        """;
+			SELECT id, tour_id, status, total_price, note, created_at, updated_at
+			FROM bookings
+			ORDER BY created_at DESC
+			""";
 
 	private static final String SQL_FIND_BY_ID = """
 			SELECT id, tour_id, status, total_price, note, created_at, updated_at
@@ -46,9 +46,7 @@ public class BookingDao extends BaseDao {
 
 	public List<Booking> findAll() {
 		List<Booking> list = new ArrayList<>();
-		try (Connection conn = getConnection();
-			        PreparedStatement ps = conn.prepareStatement(SQL_FIND_ALL);
-			        ResultSet rs = ps.executeQuery()) {
+		try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(SQL_FIND_ALL); ResultSet rs = ps.executeQuery()) {
 			while (rs.next()) {
 				list.add(map(rs));
 			}
@@ -59,8 +57,7 @@ public class BookingDao extends BaseDao {
 	}
 
 	public Booking findById(String id) {
-		try (Connection conn = getConnection();
-			        PreparedStatement ps = conn.prepareStatement(SQL_FIND_BY_ID)) {
+		try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(SQL_FIND_BY_ID)) {
 			ps.setString(1, id);
 			try (ResultSet rs = ps.executeQuery()) {
 				if (rs.next()) {
@@ -74,8 +71,7 @@ public class BookingDao extends BaseDao {
 	}
 
 	public boolean insert(Booking b) {
-		try (Connection conn = getConnection();
-			        PreparedStatement ps = conn.prepareStatement(SQL_INSERT)) {
+		try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(SQL_INSERT)) {
 			if (b.getId() != null) {
 				ps.setString(1, b.getId());
 			} else {
@@ -85,10 +81,8 @@ public class BookingDao extends BaseDao {
 			ps.setString(3, b.getStatus());
 			ps.setBigDecimal(4, b.getTotalPrice());
 			ps.setString(5, b.getNote());
-			ps.setTimestamp(6, b.getCreatedAt() != null ? Timestamp.valueOf(b.getCreatedAt())
-			                : new Timestamp(System.currentTimeMillis()));
-			ps.setTimestamp(7, b.getUpdatedAt() != null ? Timestamp.valueOf(b.getUpdatedAt())
-			                : new Timestamp(System.currentTimeMillis()));
+			ps.setTimestamp(6, b.getCreatedAt() != null ? Timestamp.valueOf(b.getCreatedAt()) : new Timestamp(System.currentTimeMillis()));
+			ps.setTimestamp(7, b.getUpdatedAt() != null ? Timestamp.valueOf(b.getUpdatedAt()) : new Timestamp(System.currentTimeMillis()));
 			return ps.executeUpdate() == 1;
 		} catch (SQLException e) {
 			logger.error("insert booking", e);
@@ -97,14 +91,12 @@ public class BookingDao extends BaseDao {
 	}
 
 	public boolean update(Booking b) {
-		try (Connection conn = getConnection();
-			        PreparedStatement ps = conn.prepareStatement(SQL_UPDATE)) {
+		try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(SQL_UPDATE)) {
 			ps.setString(1, b.getTourId());
 			ps.setString(2, b.getStatus());
 			ps.setBigDecimal(3, b.getTotalPrice());
 			ps.setString(4, b.getNote());
-			ps.setTimestamp(5, b.getUpdatedAt() != null ? Timestamp.valueOf(b.getUpdatedAt())
-			                : new Timestamp(System.currentTimeMillis()));
+			ps.setTimestamp(5, b.getUpdatedAt() != null ? Timestamp.valueOf(b.getUpdatedAt()) : new Timestamp(System.currentTimeMillis()));
 			ps.setString(6, b.getId());
 			return ps.executeUpdate() == 1;
 		} catch (SQLException e) {
@@ -114,8 +106,7 @@ public class BookingDao extends BaseDao {
 	}
 
 	public boolean delete(String id) {
-		try (Connection conn = getConnection();
-			        PreparedStatement ps = conn.prepareStatement(SQL_DELETE)) {
+		try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(SQL_DELETE)) {
 			ps.setString(1, id);
 			return ps.executeUpdate() == 1;
 		} catch (SQLException e) {
@@ -148,8 +139,7 @@ public class BookingDao extends BaseDao {
 		sql.append(" ORDER BY created_at DESC");
 
 		List<Booking> list = new ArrayList<>();
-		try (Connection conn = getConnection();
-			        PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+		try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql.toString())) {
 			for (int i = 0; i < params.size(); i++) {
 				ps.setObject(i + 1, params.get(i));
 			}

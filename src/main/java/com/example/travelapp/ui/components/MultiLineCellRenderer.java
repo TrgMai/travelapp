@@ -12,16 +12,11 @@ public class MultiLineCellRenderer extends JTextArea implements TableCellRendere
 		setLineWrap(true);
 		setWrapStyleWord(true);
 		setOpaque(true);
-		setBorder(new EmptyBorder(
-		              ThemeTokens.SPACE_4,
-		              ThemeTokens.SPACE_8,
-		              ThemeTokens.SPACE_4,
-		              ThemeTokens.SPACE_8));
+		setBorder(new EmptyBorder(ThemeTokens.SPACE_4, ThemeTokens.SPACE_8, ThemeTokens.SPACE_4, ThemeTokens.SPACE_8));
 	}
 
 	@Override
-	public Component getTableCellRendererComponent(
-	    JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
 
 		setText(value == null ? "" : value.toString());
 		setSize(table.getColumnModel().getColumn(column).getWidth(), Short.MAX_VALUE);

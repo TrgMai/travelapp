@@ -16,9 +16,7 @@ public final class ThemeComponents {
 		b.setBackground(ThemeTokens.PRIMARY());
 		b.setForeground(ThemeTokens.ON_PRIMARY());
 		b.setFocusPainted(false);
-		b.setBorder(BorderFactory.createCompoundBorder(
-		                BorderFactory.createLineBorder(ThemeTokens.PRIMARY(), 1, false),
-		                new EmptyBorder(6, 14, 6, 14)));
+		b.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(ThemeTokens.PRIMARY(), 1, false), new EmptyBorder(6, 14, 6, 14)));
 		b.addMouseListener(hoverBg(b, ThemeTokens.PRIMARY_HOVER(), ThemeTokens.PRIMARY()));
 		return b;
 	}
@@ -28,9 +26,7 @@ public final class ThemeComponents {
 		b.setBackground(ThemeTokens.SURFACE_ALT());
 		b.setForeground(ThemeTokens.TEXT());
 		b.setFocusPainted(false);
-		b.setBorder(BorderFactory.createCompoundBorder(
-		                BorderFactory.createLineBorder(ThemeTokens.BORDER(), 1, false),
-		                new EmptyBorder(6, 14, 6, 14)));
+		b.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(ThemeTokens.BORDER(), 1, false), new EmptyBorder(6, 14, 6, 14)));
 		b.addMouseListener(hoverBg(b, ThemeTokens.HOVER(), ThemeTokens.SURFACE_ALT()));
 		return b;
 	}
@@ -38,10 +34,7 @@ public final class ThemeComponents {
 	public static JPanel cardPanel() {
 		JPanel p = new JPanel(new BorderLayout());
 		p.setBackground(ThemeTokens.SURFACE());
-		p.setBorder(BorderFactory.createCompoundBorder(
-		                BorderFactory.createLineBorder(ThemeTokens.BORDER(), 1, false),
-		                new EmptyBorder(ThemeTokens.SPACE_12, ThemeTokens.SPACE_16, ThemeTokens.SPACE_12,
-		                                ThemeTokens.SPACE_16)));
+		p.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(ThemeTokens.BORDER(), 1, false), new EmptyBorder(ThemeTokens.SPACE_12, ThemeTokens.SPACE_16, ThemeTokens.SPACE_12, ThemeTokens.SPACE_16)));
 		return p;
 	}
 

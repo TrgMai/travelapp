@@ -19,7 +19,6 @@ public class ItineraryService {
 	public void saveForTour(String tourId, List<Itinerary> items) {
 		PermissionGuard.require();
 		dao.replaceAllForTour(tourId, items);
-		audit.log(SecurityContext.getCurrentUser().getId(), "UPDATE", "Itinerary", tourId,
-		          "{\"action\":\"update_itineraries\",\"tourId\":\"" + tourId + "\",\"count\":" + items.size() + "}");
+		audit.log(SecurityContext.getCurrentUser().getId(), "UPDATE", "Itinerary", tourId, "{\"action\":\"update_itineraries\",\"tourId\":\"" + tourId + "\",\"count\":" + items.size() + "}");
 	}
 }

@@ -34,9 +34,9 @@ public class PaymentsTab extends JPanel {
 		header.setOpaque(true);
 		header.setBackground(ThemeTokens.SURFACE());
 		header.setBorder(new EmptyBorder(ThemeTokens.SPACE_12, ThemeTokens.SPACE_12, 0, ThemeTokens.SPACE_12));
-                header.add(btnAdd);
-                header.add(btnDelete);
-                add(header, BorderLayout.NORTH);
+		header.add(btnAdd);
+		header.add(btnDelete);
+		add(header, BorderLayout.NORTH);
 
 		ThemeComponents.table(tbl);
 		TableUtils.applyTheme(tbl, 2);
@@ -50,30 +50,29 @@ public class PaymentsTab extends JPanel {
 		}
 
 		JScrollPane sp = ThemeComponents.scroll(tbl);
-		sp.setBorder(new EmptyBorder(ThemeTokens.SPACE_12, ThemeTokens.SPACE_12, ThemeTokens.SPACE_12,
-		                             ThemeTokens.SPACE_12));
+		sp.setBorder(new EmptyBorder(ThemeTokens.SPACE_12, ThemeTokens.SPACE_12, ThemeTokens.SPACE_12, ThemeTokens.SPACE_12));
 		add(sp, BorderLayout.CENTER);
 
-                final java.awt.event.MouseAdapter noPerm = new java.awt.event.MouseAdapter() {
-                        @Override
-                        public void mouseClicked(java.awt.event.MouseEvent e) {
-                                showNoPermission();
-                        }
-                };
+		final java.awt.event.MouseAdapter noPerm = new java.awt.event.MouseAdapter() {
+			@Override
+			public void mouseClicked(java.awt.event.MouseEvent e) {
+				showNoPermission();
+			}
+		};
 
-                boolean canRecord = SecurityContext.hasPermission("PAYMENT_RECORD");
+		boolean canRecord = SecurityContext.hasPermission("PAYMENT_RECORD");
 
-                if (canRecord) {
-                        btnAdd.addActionListener(e -> onAdd());
-                        btnDelete.addActionListener(e -> onDelete());
-                } else {
-                        btnAdd.setEnabled(false);
-                        btnDelete.setEnabled(false);
-                        btnAdd.addMouseListener(noPerm);
-                        btnDelete.addMouseListener(noPerm);
-                }
-                tbl.getSelectionModel().addListSelectionListener(e -> btnDelete.setEnabled(tbl.getSelectedRow() >= 0 && canRecord));
-                btnDelete.setEnabled(false);
+		if (canRecord) {
+			btnAdd.addActionListener(e -> onAdd());
+			btnDelete.addActionListener(e -> onDelete());
+		} else {
+			btnAdd.setEnabled(false);
+			btnDelete.setEnabled(false);
+			btnAdd.addMouseListener(noPerm);
+			btnDelete.addMouseListener(noPerm);
+		}
+		tbl.getSelectionModel().addListSelectionListener(e -> btnDelete.setEnabled(tbl.getSelectedRow() >= 0 && canRecord));
+		btnDelete.setEnabled(false);
 
 		reload();
 	}
@@ -88,12 +87,12 @@ public class PaymentsTab extends JPanel {
 		}
 	}
 
-        private void onAdd() {
-                if (!SecurityContext.hasPermission("PAYMENT_RECORD")) {
-                        showNoPermission();
-                        return;
-                }
-                PaymentFormDialog f = new PaymentFormDialog();
+	private void onAdd() {
+		if (!SecurityContext.hasPermission("PAYMENT_RECORD")) {
+			showNoPermission();
+			return;
+		}
+		PaymentFormDialog f = new PaymentFormDialog();
 		f.setVisible(true);
 		if (!f.isOk()) {
 			return;
@@ -113,28 +112,27 @@ public class PaymentsTab extends JPanel {
 		}
 	}
 
-        private void onDelete() {
-                if (!SecurityContext.hasPermission("PAYMENT_RECORD")) {
-                        showNoPermission();
-                        return;
-                }
-                int r = tbl.getSelectedRow();
-                if (r < 0) {
-                        return;
-                }
-                var p = model.getAt(tbl.convertRowIndexToModel(r));
-                int ok = JOptionPane.showConfirmDialog(this, "Xóa thanh toán?", "Xác nhận", JOptionPane.YES_NO_OPTION);
-                if (ok == JOptionPane.YES_OPTION) {
-                        if (paymentService.deletePayment(p.getId())) {
-                                reload();
-                        } else {
-                                JOptionPane.showMessageDialog(this, "Xóa thất bại", "Lỗi", JOptionPane.ERROR_MESSAGE);
-                        }
-                }
-        }
+	private void onDelete() {
+		if (!SecurityContext.hasPermission("PAYMENT_RECORD")) {
+			showNoPermission();
+			return;
+		}
+		int r = tbl.getSelectedRow();
+		if (r < 0) {
+			return;
+		}
+		var p = model.getAt(tbl.convertRowIndexToModel(r));
+		int ok = JOptionPane.showConfirmDialog(this, "Xóa thanh toán?", "Xác nhận", JOptionPane.YES_NO_OPTION);
+		if (ok == JOptionPane.YES_OPTION) {
+			if (paymentService.deletePayment(p.getId())) {
+				reload();
+			} else {
+				JOptionPane.showMessageDialog(this, "Xóa thất bại", "Lỗi", JOptionPane.ERROR_MESSAGE);
+			}
+		}
+	}
 
-        private void showNoPermission() {
-                JOptionPane.showMessageDialog(this, "Bạn không có quyền thực hiện thao tác này.",
-                                              "Từ chối truy cập", JOptionPane.ERROR_MESSAGE);
-        }
+	private void showNoPermission() {
+		JOptionPane.showMessageDialog(this, "Bạn không có quyền thực hiện thao tác này.", "Từ chối truy cập", JOptionPane.ERROR_MESSAGE);
+	}
 }

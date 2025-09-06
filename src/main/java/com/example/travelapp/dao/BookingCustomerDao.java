@@ -9,9 +9,9 @@ import java.util.List;
 
 public class BookingCustomerDao extends BaseDao {
 	private static final String SQL_FIND_BY_BOOKING = """
-	        SELECT booking_id, customer_id, role
-	        FROM booking_customers
-	        WHERE booking_id=?
+			SELECT booking_id, customer_id, role
+			FROM booking_customers
+			WHERE booking_id=?
 			ORDER BY customer_id
 			""";
 
@@ -33,8 +33,7 @@ public class BookingCustomerDao extends BaseDao {
 
 	public List<BookingCustomer> findByBooking(String bookingId) {
 		List<BookingCustomer> list = new ArrayList<>();
-		try (Connection c = getConnection();
-			        PreparedStatement ps = c.prepareStatement(SQL_FIND_BY_BOOKING)) {
+		try (Connection c = getConnection(); PreparedStatement ps = c.prepareStatement(SQL_FIND_BY_BOOKING)) {
 			ps.setString(1, bookingId);
 			try (ResultSet rs = ps.executeQuery()) {
 				while (rs.next()) {
@@ -49,8 +48,7 @@ public class BookingCustomerDao extends BaseDao {
 	}
 
 	public boolean add(String bookingId, String customerId, String role) {
-		try (Connection c = getConnection();
-			        PreparedStatement ps = c.prepareStatement(SQL_INSERT)) {
+		try (Connection c = getConnection(); PreparedStatement ps = c.prepareStatement(SQL_INSERT)) {
 			ps.setString(1, bookingId);
 			ps.setString(2, customerId);
 			ps.setString(3, role);
@@ -62,8 +60,7 @@ public class BookingCustomerDao extends BaseDao {
 	}
 
 	public boolean remove(String bookingId, String customerId) {
-		try (Connection c = getConnection();
-			        PreparedStatement ps = c.prepareStatement(SQL_DELETE)) {
+		try (Connection c = getConnection(); PreparedStatement ps = c.prepareStatement(SQL_DELETE)) {
 			ps.setString(1, bookingId);
 			ps.setString(2, customerId);
 			return ps.executeUpdate() > 0;
@@ -74,8 +71,7 @@ public class BookingCustomerDao extends BaseDao {
 	}
 
 	public boolean updateRole(String bookingId, String customerId, String role) {
-		try (Connection c = getConnection();
-			        PreparedStatement ps = c.prepareStatement(SQL_UPDATE_ROLE)) {
+		try (Connection c = getConnection(); PreparedStatement ps = c.prepareStatement(SQL_UPDATE_ROLE)) {
 			ps.setString(1, role);
 			ps.setString(2, bookingId);
 			ps.setString(3, customerId);

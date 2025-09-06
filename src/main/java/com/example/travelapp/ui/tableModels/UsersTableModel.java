@@ -45,7 +45,7 @@ public class UsersTableModel extends AbstractTableModel {
 		case 3 -> u.getPhone();
 		case 4 -> u.getStatus();
 		case 5 -> u.getRoles().stream().map(Role::getCode).collect(Collectors.joining(", "));
-			default -> null;
+		default -> null;
 		};
 	}
 }

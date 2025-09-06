@@ -73,11 +73,7 @@ public class TourFormDialog extends JDialog {
 		int daysFromItinerary = itineraryTab.getDaysCount();
 		int daysInput = detailsTab.getDays();
 		if (daysInput != daysFromItinerary) {
-			int ch = JOptionPane.showConfirmDialog(
-			             this,
-			             "Lịch trình có " + daysFromItinerary + " ngày, khác với số ngày bạn nhập là " + daysInput +
-			             ". Bạn có muốn đồng bộ số ngày thành " + daysFromItinerary + " không?",
-			             "Xác nhận", JOptionPane.YES_NO_OPTION);
+			int ch = JOptionPane.showConfirmDialog(this, "Lịch trình có " + daysFromItinerary + " ngày, khác với số ngày bạn nhập là " + daysInput + ". Bạn có muốn đồng bộ số ngày thành " + daysFromItinerary + " không?", "Xác nhận", JOptionPane.YES_NO_OPTION);
 			if (ch == JOptionPane.YES_OPTION) {
 				detailsTab.setDays(daysFromItinerary);
 			} else {
@@ -87,8 +83,7 @@ public class TourFormDialog extends JDialog {
 
 		BigDecimal pn = detailsTab.getPrice();
 		if (pn != null && pn.signum() < 0) {
-			JOptionPane.showMessageDialog(this, "Giá phải lớn hơn hoặc bằng 0", "Kiểm tra dữ liệu",
-			                              JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(this, "Giá phải lớn hơn hoặc bằng 0", "Kiểm tra dữ liệu", JOptionPane.WARNING_MESSAGE);
 			return;
 		}
 

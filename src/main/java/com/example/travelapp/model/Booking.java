@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-
 public class Booking {
 	private String id;
 	private String tourId;
@@ -17,8 +16,7 @@ public class Booking {
 	public Booking() {
 	}
 
-	public Booking(String id, String tourId, String status, BigDecimal totalPrice,
-	               String note, LocalDateTime createdAt, LocalDateTime updatedAt) {
+	public Booking(String id, String tourId, String status, BigDecimal totalPrice, String note, LocalDateTime createdAt, LocalDateTime updatedAt) {
 		this.id = id;
 		this.tourId = tourId;
 		this.status = status;

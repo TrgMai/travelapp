@@ -21,8 +21,7 @@ public class BookingService {
 		PermissionGuard.require();
 		boolean ok = dao.insert(b);
 		if (ok)
-			audit.log(SecurityContext.getCurrentUser().getId(), "CREATE", "Booking", b.getId(),
-			          "{\"action\":\"create_booking\", \"bookingId\":\"" + b.getId() + "\"}");
+			audit.log(SecurityContext.getCurrentUser().getId(), "CREATE", "Booking", b.getId(), "{\"action\":\"create_booking\", \"bookingId\":\"" + b.getId() + "\"}");
 		return ok;
 	}
 
@@ -30,8 +29,7 @@ public class BookingService {
 		PermissionGuard.require();
 		boolean ok = dao.update(b);
 		if (ok)
-			audit.log(SecurityContext.getCurrentUser().getId(), "UPDATE", "Booking", b.getId(),
-			          "{\"action\":\"update_booking\", \"bookingId\":\"" + b.getId() + "\"}");
+			audit.log(SecurityContext.getCurrentUser().getId(), "UPDATE", "Booking", b.getId(), "{\"action\":\"update_booking\", \"bookingId\":\"" + b.getId() + "\"}");
 		return ok;
 	}
 
@@ -39,8 +37,7 @@ public class BookingService {
 		PermissionGuard.require();
 		boolean ok = dao.delete(id);
 		if (ok)
-			audit.log(SecurityContext.getCurrentUser().getId(), "DELETE", "Booking", id,
-			          "{\"action\":\"delete_booking\", \"bookingId\":\"" + id + "\"}");
+			audit.log(SecurityContext.getCurrentUser().getId(), "DELETE", "Booking", id, "{\"action\":\"delete_booking\", \"bookingId\":\"" + id + "\"}");
 		return ok;
 	}
 

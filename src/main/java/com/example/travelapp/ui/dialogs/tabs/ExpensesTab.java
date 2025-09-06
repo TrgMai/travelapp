@@ -49,26 +49,25 @@ public class ExpensesTab extends JPanel {
 		}
 
 		JScrollPane sp = ThemeComponents.scroll(table);
-		sp.setBorder(new EmptyBorder(ThemeTokens.SPACE_12, ThemeTokens.SPACE_12, ThemeTokens.SPACE_12,
-		                             ThemeTokens.SPACE_12));
+		sp.setBorder(new EmptyBorder(ThemeTokens.SPACE_12, ThemeTokens.SPACE_12, ThemeTokens.SPACE_12, ThemeTokens.SPACE_12));
 		add(sp, BorderLayout.CENTER);
 
-                final java.awt.event.MouseAdapter noPerm = new java.awt.event.MouseAdapter() {
-                        @Override
-                        public void mouseClicked(java.awt.event.MouseEvent e) {
-                                showNoPermission();
-                        }
-                };
-                boolean canEdit = SecurityContext.hasPermission("BOOKING_EDIT");
-                if (canEdit) {
-                        btnAdd.addActionListener(e -> onAdd());
-                        btnDelete.addActionListener(e -> onDelete());
-                } else {
-                        btnAdd.setEnabled(false);
-                        btnDelete.setEnabled(false);
-                        btnAdd.addMouseListener(noPerm);
-                        btnDelete.addMouseListener(noPerm);
-                }
+		final java.awt.event.MouseAdapter noPerm = new java.awt.event.MouseAdapter() {
+			@Override
+			public void mouseClicked(java.awt.event.MouseEvent e) {
+				showNoPermission();
+			}
+		};
+		boolean canEdit = SecurityContext.hasPermission("BOOKING_EDIT");
+		if (canEdit) {
+			btnAdd.addActionListener(e -> onAdd());
+			btnDelete.addActionListener(e -> onDelete());
+		} else {
+			btnAdd.setEnabled(false);
+			btnDelete.setEnabled(false);
+			btnAdd.addMouseListener(noPerm);
+			btnDelete.addMouseListener(noPerm);
+		}
 
 		reload();
 	}
@@ -77,12 +76,12 @@ public class ExpensesTab extends JPanel {
 		model.setData(service.getByBooking(bookingId));
 	}
 
-        private void onAdd() {
-                if (!SecurityContext.hasPermission("BOOKING_EDIT")) {
-                        showNoPermission();
-                        return;
-                }
-                ExpenseFormDialog f = new ExpenseFormDialog();
+	private void onAdd() {
+		if (!SecurityContext.hasPermission("BOOKING_EDIT")) {
+			showNoPermission();
+			return;
+		}
+		ExpenseFormDialog f = new ExpenseFormDialog();
 		f.setVisible(true);
 		if (!f.ok) {
 			return;
@@ -105,28 +104,26 @@ public class ExpensesTab extends JPanel {
 		}
 	}
 
-        private void onDelete() {
-                if (!SecurityContext.hasPermission("BOOKING_EDIT")) {
-                        showNoPermission();
-                        return;
-                }
-                int r = table.getSelectedRow();
-                if (r < 0) {
-                        return;
-                }
-                var ex = model.getAt(table.convertRowIndexToModel(r));
-                if (JOptionPane.showConfirmDialog(this, "Xóa chi phí này?", "Xác nhận",
-                                                  JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-                        if (service.delete(ex.getId())) {
-                                reload();
-                        } else {
-                                JOptionPane.showMessageDialog(this, "Xóa thất bại", "Lỗi", JOptionPane.ERROR_MESSAGE);
-                        }
-                }
-        }
+	private void onDelete() {
+		if (!SecurityContext.hasPermission("BOOKING_EDIT")) {
+			showNoPermission();
+			return;
+		}
+		int r = table.getSelectedRow();
+		if (r < 0) {
+			return;
+		}
+		var ex = model.getAt(table.convertRowIndexToModel(r));
+		if (JOptionPane.showConfirmDialog(this, "Xóa chi phí này?", "Xác nhận", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+			if (service.delete(ex.getId())) {
+				reload();
+			} else {
+				JOptionPane.showMessageDialog(this, "Xóa thất bại", "Lỗi", JOptionPane.ERROR_MESSAGE);
+			}
+		}
+	}
 
-        private void showNoPermission() {
-                JOptionPane.showMessageDialog(this, "Bạn không có quyền thực hiện thao tác này.",
-                                              "Từ chối truy cập", JOptionPane.ERROR_MESSAGE);
-        }
+	private void showNoPermission() {
+		JOptionPane.showMessageDialog(this, "Bạn không có quyền thực hiện thao tác này.", "Từ chối truy cập", JOptionPane.ERROR_MESSAGE);
+	}
 }

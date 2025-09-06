@@ -40,12 +40,12 @@ public class PaymentsPanel extends JPanel {
 	private JDatePickerImpl dateFromPicker;
 	private JDatePickerImpl dateToPicker;
 
-        private final JButton addBtn = ThemeComponents.primaryButton("Thêm");
-        private final JButton editBtn = ThemeComponents.softButton("Sửa");
-        private final JButton deleteBtn = ThemeComponents.softButton("Xóa");
-        private final JButton exportBtn = ThemeComponents.softButton("Tải tệp Excel");
-        private final JButton btnFilter = ThemeComponents.primaryButton("Lọc");
-        private final JButton btnReset = ThemeComponents.softButton("Xóa lọc");
+	private final JButton addBtn = ThemeComponents.primaryButton("Thêm");
+	private final JButton editBtn = ThemeComponents.softButton("Sửa");
+	private final JButton deleteBtn = ThemeComponents.softButton("Xóa");
+	private final JButton exportBtn = ThemeComponents.softButton("Tải tệp Excel");
+	private final JButton btnFilter = ThemeComponents.primaryButton("Lọc");
+	private final JButton btnReset = ThemeComponents.softButton("Xóa lọc");
 
 	public PaymentsPanel() {
 		setLayout(new BorderLayout());
@@ -54,7 +54,7 @@ public class PaymentsPanel extends JPanel {
 		JPanel top = new JPanel();
 		top.setLayout(new BoxLayout(top, BoxLayout.Y_AXIS));
 		top.setOpaque(false);
-                top.add(new HeaderBar("Thanh toán", addBtn, editBtn, deleteBtn, exportBtn));
+		top.add(new HeaderBar("Thanh toán", addBtn, editBtn, deleteBtn, exportBtn));
 		top.add(Box.createVerticalStrut(ThemeTokens.SPACE_12));
 		top.add(buildFiltersCard());
 		add(top, BorderLayout.NORTH);
@@ -75,45 +75,42 @@ public class PaymentsPanel extends JPanel {
 		JScrollPane sp = ThemeComponents.scroll(table);
 		add(sp, BorderLayout.CENTER);
 
-                final java.awt.event.MouseAdapter noPerm = new java.awt.event.MouseAdapter() {
-                        @Override
-                        public void mouseClicked(java.awt.event.MouseEvent e) {
-                                showNoPermission();
-                        }
-                };
-
-                boolean canRecord = SecurityContext.hasPermission("PAYMENT_RECORD");
-
-                table.getSelectionModel().addListSelectionListener(e -> {
-                        boolean sel = table.getSelectedRow() >= 0;
-                        editBtn.setEnabled(sel && canRecord);
-                        deleteBtn.setEnabled(sel && canRecord);
-                });
-                editBtn.setEnabled(false);
-                deleteBtn.setEnabled(false);
-
-                table.addMouseListener(new java.awt.event.MouseAdapter() {
-                        @Override
-                        public void mouseClicked(java.awt.event.MouseEvent e) {
-                                if (e.getClickCount() == 2 && table.getSelectedRow() >= 0) {
-                                        if (!canRecord) {
-                                                showNoPermission();
-                                                return;
-                                        }
-                                        editSelected();
-                                }
-                        }
-                });
-
-                cbType.setRenderer(new DefaultListCellRenderer() {
+		final java.awt.event.MouseAdapter noPerm = new java.awt.event.MouseAdapter() {
 			@Override
-			public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected,
-			        boolean cellHasFocus) {
+			public void mouseClicked(java.awt.event.MouseEvent e) {
+				showNoPermission();
+			}
+		};
+
+		boolean canRecord = SecurityContext.hasPermission("PAYMENT_RECORD");
+
+		table.getSelectionModel().addListSelectionListener(e -> {
+			boolean sel = table.getSelectedRow() >= 0;
+			editBtn.setEnabled(sel && canRecord);
+			deleteBtn.setEnabled(sel && canRecord);
+		});
+		editBtn.setEnabled(false);
+		deleteBtn.setEnabled(false);
+
+		table.addMouseListener(new java.awt.event.MouseAdapter() {
+			@Override
+			public void mouseClicked(java.awt.event.MouseEvent e) {
+				if (e.getClickCount() == 2 && table.getSelectedRow() >= 0) {
+					if (!canRecord) {
+						showNoPermission();
+						return;
+					}
+					editSelected();
+				}
+			}
+		});
+
+		cbType.setRenderer(new DefaultListCellRenderer() {
+			@Override
+			public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
 				Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 				String v = String.valueOf(value);
-				setText("All".equals(v) ? "Tất cả"
-				        : "CASH".equals(v) ? "Tiền mặt"
-				        : "TRANSFER".equals(v) ? "Chuyển khoản" : "CARD".equals(v) ? "Thẻ" : v);
+				setText("All".equals(v) ? "Tất cả" : "CASH".equals(v) ? "Tiền mặt" : "TRANSFER".equals(v) ? "Chuyển khoản" : "CARD".equals(v) ? "Thẻ" : v);
 				return c;
 			}
 		});
@@ -123,24 +120,24 @@ public class PaymentsPanel extends JPanel {
 		editBtn.setPreferredSize(btnSize);
 		deleteBtn.setPreferredSize(btnSize);
 
-                if (canRecord) {
-                        addBtn.addActionListener(e -> addPayment());
-                        editBtn.addActionListener(e -> editSelected());
-                        deleteBtn.addActionListener(e -> deletePayment());
-                } else {
-                        addBtn.setEnabled(false);
-                        editBtn.setEnabled(false);
-                        deleteBtn.setEnabled(false);
-                        addBtn.addMouseListener(noPerm);
-                        editBtn.addMouseListener(noPerm);
-                        deleteBtn.addMouseListener(noPerm);
-                }
-                exportBtn.addActionListener(e -> exportExcel());
-                btnFilter.addActionListener(e -> reloadData());
-                btnReset.addActionListener(e -> {
-                        resetFilter();
-                        reloadData();
-                });
+		if (canRecord) {
+			addBtn.addActionListener(e -> addPayment());
+			editBtn.addActionListener(e -> editSelected());
+			deleteBtn.addActionListener(e -> deletePayment());
+		} else {
+			addBtn.setEnabled(false);
+			editBtn.setEnabled(false);
+			deleteBtn.setEnabled(false);
+			addBtn.addMouseListener(noPerm);
+			editBtn.addMouseListener(noPerm);
+			deleteBtn.addMouseListener(noPerm);
+		}
+		exportBtn.addActionListener(e -> exportExcel());
+		btnFilter.addActionListener(e -> reloadData());
+		btnReset.addActionListener(e -> {
+			resetFilter();
+			reloadData();
+		});
 
 		loadBookings();
 		reloadData();
@@ -265,8 +262,7 @@ public class PaymentsPanel extends JPanel {
 		cbBooking.setModel(model);
 		cbBooking.setRenderer(new DefaultListCellRenderer() {
 			@Override
-			public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected,
-			        boolean cellHasFocus) {
+			public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
 				Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 				if (value instanceof Booking b) {
 					setText(b.getId());
@@ -312,8 +308,7 @@ public class PaymentsPanel extends JPanel {
 
 		java.util.Date f = (java.util.Date) dateFromPicker.getModel().getValue();
 		java.util.Date t = (java.util.Date) dateToPicker.getModel().getValue();
-		LocalDateTime from = f == null ? null
-		                     : f.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().atStartOfDay();
+		LocalDateTime from = f == null ? null : f.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().atStartOfDay();
 		LocalDateTime to = null;
 		if (t != null) {
 			LocalDate ld = t.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
@@ -330,15 +325,14 @@ public class PaymentsPanel extends JPanel {
 		tableModel.setData(list);
 	}
 
-        private void addPayment() {
-                if (!SecurityContext.hasPermission("PAYMENT_RECORD")) {
-                        showNoPermission();
-                        return;
-                }
-                Object sel = cbBooking.getSelectedItem();
+	private void addPayment() {
+		if (!SecurityContext.hasPermission("PAYMENT_RECORD")) {
+			showNoPermission();
+			return;
+		}
+		Object sel = cbBooking.getSelectedItem();
 		if (!(sel instanceof Booking b)) {
-			JOptionPane.showMessageDialog(this, "Vui lòng chọn đặt chỗ.", "Thêm thanh toán",
-			                              JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(this, "Vui lòng chọn đặt chỗ.", "Thêm thanh toán", JOptionPane.WARNING_MESSAGE);
 			return;
 		}
 		PaymentFormDialog d = new PaymentFormDialog();
@@ -362,12 +356,12 @@ public class PaymentsPanel extends JPanel {
 		}
 	}
 
-        private void editSelected() {
-                if (!SecurityContext.hasPermission("PAYMENT_RECORD")) {
-                        showNoPermission();
-                        return;
-                }
-                int rowView = table.getSelectedRow();
+	private void editSelected() {
+		if (!SecurityContext.hasPermission("PAYMENT_RECORD")) {
+			showNoPermission();
+			return;
+		}
+		int rowView = table.getSelectedRow();
 		if (rowView < 0) {
 			return;
 		}
@@ -394,12 +388,12 @@ public class PaymentsPanel extends JPanel {
 		}
 	}
 
-        private void deletePayment() {
-                if (!SecurityContext.hasPermission("PAYMENT_RECORD")) {
-                        showNoPermission();
-                        return;
-                }
-                int rowView = table.getSelectedRow();
+	private void deletePayment() {
+		if (!SecurityContext.hasPermission("PAYMENT_RECORD")) {
+			showNoPermission();
+			return;
+		}
+		int rowView = table.getSelectedRow();
 		if (rowView < 0) {
 			return;
 		}
@@ -415,32 +409,31 @@ public class PaymentsPanel extends JPanel {
 		}
 	}
 
-        private void resetFilter() {
-                cbBooking.setSelectedIndex(0);
-                cbType.setSelectedIndex(0);
-                txtMinAmount.setText("");
-                txtMaxAmount.setText("");
-                dateFromPicker.getModel().setValue(null);
-                dateToPicker.getModel().setValue(null);
-        }
+	private void resetFilter() {
+		cbBooking.setSelectedIndex(0);
+		cbType.setSelectedIndex(0);
+		txtMinAmount.setText("");
+		txtMaxAmount.setText("");
+		dateFromPicker.getModel().setValue(null);
+		dateToPicker.getModel().setValue(null);
+	}
 
-        private void showNoPermission() {
-                JOptionPane.showMessageDialog(this, "Bạn không có quyền thực hiện thao tác này.",
-                                              "Từ chối truy cập", JOptionPane.ERROR_MESSAGE);
-        }
+	private void showNoPermission() {
+		JOptionPane.showMessageDialog(this, "Bạn không có quyền thực hiện thao tác này.", "Từ chối truy cập", JOptionPane.ERROR_MESSAGE);
+	}
 
-        private void exportExcel() {
-                java.time.format.DateTimeFormatter df = java.time.format.DateTimeFormatter.ofPattern("yyyyMMdd");
-                String fname = "DanhSachThanhToan_" + java.time.LocalDate.now().format(df) + ".xlsx";
-                javax.swing.JFileChooser fc = new javax.swing.JFileChooser();
-                fc.setSelectedFile(new java.io.File(fname));
-                if (fc.showSaveDialog(this) == javax.swing.JFileChooser.APPROVE_OPTION) {
-                        try {
-                                ExcelExporter.exportTable(table, fc.getSelectedFile().toPath(), "ThanhToan");
-                                javax.swing.JOptionPane.showMessageDialog(this, "Xuất Excel thành công.");
-                        } catch (Exception ex) {
-                                javax.swing.JOptionPane.showMessageDialog(this, "Xuất Excel thất bại: " + ex.getMessage(), "Lỗi", javax.swing.JOptionPane.ERROR_MESSAGE);
-                        }
-                }
-        }
+	private void exportExcel() {
+		java.time.format.DateTimeFormatter df = java.time.format.DateTimeFormatter.ofPattern("yyyyMMdd");
+		String fname = "DanhSachThanhToan_" + java.time.LocalDate.now().format(df) + ".xlsx";
+		javax.swing.JFileChooser fc = new javax.swing.JFileChooser();
+		fc.setSelectedFile(new java.io.File(fname));
+		if (fc.showSaveDialog(this) == javax.swing.JFileChooser.APPROVE_OPTION) {
+			try {
+				ExcelExporter.exportTable(table, fc.getSelectedFile().toPath(), "ThanhToan");
+				javax.swing.JOptionPane.showMessageDialog(this, "Xuất Excel thành công.");
+			} catch (Exception ex) {
+				javax.swing.JOptionPane.showMessageDialog(this, "Xuất Excel thất bại: " + ex.getMessage(), "Lỗi", javax.swing.JOptionPane.ERROR_MESSAGE);
+			}
+		}
+	}
 }

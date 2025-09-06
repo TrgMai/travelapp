@@ -22,8 +22,7 @@ public class ItineraryTab extends JPanel {
 		super(new BorderLayout(ThemeTokens.SPACE_8, ThemeTokens.SPACE_8));
 		setOpaque(true);
 		setBackground(ThemeTokens.SURFACE());
-		setBorder(new EmptyBorder(ThemeTokens.SPACE_12, ThemeTokens.SPACE_12, ThemeTokens.SPACE_12,
-		                          ThemeTokens.SPACE_12));
+		setBorder(new EmptyBorder(ThemeTokens.SPACE_12, ThemeTokens.SPACE_12, ThemeTokens.SPACE_12, ThemeTokens.SPACE_12));
 
 		itineraryTable.setFillsViewportHeight(true);
 		itineraryTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -100,8 +99,7 @@ public class ItineraryTab extends JPanel {
 		itineraryModel.clear();
 		for (var it : list) {
 			int dayNo = (it.getDayNo() == null) ? itineraryModel.getRowCount() + 1 : it.getDayNo();
-			itineraryModel.addRow(dayNo, nullToEmpty(it.getTitle()), nullToEmpty(it.getPlace()),
-			                      nullToEmpty(it.getActivity()), nullToEmpty(it.getNote()));
+			itineraryModel.addRow(dayNo, nullToEmpty(it.getTitle()), nullToEmpty(it.getPlace()), nullToEmpty(it.getActivity()), nullToEmpty(it.getNote()));
 		}
 		itineraryModel.renumberDays();
 		notifyDaysChanged();

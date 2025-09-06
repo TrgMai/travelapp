@@ -11,10 +11,10 @@ import java.util.List;
 public class CustomerDao extends BaseDao {
 
 	private static final String SQL_FIND_ALL = """
-	        SELECT id, full_name, dob, gender, id_type, id_no, phone, email, note, created_at
-	        FROM customers
-	        ORDER BY created_at DESC
-	        """;
+			SELECT id, full_name, dob, gender, id_type, id_no, phone, email, note, created_at
+			FROM customers
+			ORDER BY created_at DESC
+			""";
 
 	private static final String SQL_FIND_BY_ID = """
 			SELECT id, full_name, dob, gender, id_type, id_no, phone, email, note, created_at
@@ -36,13 +36,11 @@ public class CustomerDao extends BaseDao {
 	private static final String SQL_DELETE = """
 			DELETE FROM customers
 			WHERE id = ?
-					""";
+			""";
 
 	public List<Customer> findAll() {
 		List<Customer> list = new ArrayList<>();
-		try (Connection conn = getConnection();
-			        PreparedStatement ps = conn.prepareStatement(SQL_FIND_ALL);
-			        ResultSet rs = ps.executeQuery()) {
+		try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(SQL_FIND_ALL); ResultSet rs = ps.executeQuery()) {
 			while (rs.next()) {
 				list.add(map(rs));
 			}
@@ -53,8 +51,7 @@ public class CustomerDao extends BaseDao {
 	}
 
 	public Customer findById(String id) {
-		try (Connection conn = getConnection();
-			        PreparedStatement ps = conn.prepareStatement(SQL_FIND_BY_ID)) {
+		try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(SQL_FIND_BY_ID)) {
 			ps.setString(1, id);
 			try (ResultSet rs = ps.executeQuery()) {
 				if (rs.next()) {
@@ -69,39 +66,38 @@ public class CustomerDao extends BaseDao {
 
 	public List<Customer> search(String keyword, String gender, LocalDate dobFrom, LocalDate dobTo) {
 		StringBuilder sql = new StringBuilder("""
-		                                      SELECT id, full_name, dob, gender, id_type, id_no, phone, email, note, created_at
-		                                      FROM customers
-		                                      WHERE 1=1
-		                                              """);
-		                                              List<Object> params = new ArrayList<>();
+				SELECT id, full_name, dob, gender, id_type, id_no, phone, email, note, created_at
+				FROM customers
+				WHERE 1=1
+				        """);
+		List<Object> params = new ArrayList<>();
 
 		if (keyword != null && !keyword.isBlank()) {
-		sql.append("""
-		           AND (LOWER(full_name) LIKE ? OR LOWER(phone) LIKE ? OR LOWER(email) LIKE ? OR LOWER(id_no) LIKE ?)
-		           """);
-		           String kw = "%" + keyword.toLowerCase() + "%";
-		           params.add(kw);
-		           params.add(kw);
-		           params.add(kw);
-		           params.add(kw);
-	}
-	if (gender != null && !gender.isBlank()) {
-		sql.append(" AND gender = ? ");
+			sql.append("""
+					AND (LOWER(full_name) LIKE ? OR LOWER(phone) LIKE ? OR LOWER(email) LIKE ? OR LOWER(id_no) LIKE ?)
+					""");
+			String kw = "%" + keyword.toLowerCase() + "%";
+			params.add(kw);
+			params.add(kw);
+			params.add(kw);
+			params.add(kw);
+		}
+		if (gender != null && !gender.isBlank()) {
+			sql.append(" AND gender = ? ");
 			params.add(gender);
 		}
 		if (dobFrom != null) {
-		sql.append(" AND dob >= ? ");
+			sql.append(" AND dob >= ? ");
 			params.add(Date.valueOf(dobFrom));
 		}
 		if (dobTo != null) {
-		sql.append(" AND dob <= ? ");
+			sql.append(" AND dob <= ? ");
 			params.add(Date.valueOf(dobTo));
 		}
 		sql.append(" ORDER BY created_at DESC ");
 
 		List<Customer> list = new ArrayList<>();
-		try (Connection conn = getConnection();
-			PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+		try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql.toString())) {
 			for (int i = 0; i < params.size(); i++) {
 				Object p = params.get(i);
 				if (p instanceof Date d) {
@@ -122,8 +118,7 @@ public class CustomerDao extends BaseDao {
 	}
 
 	public boolean insert(Customer c) {
-		try (Connection conn = getConnection();
-			        PreparedStatement ps = conn.prepareStatement(SQL_INSERT)) {
+		try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(SQL_INSERT)) {
 			if (c.getId() != null) {
 				ps.setString(1, c.getId());
 			} else {
@@ -154,8 +149,7 @@ public class CustomerDao extends BaseDao {
 	}
 
 	public boolean update(Customer c) {
-		try (Connection conn = getConnection();
-			        PreparedStatement ps = conn.prepareStatement(SQL_UPDATE)) {
+		try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(SQL_UPDATE)) {
 			ps.setString(1, c.getFullName());
 			if (c.getDob() != null) {
 				ps.setDate(2, Date.valueOf(c.getDob()));
@@ -177,8 +171,7 @@ public class CustomerDao extends BaseDao {
 	}
 
 	public boolean delete(String id) {
-		try (Connection conn = getConnection();
-			        PreparedStatement ps = conn.prepareStatement(SQL_DELETE)) {
+		try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(SQL_DELETE)) {
 			ps.setString(1, id);
 			return ps.executeUpdate() == 1;
 		} catch (SQLException e) {

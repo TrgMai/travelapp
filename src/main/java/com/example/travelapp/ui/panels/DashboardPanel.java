@@ -49,10 +49,8 @@ public class DashboardPanel extends JPanel {
 	private javax.swing.Timer refreshTimer;
 	private final DecimalFormat moneyFmt;
 
-	private final JSpinner startDate = new JSpinner(
-	    new SpinnerDateModel(java.sql.Date.valueOf(YearMonth.now().atDay(1)), null, null, Calendar.DAY_OF_MONTH));
-	private final JSpinner endDate = new JSpinner(new SpinnerDateModel(
-	            java.sql.Date.valueOf(YearMonth.now().atEndOfMonth()), null, null, Calendar.DAY_OF_MONTH));
+	private final JSpinner startDate = new JSpinner(new SpinnerDateModel(java.sql.Date.valueOf(YearMonth.now().atDay(1)), null, null, Calendar.DAY_OF_MONTH));
+	private final JSpinner endDate = new JSpinner(new SpinnerDateModel(java.sql.Date.valueOf(YearMonth.now().atEndOfMonth()), null, null, Calendar.DAY_OF_MONTH));
 	private final JCheckBox ckCash = new JCheckBox("Tiền mặt", true);
 	private final JCheckBox ckTransfer = new JCheckBox("Chuyển khoản", true);
 	private final JCheckBox ckCard = new JCheckBox("Thẻ", true);
@@ -62,8 +60,7 @@ public class DashboardPanel extends JPanel {
 	public DashboardPanel() {
 		setLayout(new BorderLayout());
 		setBackground(ThemeTokens.SURFACE());
-		setBorder(new EmptyBorder(ThemeTokens.SPACE_16, ThemeTokens.SPACE_16, ThemeTokens.SPACE_16,
-		                          ThemeTokens.SPACE_16));
+		setBorder(new EmptyBorder(ThemeTokens.SPACE_16, ThemeTokens.SPACE_16, ThemeTokens.SPACE_16, ThemeTokens.SPACE_16));
 
 		DecimalFormatSymbols dfs = new DecimalFormatSymbols(Locale.US);
 		dfs.setGroupingSeparator(',');
@@ -124,15 +121,13 @@ public class DashboardPanel extends JPanel {
 		chartsPanel.setBackground(ThemeTokens.SURFACE());
 		add(chartsPanel, BorderLayout.CENTER);
 
-		tourBarChart = new CategoryChartBuilder().title("Doanh thu theo tour").xAxisTitle("Tour")
-		.yAxisTitle("Doanh thu").build();
+		tourBarChart = new CategoryChartBuilder().title("Doanh thu theo tour").xAxisTitle("Tour").yAxisTitle("Doanh thu").build();
 		styleCategoryChart(tourBarChart);
 		tourBarChart.getStyler().setYAxisDecimalPattern("#,###");
 		tourBarChart.getStyler().setToolTipsEnabled(true);
 		tourBarPanel = new XChartPanel<>(tourBarChart);
 
-		monthlyLineChart = new XYChartBuilder().title("Doanh thu 12 tháng gần nhất").xAxisTitle("Thời gian")
-		.yAxisTitle("Doanh thu").build();
+		monthlyLineChart = new XYChartBuilder().title("Doanh thu 12 tháng gần nhất").xAxisTitle("Thời gian").yAxisTitle("Doanh thu").build();
 		styleXYChartLine(monthlyLineChart);
 		monthlyLineChart.getStyler().setYAxisDecimalPattern("#,###");
 		monthlyLineChart.getStyler().setToolTipsEnabled(true);
@@ -143,8 +138,7 @@ public class DashboardPanel extends JPanel {
 		typePieChart.getStyler().setToolTipsEnabled(true);
 		typePiePanel = new XChartPanel<>(typePieChart);
 
-		dailyAreaChart = new XYChartBuilder().title("Doanh thu theo ngày").xAxisTitle("Ngày").yAxisTitle("Doanh thu")
-		.build();
+		dailyAreaChart = new XYChartBuilder().title("Doanh thu theo ngày").xAxisTitle("Ngày").yAxisTitle("Doanh thu").build();
 		styleXYChartArea(dailyAreaChart);
 		dailyAreaChart.getStyler().setYAxisDecimalPattern("#,###");
 		dailyAreaChart.getStyler().setToolTipsEnabled(true);
@@ -175,10 +169,8 @@ public class DashboardPanel extends JPanel {
 	}
 
 	private void initEmptySeries() {
-		updateCategorySafe(tourBarChart, "Doanh thu", java.util.Collections.emptyList(),
-		                   java.util.Collections.emptyList());
-		updateXYSafe(monthlyLineChart, "Doanh thu", java.util.Collections.emptyList(),
-		             java.util.Collections.emptyList());
+		updateCategorySafe(tourBarChart, "Doanh thu", java.util.Collections.emptyList(), java.util.Collections.emptyList());
+		updateXYSafe(monthlyLineChart, "Doanh thu", java.util.Collections.emptyList(), java.util.Collections.emptyList());
 		updatePieSafe(typePieChart, java.util.Collections.emptyMap());
 		updateXYSafe(dailyAreaChart, "Theo ngày", java.util.Collections.emptyList(), java.util.Collections.emptyList());
 	}
@@ -213,8 +205,7 @@ public class DashboardPanel extends JPanel {
 		JPanel card = ThemeComponents.cardPanel();
 		card.setLayout(new BorderLayout());
 		JLabel titleLabel = new JLabel(title);
-		titleLabel.setFont(
-		    new Font(ThemeTokens.FONT_FAMILY, ThemeTokens.FONT_WEIGHT_REGULAR, ThemeTokens.FONT_SIZE_BASE));
+		titleLabel.setFont(new Font(ThemeTokens.FONT_FAMILY, ThemeTokens.FONT_WEIGHT_REGULAR, ThemeTokens.FONT_SIZE_BASE));
 		titleLabel.setForeground(ThemeTokens.MUTED());
 		valueLabel.setFont(new Font(ThemeTokens.FONT_FAMILY, ThemeTokens.FONT_WEIGHT_BOLD, ThemeTokens.FONT_SIZE_XL));
 		valueLabel.setForeground(ThemeTokens.PRIMARY());
@@ -242,8 +233,7 @@ public class DashboardPanel extends JPanel {
 		c.getStyler().setPlotGridLinesColor(ThemeTokens.BORDER());
 		c.getStyler().setChartFontColor(ThemeTokens.TEXT());
 		c.getStyler().setAxisTickLabelsColor(ThemeTokens.TEXT());
-		c.getStyler()
-		.setSeriesColors(new Color[] { ThemeTokens.PRIMARY(), ThemeTokens.SUCCESS(), ThemeTokens.WARNING() });
+		c.getStyler().setSeriesColors(new Color[] { ThemeTokens.PRIMARY(), ThemeTokens.SUCCESS(), ThemeTokens.WARNING() });
 		c.getStyler().setMarkerSize(5);
 	}
 
@@ -251,8 +241,7 @@ public class DashboardPanel extends JPanel {
 		styleXYChartLine(c);
 		c.getStyler().setDefaultSeriesRenderStyle(XYSeries.XYSeriesRenderStyle.Area);
 		c.getStyler().setMarkerSize(0);
-		c.getStyler()
-		.setSeriesColors(new Color[] { ThemeTokens.PRIMARY(), ThemeTokens.SUCCESS(), ThemeTokens.WARNING() });
+		c.getStyler().setSeriesColors(new Color[] { ThemeTokens.PRIMARY(), ThemeTokens.SUCCESS(), ThemeTokens.WARNING() });
 	}
 
 	private void stylePie(PieChart c) {
@@ -332,7 +321,7 @@ public class DashboardPanel extends JPanel {
 					loading = false;
 				}
 			}
-		} .execute();
+		}.execute();
 	}
 
 	private LocalDate toLocal(java.util.Date d) {
@@ -360,8 +349,7 @@ public class DashboardPanel extends JPanel {
 				}
 			}
 
-			String sqlTotal = "SELECT COALESCE(SUM(p.amount),0) FROM payments p WHERE p.paid_at BETWEEN ? AND ? "
-			                  + typeFilter.replace("WHERE", "AND");
+			String sqlTotal = "SELECT COALESCE(SUM(p.amount),0) FROM payments p WHERE p.paid_at BETWEEN ? AND ? " + typeFilter.replace("WHERE", "AND");
 			try (PreparedStatement ps = conn.prepareStatement(sqlTotal)) {
 				int idx = 1;
 				ps.setDate(idx++, java.sql.Date.valueOf(from));
@@ -374,11 +362,7 @@ public class DashboardPanel extends JPanel {
 				}
 			}
 
-			String sqlTour = "SELECT t.name, COALESCE(SUM(p.amount),0) FROM payments p "
-			                 + "JOIN bookings b ON b.id = p.booking_id "
-			                 + "JOIN tours t ON t.id = b.tour_id "
-			                 + "WHERE p.paid_at BETWEEN ? AND ? " + typeFilter.replace("WHERE", "AND")
-			                 + "GROUP BY t.name ORDER BY SUM(p.amount) DESC LIMIT 12";
+			String sqlTour = "SELECT t.name, COALESCE(SUM(p.amount),0) FROM payments p " + "JOIN bookings b ON b.id = p.booking_id " + "JOIN tours t ON t.id = b.tour_id " + "WHERE p.paid_at BETWEEN ? AND ? " + typeFilter.replace("WHERE", "AND") + "GROUP BY t.name ORDER BY SUM(p.amount) DESC LIMIT 12";
 			try (PreparedStatement ps = conn.prepareStatement(sqlTour)) {
 				int idx = 1;
 				ps.setDate(idx++, java.sql.Date.valueOf(from));
@@ -393,9 +377,7 @@ public class DashboardPanel extends JPanel {
 				}
 			}
 
-			String sqlMonthly = "SELECT DATE_TRUNC('month', p.paid_at) m, COALESCE(SUM(p.amount),0) FROM payments p "
-			                    + "WHERE p.paid_at >= ? AND p.paid_at <= ? " + typeFilter.replace("WHERE", "AND")
-			                    + "GROUP BY m ORDER BY m";
+			String sqlMonthly = "SELECT DATE_TRUNC('month', p.paid_at) m, COALESCE(SUM(p.amount),0) FROM payments p " + "WHERE p.paid_at >= ? AND p.paid_at <= ? " + typeFilter.replace("WHERE", "AND") + "GROUP BY m ORDER BY m";
 			try (PreparedStatement ps = conn.prepareStatement(sqlMonthly)) {
 				int idx = 1;
 				ps.setDate(idx++, java.sql.Date.valueOf(from.minusMonths(11).withDayOfMonth(1)));
@@ -410,9 +392,7 @@ public class DashboardPanel extends JPanel {
 				}
 			}
 
-			String sqlDaily = "SELECT CAST(p.paid_at AS DATE) d, COALESCE(SUM(p.amount),0) FROM payments p "
-			                  + "WHERE p.paid_at BETWEEN ? AND ? " + typeFilter.replace("WHERE", "AND")
-			                  + "GROUP BY d ORDER BY d";
+			String sqlDaily = "SELECT CAST(p.paid_at AS DATE) d, COALESCE(SUM(p.amount),0) FROM payments p " + "WHERE p.paid_at BETWEEN ? AND ? " + typeFilter.replace("WHERE", "AND") + "GROUP BY d ORDER BY d";
 			try (PreparedStatement ps = conn.prepareStatement(sqlDaily)) {
 				int idx = 1;
 				ps.setDate(idx++, java.sql.Date.valueOf(from));
@@ -427,9 +407,7 @@ public class DashboardPanel extends JPanel {
 				}
 			}
 
-			String sqlPie = "SELECT CASE WHEN p.type IS NULL OR p.type NOT IN ('CASH','TRANSFER','CARD') THEN 'OTHER' ELSE p.type END t, "
-			                + "COALESCE(SUM(p.amount),0) FROM payments p WHERE p.paid_at BETWEEN ? AND ? "
-			                + typeFilter.replace("WHERE", "AND") + " GROUP BY t ORDER BY 2 DESC";
+			String sqlPie = "SELECT CASE WHEN p.type IS NULL OR p.type NOT IN ('CASH','TRANSFER','CARD') THEN 'OTHER' ELSE p.type END t, " + "COALESCE(SUM(p.amount),0) FROM payments p WHERE p.paid_at BETWEEN ? AND ? " + typeFilter.replace("WHERE", "AND") + " GROUP BY t ORDER BY 2 DESC";
 			try (PreparedStatement ps = conn.prepareStatement(sqlPie)) {
 				int idx = 1;
 				ps.setDate(idx++, java.sql.Date.valueOf(from));
@@ -443,7 +421,7 @@ public class DashboardPanel extends JPanel {
 						case "CASH" -> "Tiền mặt";
 						case "TRANSFER" -> "Chuyển khoản";
 						case "CARD" -> "Thẻ";
-							default -> "Khác";
+						default -> "Khác";
 						};
 						s.typeAmounts.put(type, new LabeledAmount(label, amt));
 					}
@@ -512,8 +490,7 @@ public class DashboardPanel extends JPanel {
 				chart.removeSeries(seriesName);
 			}
 			if (!chart.getSeriesMap().containsKey(EMPTY_SERIES)) {
-				chart.addSeries(EMPTY_SERIES, java.util.Collections.singletonList(PLACEHOLDER_LABEL),
-				                java.util.Collections.singletonList(0));
+				chart.addSeries(EMPTY_SERIES, java.util.Collections.singletonList(PLACEHOLDER_LABEL), java.util.Collections.singletonList(0));
 			}
 			return;
 		}
@@ -545,8 +522,7 @@ public class DashboardPanel extends JPanel {
 				chart.removeSeries(seriesName);
 			}
 			if (!chart.getSeriesMap().containsKey(EMPTY_SERIES)) {
-				chart.addSeries(EMPTY_SERIES, java.util.Collections.singletonList(new java.util.Date()),
-				                java.util.Collections.singletonList(0));
+				chart.addSeries(EMPTY_SERIES, java.util.Collections.singletonList(new java.util.Date()), java.util.Collections.singletonList(0));
 			}
 			return;
 		}
@@ -613,9 +589,7 @@ public class DashboardPanel extends JPanel {
 		f.setLocationRelativeTo(owner);
 		f.setResizable(true);
 
-		f.getRootPane().registerKeyboardAction(e -> f.dispose(),
-		                                       javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ESCAPE, 0),
-		                                       javax.swing.JComponent.WHEN_IN_FOCUSED_WINDOW);
+		f.getRootPane().registerKeyboardAction(e -> f.dispose(), javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ESCAPE, 0), javax.swing.JComponent.WHEN_IN_FOCUSED_WINDOW);
 
 		f.setVisible(true);
 	}

@@ -15,6 +15,7 @@ public class AuditLog {
 	public String getId() {
 		return id;
 	}
+
 	public void setId(String id) {
 		this.id = id;
 	}
@@ -22,6 +23,7 @@ public class AuditLog {
 	public String getUserId() {
 		return userId;
 	}
+
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
@@ -29,6 +31,7 @@ public class AuditLog {
 	public String getAction() {
 		return action;
 	}
+
 	public void setAction(String action) {
 		this.action = action;
 	}
@@ -36,6 +39,7 @@ public class AuditLog {
 	public String getEntity() {
 		return entity;
 	}
+
 	public void setEntity(String entity) {
 		this.entity = entity;
 	}
@@ -43,6 +47,7 @@ public class AuditLog {
 	public String getEntityId() {
 		return entityId;
 	}
+
 	public void setEntityId(String entityId) {
 		this.entityId = entityId;
 	}
@@ -50,6 +55,7 @@ public class AuditLog {
 	public LocalDateTime getAt() {
 		return at;
 	}
+
 	public void setAt(LocalDateTime at) {
 		this.at = at;
 	}
@@ -57,11 +63,13 @@ public class AuditLog {
 	public String getMeta() {
 		return meta;
 	}
+
 	public void setMeta(String meta) {
 		this.meta = meta;
 	}
 
-	@Override public boolean equals(Object o) {
+	@Override
+	public boolean equals(Object o) {
 		if (this == o) {
 			return true;
 		}
@@ -71,7 +79,9 @@ public class AuditLog {
 		AuditLog that = (AuditLog) o;
 		return Objects.equals(id, that.id);
 	}
-	@Override public int hashCode() {
+
+	@Override
+	public int hashCode() {
 		return Objects.hash(id);
 	}
 }
