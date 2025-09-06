@@ -6,9 +6,12 @@ import com.example.travelapp.security.SecurityContext;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.example.travelapp.util.ImageUtils;
+
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -60,9 +63,13 @@ public class ProfileService {
     public static ImageIcon loadAvatar(String userId, int size) {
         Path p = Path.of("user-images", userId + ".png");
         if (Files.exists(p)) {
-            ImageIcon icon = new ImageIcon(p.toString());
-            Image scaled = icon.getImage().getScaledInstance(size, size, Image.SCALE_SMOOTH);
-            return new ImageIcon(scaled);
+            try {
+                BufferedImage img = ImageIO.read(p.toFile());
+                Image circle = ImageUtils.makeCircular(img, size);
+                return new ImageIcon(circle);
+            } catch (IOException e) {
+                // ignore read error
+            }
         }
         return null;
     }

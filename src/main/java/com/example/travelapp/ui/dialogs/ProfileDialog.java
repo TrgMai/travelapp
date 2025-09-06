@@ -8,6 +8,8 @@ import com.example.travelapp.ui.theme.ThemeTokens;
 import org.kordamp.ikonli.bootstrapicons.BootstrapIcons;
 import org.kordamp.ikonli.swing.FontIcon;
 
+import com.example.travelapp.util.ImageUtils;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -146,8 +148,8 @@ public class ProfileDialog extends JDialog {
         if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             selectedImage = fc.getSelectedFile();
             ImageIcon icon = new ImageIcon(selectedImage.getAbsolutePath());
-            Image scaled = icon.getImage().getScaledInstance(72,72,Image.SCALE_SMOOTH);
-            avatarLabel.setIcon(new ImageIcon(scaled));
+            Image circle = ImageUtils.makeCircular(icon.getImage(), 72);
+            avatarLabel.setIcon(new ImageIcon(circle));
             avatarLabel.setText("");
         }
     }
