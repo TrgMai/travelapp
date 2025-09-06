@@ -3,6 +3,7 @@ package com.example.travelapp.config;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
+import java.util.Set;
 
 import javax.sql.DataSource;
 
@@ -30,18 +31,15 @@ public class DataSourceProvider {
 				LOGGER.warn("Could not load application.properties", e);
 			}
 
-			String url = props.getProperty("db.url", "jdbc:postgresql://localhost:5432/postgres");
-			String user = props.getProperty("db.user", "postgres");
-			String password = props.getProperty("db.password", "admin");
-			int poolSize = Integer.parseInt(props.getProperty("db.pool.size", "10"));
+			Properties hikariProps = new Properties();
+			Set<String> names = props.stringPropertyNames();
+			for (String name : names) {
+				if (name.startsWith("db.")) {
+					hikariProps.setProperty(name.substring(3), props.getProperty(name));
+				}
+			}
 
-			HikariConfig config = new HikariConfig();
-			config.setJdbcUrl(url);
-			config.setUsername(user);
-			config.setPassword(password);
-			config.setMaximumPoolSize(poolSize);
-			config.setMinimumIdle(1);
-			config.setPoolName("TravelAppHikariPool");
+			HikariConfig config = new HikariConfig(hikariProps);
 			dataSource = new HikariDataSource(config);
 			LOGGER.info("Initialized HikariCP data source");
 		}
