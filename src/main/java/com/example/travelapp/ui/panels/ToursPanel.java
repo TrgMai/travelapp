@@ -9,6 +9,7 @@ import com.example.travelapp.ui.tableModels.TourTableModel;
 import com.example.travelapp.ui.theme.ThemeComponents;
 import com.example.travelapp.ui.theme.ThemeTokens;
 import com.example.travelapp.util.ExcelExporter;
+import com.example.travelapp.security.SecurityContext;
 
 import javax.swing.*;
 import javax.swing.table.TableRowSorter;
@@ -65,34 +66,62 @@ public class ToursPanel extends JPanel {
 		JScrollPane sp = ThemeComponents.scroll(table);
 		add(sp, BorderLayout.CENTER);
 
-		table.getSelectionModel().addListSelectionListener(e -> {
-			boolean selected = table.getSelectedRow() >= 0;
-			editBtn.setEnabled(selected);
-			deleteBtn.setEnabled(selected);
-		});
-		editBtn.setEnabled(false);
-		deleteBtn.setEnabled(false);
+                final java.awt.event.MouseAdapter noPerm = new java.awt.event.MouseAdapter() {
+                        @Override
+                        public void mouseClicked(java.awt.event.MouseEvent e) {
+                                showNoPermission();
+                        }
+                };
 
-		table.addMouseListener(new java.awt.event.MouseAdapter() {
-			@Override
-			public void mouseClicked(java.awt.event.MouseEvent e) {
-				if (e.getClickCount() == 2 && table.getSelectedRow() >= 0) {
-					editTour();
-				}
-			}
-		});
+                boolean canCreate = SecurityContext.hasPermission("TOUR_CREATE");
+                boolean canEdit = SecurityContext.hasPermission("TOUR_EDIT");
+                boolean canDelete = SecurityContext.hasPermission("TOUR_DELETE");
 
-		Dimension btnSize = new Dimension(100, 36);
-		addBtn.setPreferredSize(btnSize);
-		editBtn.setPreferredSize(btnSize);
-		deleteBtn.setPreferredSize(btnSize);
+                table.getSelectionModel().addListSelectionListener(e -> {
+                        boolean selected = table.getSelectedRow() >= 0;
+                        editBtn.setEnabled(selected && canEdit);
+                        deleteBtn.setEnabled(selected && canDelete);
+                });
+                editBtn.setEnabled(false);
+                deleteBtn.setEnabled(false);
 
-		addBtn.addActionListener(e -> addTour());
-		editBtn.addActionListener(e -> editTour());
-                deleteBtn.addActionListener(e -> deleteTour());
+                table.addMouseListener(new java.awt.event.MouseAdapter() {
+                        @Override
+                        public void mouseClicked(java.awt.event.MouseEvent e) {
+                                if (e.getClickCount() == 2 && table.getSelectedRow() >= 0) {
+                                        if (!canEdit) {
+                                                showNoPermission();
+                                                return;
+                                        }
+                                        editTour();
+                                }
+                        }
+                });
+
+                Dimension btnSize = new Dimension(100, 36);
+                addBtn.setPreferredSize(btnSize);
+                editBtn.setPreferredSize(btnSize);
+                deleteBtn.setPreferredSize(btnSize);
+
+                if (canCreate) {
+                        addBtn.addActionListener(e -> addTour());
+                } else {
+                        addBtn.setEnabled(false);
+                        addBtn.addMouseListener(noPerm);
+                }
+                if (canEdit) {
+                        editBtn.addActionListener(e -> editTour());
+                } else {
+                        editBtn.addMouseListener(noPerm);
+                }
+                if (canDelete) {
+                        deleteBtn.addActionListener(e -> deleteTour());
+                } else {
+                        deleteBtn.addMouseListener(noPerm);
+                }
                 exportBtn.addActionListener(e -> exportExcel());
-		btnFilter.addActionListener(e -> applyFilter());
-		btnReset.addActionListener(e -> resetFilter());
+                btnFilter.addActionListener(e -> applyFilter());
+                btnReset.addActionListener(e -> resetFilter());
 
 		reloadData();
 	}
@@ -157,8 +186,12 @@ public class ToursPanel extends JPanel {
 		tableModel.setTours(list);
 	}
 
-	private void addTour() {
-		TourFormDialog d = new TourFormDialog(null);
+        private void addTour() {
+                if (!SecurityContext.hasPermission("TOUR_CREATE")) {
+                        showNoPermission();
+                        return;
+                }
+                TourFormDialog d = new TourFormDialog(null);
 		d.setVisible(true);
 		if (!d.isOk()) {
 			return;
@@ -187,8 +220,12 @@ public class ToursPanel extends JPanel {
 		}
 	}
 
-	private void editTour() {
-		int rowView = table.getSelectedRow();
+        private void editTour() {
+                if (!SecurityContext.hasPermission("TOUR_EDIT")) {
+                        showNoPermission();
+                        return;
+                }
+                int rowView = table.getSelectedRow();
 		if (rowView < 0) {
 			return;
 		}
@@ -219,8 +256,12 @@ public class ToursPanel extends JPanel {
 		}
 	}
 
-	private void deleteTour() {
-		int rowView = table.getSelectedRow();
+        private void deleteTour() {
+                if (!SecurityContext.hasPermission("TOUR_DELETE")) {
+                        showNoPermission();
+                        return;
+                }
+                int rowView = table.getSelectedRow();
 		if (rowView < 0) {
 			return;
 		}
@@ -296,6 +337,11 @@ public class ToursPanel extends JPanel {
                 txtMinPrice.setText("");
                 txtMaxPrice.setText("");
                 sorter.setRowFilter(null);
+        }
+
+        private void showNoPermission() {
+                JOptionPane.showMessageDialog(this, "Bạn không có quyền thực hiện thao tác này.",
+                                              "Từ chối truy cập", JOptionPane.ERROR_MESSAGE);
         }
 
         private void exportExcel() {

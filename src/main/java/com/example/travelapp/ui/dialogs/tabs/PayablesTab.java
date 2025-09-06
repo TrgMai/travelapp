@@ -7,6 +7,7 @@ import com.example.travelapp.ui.dialogs.PayableFormDialog;
 import com.example.travelapp.ui.theme.ThemeComponents;
 import com.example.travelapp.ui.theme.ThemeTokens;
 import com.example.travelapp.ui.tableModels.PayablesTableModel;
+import com.example.travelapp.security.SecurityContext;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -52,8 +53,22 @@ public class PayablesTab extends JPanel {
 		                             ThemeTokens.SPACE_12));
 		add(sp, BorderLayout.CENTER);
 
-		btnAdd.addActionListener(e -> onAdd());
-		btnDelete.addActionListener(e -> onDelete());
+                final java.awt.event.MouseAdapter noPerm = new java.awt.event.MouseAdapter() {
+                        @Override
+                        public void mouseClicked(java.awt.event.MouseEvent e) {
+                                showNoPermission();
+                        }
+                };
+                boolean canEdit = SecurityContext.hasPermission("BOOKING_EDIT");
+                if (canEdit) {
+                        btnAdd.addActionListener(e -> onAdd());
+                        btnDelete.addActionListener(e -> onDelete());
+                } else {
+                        btnAdd.setEnabled(false);
+                        btnDelete.setEnabled(false);
+                        btnAdd.addMouseListener(noPerm);
+                        btnDelete.addMouseListener(noPerm);
+                }
 
 		reload();
 	}
@@ -62,8 +77,12 @@ public class PayablesTab extends JPanel {
 		model.setData(service.getByBooking(bookingId));
 	}
 
-	private void onAdd() {
-		PayableFormDialog f = new PayableFormDialog();
+        private void onAdd() {
+                if (!SecurityContext.hasPermission("BOOKING_EDIT")) {
+                        showNoPermission();
+                        return;
+                }
+                PayableFormDialog f = new PayableFormDialog();
 		f.setVisible(true);
 		if (!f.ok) {
 			return;
@@ -99,19 +118,28 @@ public class PayablesTab extends JPanel {
 		}
 	}
 
-	private void onDelete() {
-		int r = table.getSelectedRow();
-		if (r < 0) {
-			return;
-		}
-		var p = model.getAt(table.convertRowIndexToModel(r));
-		if (JOptionPane.showConfirmDialog(this, "Xóa công nợ này?", "Xác nhận",
-		                                  JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-			if (service.delete(p.getId())) {
-				reload();
-			} else {
-				JOptionPane.showMessageDialog(this, "Xóa thất bại", "Lỗi", JOptionPane.ERROR_MESSAGE);
-			}
-		}
-	}
+        private void onDelete() {
+                if (!SecurityContext.hasPermission("BOOKING_EDIT")) {
+                        showNoPermission();
+                        return;
+                }
+                int r = table.getSelectedRow();
+                if (r < 0) {
+                        return;
+                }
+                var p = model.getAt(table.convertRowIndexToModel(r));
+                if (JOptionPane.showConfirmDialog(this, "Xóa công nợ này?", "Xác nhận",
+                                                  JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                        if (service.delete(p.getId())) {
+                                reload();
+                        } else {
+                                JOptionPane.showMessageDialog(this, "Xóa thất bại", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                        }
+                }
+        }
+
+        private void showNoPermission() {
+                JOptionPane.showMessageDialog(this, "Bạn không có quyền thực hiện thao tác này.",
+                                              "Từ chối truy cập", JOptionPane.ERROR_MESSAGE);
+        }
 }

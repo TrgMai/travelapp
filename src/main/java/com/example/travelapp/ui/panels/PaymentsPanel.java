@@ -14,6 +14,7 @@ import com.example.travelapp.util.ExcelExporter;
 import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.UtilDateModel;
+import com.example.travelapp.security.SecurityContext;
 
 import javax.swing.*;
 import javax.swing.table.TableRowSorter;
@@ -74,24 +75,37 @@ public class PaymentsPanel extends JPanel {
 		JScrollPane sp = ThemeComponents.scroll(table);
 		add(sp, BorderLayout.CENTER);
 
-		table.getSelectionModel().addListSelectionListener(e -> {
-			boolean sel = table.getSelectedRow() >= 0;
-			editBtn.setEnabled(sel);
-			deleteBtn.setEnabled(sel);
-		});
-		editBtn.setEnabled(false);
-		deleteBtn.setEnabled(false);
+                final java.awt.event.MouseAdapter noPerm = new java.awt.event.MouseAdapter() {
+                        @Override
+                        public void mouseClicked(java.awt.event.MouseEvent e) {
+                                showNoPermission();
+                        }
+                };
 
-		table.addMouseListener(new java.awt.event.MouseAdapter() {
-			@Override
-			public void mouseClicked(java.awt.event.MouseEvent e) {
-				if (e.getClickCount() == 2 && table.getSelectedRow() >= 0) {
-					editSelected();
-				}
-			}
-		});
+                boolean canRecord = SecurityContext.hasPermission("PAYMENT_RECORD");
 
-		cbType.setRenderer(new DefaultListCellRenderer() {
+                table.getSelectionModel().addListSelectionListener(e -> {
+                        boolean sel = table.getSelectedRow() >= 0;
+                        editBtn.setEnabled(sel && canRecord);
+                        deleteBtn.setEnabled(sel && canRecord);
+                });
+                editBtn.setEnabled(false);
+                deleteBtn.setEnabled(false);
+
+                table.addMouseListener(new java.awt.event.MouseAdapter() {
+                        @Override
+                        public void mouseClicked(java.awt.event.MouseEvent e) {
+                                if (e.getClickCount() == 2 && table.getSelectedRow() >= 0) {
+                                        if (!canRecord) {
+                                                showNoPermission();
+                                                return;
+                                        }
+                                        editSelected();
+                                }
+                        }
+                });
+
+                cbType.setRenderer(new DefaultListCellRenderer() {
 			@Override
 			public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected,
 			        boolean cellHasFocus) {
@@ -109,15 +123,24 @@ public class PaymentsPanel extends JPanel {
 		editBtn.setPreferredSize(btnSize);
 		deleteBtn.setPreferredSize(btnSize);
 
-		addBtn.addActionListener(e -> addPayment());
-		editBtn.addActionListener(e -> editSelected());
-                deleteBtn.addActionListener(e -> deletePayment());
+                if (canRecord) {
+                        addBtn.addActionListener(e -> addPayment());
+                        editBtn.addActionListener(e -> editSelected());
+                        deleteBtn.addActionListener(e -> deletePayment());
+                } else {
+                        addBtn.setEnabled(false);
+                        editBtn.setEnabled(false);
+                        deleteBtn.setEnabled(false);
+                        addBtn.addMouseListener(noPerm);
+                        editBtn.addMouseListener(noPerm);
+                        deleteBtn.addMouseListener(noPerm);
+                }
                 exportBtn.addActionListener(e -> exportExcel());
-		btnFilter.addActionListener(e -> reloadData());
-		btnReset.addActionListener(e -> {
-			resetFilter();
-			reloadData();
-		});
+                btnFilter.addActionListener(e -> reloadData());
+                btnReset.addActionListener(e -> {
+                        resetFilter();
+                        reloadData();
+                });
 
 		loadBookings();
 		reloadData();
@@ -307,8 +330,12 @@ public class PaymentsPanel extends JPanel {
 		tableModel.setData(list);
 	}
 
-	private void addPayment() {
-		Object sel = cbBooking.getSelectedItem();
+        private void addPayment() {
+                if (!SecurityContext.hasPermission("PAYMENT_RECORD")) {
+                        showNoPermission();
+                        return;
+                }
+                Object sel = cbBooking.getSelectedItem();
 		if (!(sel instanceof Booking b)) {
 			JOptionPane.showMessageDialog(this, "Vui lòng chọn đặt chỗ.", "Thêm thanh toán",
 			                              JOptionPane.WARNING_MESSAGE);
@@ -335,8 +362,12 @@ public class PaymentsPanel extends JPanel {
 		}
 	}
 
-	private void editSelected() {
-		int rowView = table.getSelectedRow();
+        private void editSelected() {
+                if (!SecurityContext.hasPermission("PAYMENT_RECORD")) {
+                        showNoPermission();
+                        return;
+                }
+                int rowView = table.getSelectedRow();
 		if (rowView < 0) {
 			return;
 		}
@@ -363,8 +394,12 @@ public class PaymentsPanel extends JPanel {
 		}
 	}
 
-	private void deletePayment() {
-		int rowView = table.getSelectedRow();
+        private void deletePayment() {
+                if (!SecurityContext.hasPermission("PAYMENT_RECORD")) {
+                        showNoPermission();
+                        return;
+                }
+                int rowView = table.getSelectedRow();
 		if (rowView < 0) {
 			return;
 		}
@@ -387,6 +422,11 @@ public class PaymentsPanel extends JPanel {
                 txtMaxAmount.setText("");
                 dateFromPicker.getModel().setValue(null);
                 dateToPicker.getModel().setValue(null);
+        }
+
+        private void showNoPermission() {
+                JOptionPane.showMessageDialog(this, "Bạn không có quyền thực hiện thao tác này.",
+                                              "Từ chối truy cập", JOptionPane.ERROR_MESSAGE);
         }
 
         private void exportExcel() {

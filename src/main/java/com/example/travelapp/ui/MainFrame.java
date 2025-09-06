@@ -81,9 +81,9 @@ public class MainFrame extends JFrame {
 		if (SecurityContext.hasPermission("BOOKING_VIEW")) {
 			addNavItem("Đặt chỗ", BootstrapIcons.CALENDAR_CHECK, null);
 		}
-		if (SecurityContext.hasPermission("PAYMENT_RECORD")) {
-			addNavItem("Thanh toán", BootstrapIcons.CREDIT_CARD, null);
-		}
+                if (SecurityContext.hasPermission("PAYMENT_VIEW")) {
+                        addNavItem("Thanh toán", BootstrapIcons.CREDIT_CARD, null);
+                }
 		if (SecurityContext.hasPermission("USER_MANAGE")) {
 			addNavItem("Quản trị", BootstrapIcons.GEAR, null);
 		}
