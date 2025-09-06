@@ -10,6 +10,7 @@ import com.example.travelapp.ui.dialogs.BookingEditorDialog;
 import com.example.travelapp.ui.tableModels.BookingTableModel;
 import com.example.travelapp.ui.theme.ThemeComponents;
 import com.example.travelapp.ui.theme.ThemeTokens;
+import com.example.travelapp.util.ExcelExporter;
 
 import javax.swing.*;
 import javax.swing.table.TableRowSorter;
@@ -30,9 +31,10 @@ public class BookingsPanel extends JPanel {
 	private final JTable table = new JTable(tableModel);
 	private final TableRowSorter<BookingTableModel> sorter = new TableRowSorter<>(tableModel);
 
-	private final JButton addBtn = ThemeComponents.primaryButton("Thêm");
-	private final JButton editBtn = ThemeComponents.softButton("Sửa");
-	private final JButton deleteBtn = ThemeComponents.softButton("Xóa");
+        private final JButton addBtn = ThemeComponents.primaryButton("Thêm");
+        private final JButton editBtn = ThemeComponents.softButton("Sửa");
+        private final JButton deleteBtn = ThemeComponents.softButton("Xóa");
+        private final JButton exportBtn = ThemeComponents.softButton("Tải tệp Excel");
 
 	private final JTextField txtKeyword = new JTextField();
 	private final JComboBox<String> cbStatus = new JComboBox<>(new String[] { "All", "REQUESTED", "CONFIRMED", "COMPLETED", "CANCELED" });
@@ -48,7 +50,7 @@ public class BookingsPanel extends JPanel {
 		JPanel top = new JPanel();
 		top.setLayout(new BoxLayout(top, BoxLayout.Y_AXIS));
 		top.setOpaque(false);
-		top.add(new HeaderBar("Đặt chỗ", addBtn, editBtn, deleteBtn));
+                top.add(new HeaderBar("Đặt chỗ", addBtn, editBtn, deleteBtn, exportBtn));
 		top.add(Box.createVerticalStrut(ThemeTokens.SPACE_12));
 		top.add(buildFiltersCard());
 		add(top, BorderLayout.NORTH);
@@ -109,7 +111,8 @@ public class BookingsPanel extends JPanel {
 
 		addBtn.addActionListener(e -> addBooking());
 		editBtn.addActionListener(e -> editBooking());
-		deleteBtn.addActionListener(e -> deleteBooking());
+                deleteBtn.addActionListener(e -> deleteBooking());
+                exportBtn.addActionListener(e -> exportExcel());
 		btnFilter.addActionListener(e -> applyFilter());
 		btnReset.addActionListener(e -> resetFilter());
 
@@ -277,11 +280,26 @@ public class BookingsPanel extends JPanel {
 		}
 	}
 
-	private void resetFilter() {
-		txtKeyword.setText("");
-		cbStatus.setSelectedIndex(0);
-		txtMinPrice.setText("");
-		txtMaxPrice.setText("");
-		reloadData();
-	}
+        private void resetFilter() {
+                txtKeyword.setText("");
+                cbStatus.setSelectedIndex(0);
+                txtMinPrice.setText("");
+                txtMaxPrice.setText("");
+                reloadData();
+        }
+
+        private void exportExcel() {
+                java.time.format.DateTimeFormatter df = java.time.format.DateTimeFormatter.ofPattern("yyyyMMdd");
+                String fname = "DanhSachDatCho_" + java.time.LocalDate.now().format(df) + ".xlsx";
+                javax.swing.JFileChooser fc = new javax.swing.JFileChooser();
+                fc.setSelectedFile(new java.io.File(fname));
+                if (fc.showSaveDialog(this) == javax.swing.JFileChooser.APPROVE_OPTION) {
+                        try {
+                                ExcelExporter.exportTable(table, fc.getSelectedFile().toPath(), "DatCho");
+                                javax.swing.JOptionPane.showMessageDialog(this, "Xuất Excel thành công.");
+                        } catch (Exception ex) {
+                                javax.swing.JOptionPane.showMessageDialog(this, "Xuất Excel thất bại: " + ex.getMessage(), "Lỗi", javax.swing.JOptionPane.ERROR_MESSAGE);
+                        }
+                }
+        }
 }

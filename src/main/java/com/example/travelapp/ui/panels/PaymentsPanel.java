@@ -10,6 +10,7 @@ import com.example.travelapp.ui.dialogs.PaymentFormDialog;
 import com.example.travelapp.ui.tableModels.PaymentsTableModel;
 import com.example.travelapp.ui.theme.ThemeComponents;
 import com.example.travelapp.ui.theme.ThemeTokens;
+import com.example.travelapp.util.ExcelExporter;
 import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.UtilDateModel;
@@ -38,11 +39,12 @@ public class PaymentsPanel extends JPanel {
 	private JDatePickerImpl dateFromPicker;
 	private JDatePickerImpl dateToPicker;
 
-	private final JButton addBtn = ThemeComponents.primaryButton("Thêm");
-	private final JButton editBtn = ThemeComponents.softButton("Sửa");
-	private final JButton deleteBtn = ThemeComponents.softButton("Xóa");
-	private final JButton btnFilter = ThemeComponents.primaryButton("Lọc");
-	private final JButton btnReset = ThemeComponents.softButton("Xóa lọc");
+        private final JButton addBtn = ThemeComponents.primaryButton("Thêm");
+        private final JButton editBtn = ThemeComponents.softButton("Sửa");
+        private final JButton deleteBtn = ThemeComponents.softButton("Xóa");
+        private final JButton exportBtn = ThemeComponents.softButton("Tải tệp Excel");
+        private final JButton btnFilter = ThemeComponents.primaryButton("Lọc");
+        private final JButton btnReset = ThemeComponents.softButton("Xóa lọc");
 
 	public PaymentsPanel() {
 		setLayout(new BorderLayout());
@@ -51,7 +53,7 @@ public class PaymentsPanel extends JPanel {
 		JPanel top = new JPanel();
 		top.setLayout(new BoxLayout(top, BoxLayout.Y_AXIS));
 		top.setOpaque(false);
-		top.add(new HeaderBar("Thanh toán", addBtn, editBtn, deleteBtn));
+                top.add(new HeaderBar("Thanh toán", addBtn, editBtn, deleteBtn, exportBtn));
 		top.add(Box.createVerticalStrut(ThemeTokens.SPACE_12));
 		top.add(buildFiltersCard());
 		add(top, BorderLayout.NORTH);
@@ -109,7 +111,8 @@ public class PaymentsPanel extends JPanel {
 
 		addBtn.addActionListener(e -> addPayment());
 		editBtn.addActionListener(e -> editSelected());
-		deleteBtn.addActionListener(e -> deletePayment());
+                deleteBtn.addActionListener(e -> deletePayment());
+                exportBtn.addActionListener(e -> exportExcel());
 		btnFilter.addActionListener(e -> reloadData());
 		btnReset.addActionListener(e -> {
 			resetFilter();
@@ -377,12 +380,27 @@ public class PaymentsPanel extends JPanel {
 		}
 	}
 
-	private void resetFilter() {
-		cbBooking.setSelectedIndex(0);
-		cbType.setSelectedIndex(0);
-		txtMinAmount.setText("");
-		txtMaxAmount.setText("");
-		dateFromPicker.getModel().setValue(null);
-		dateToPicker.getModel().setValue(null);
-	}
+        private void resetFilter() {
+                cbBooking.setSelectedIndex(0);
+                cbType.setSelectedIndex(0);
+                txtMinAmount.setText("");
+                txtMaxAmount.setText("");
+                dateFromPicker.getModel().setValue(null);
+                dateToPicker.getModel().setValue(null);
+        }
+
+        private void exportExcel() {
+                java.time.format.DateTimeFormatter df = java.time.format.DateTimeFormatter.ofPattern("yyyyMMdd");
+                String fname = "DanhSachThanhToan_" + java.time.LocalDate.now().format(df) + ".xlsx";
+                javax.swing.JFileChooser fc = new javax.swing.JFileChooser();
+                fc.setSelectedFile(new java.io.File(fname));
+                if (fc.showSaveDialog(this) == javax.swing.JFileChooser.APPROVE_OPTION) {
+                        try {
+                                ExcelExporter.exportTable(table, fc.getSelectedFile().toPath(), "ThanhToan");
+                                javax.swing.JOptionPane.showMessageDialog(this, "Xuất Excel thành công.");
+                        } catch (Exception ex) {
+                                javax.swing.JOptionPane.showMessageDialog(this, "Xuất Excel thất bại: " + ex.getMessage(), "Lỗi", javax.swing.JOptionPane.ERROR_MESSAGE);
+                        }
+                }
+        }
 }

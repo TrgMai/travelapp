@@ -4,6 +4,8 @@ import com.example.travelapp.security.SecurityContext;
 import com.example.travelapp.ui.components.StatusBar;
 import com.example.travelapp.ui.panels.*;
 import com.example.travelapp.ui.theme.ThemeTokens;
+import com.example.travelapp.service.ProfileService;
+import com.example.travelapp.ui.dialogs.ProfileDialog;
 import org.kordamp.ikonli.bootstrapicons.BootstrapIcons;
 import org.kordamp.ikonli.swing.FontIcon;
 
@@ -15,13 +17,17 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class MainFrame extends JFrame {
-	private final CardLayout cardLayout = new CardLayout();
-	private final JPanel centerPanel = new JPanel(cardLayout);
-	private final Map<String, JPanel> panelRegistry = new LinkedHashMap<>();
+        private final CardLayout cardLayout = new CardLayout();
+        private final JPanel centerPanel = new JPanel(cardLayout);
+        private final Map<String, JPanel> panelRegistry = new LinkedHashMap<>();
 
-	private final JLabel headerTitle = new JLabel("Tổng quan");
-	private final ButtonGroup navGroup = new ButtonGroup();
-	private final JPanel navContainer = new JPanel();
+        private final JLabel headerTitle = new JLabel("Tổng quan");
+        private final ButtonGroup navGroup = new ButtonGroup();
+        private final JPanel navContainer = new JPanel();
+        private JLabel avatarLabel;
+        private JLabel nameLabel;
+        private JLabel roleLabel;
+        private JPanel profilePanel;
 
 	public MainFrame() {
 		super("Hệ thống quản lý du lịch");
@@ -160,37 +166,46 @@ public class MainFrame extends JFrame {
 		return sp;
 	}
 
-	private JPanel buildProfile() {
-		JPanel p = new JPanel(new BorderLayout());
-		p.setOpaque(false);
-		p.setBorder(new EmptyBorder(ThemeTokens.SPACE_12, 0, ThemeTokens.SPACE_12, 0));
+        private JPanel buildProfile() {
+                profilePanel = new JPanel(new BorderLayout());
+                profilePanel.setOpaque(false);
+                profilePanel.setBorder(new EmptyBorder(ThemeTokens.SPACE_12, 0, ThemeTokens.SPACE_12, 0));
 
-		JLabel avatar = new JLabel(FontIcon.of(BootstrapIcons.PERSON_CIRCLE, 36, ThemeTokens.PRIMARY()));
-		avatar.setHorizontalAlignment(SwingConstants.CENTER);
-		p.add(avatar, BorderLayout.NORTH);
+                avatarLabel = new JLabel();
+                avatarLabel.setHorizontalAlignment(SwingConstants.CENTER);
+                profilePanel.add(avatarLabel, BorderLayout.NORTH);
 
-		JPanel info = new JPanel();
-		info.setOpaque(false);
-		info.setLayout(new BoxLayout(info, BoxLayout.Y_AXIS));
+                JPanel info = new JPanel();
+                info.setOpaque(false);
+                info.setLayout(new BoxLayout(info, BoxLayout.Y_AXIS));
 
-		JLabel name = new JLabel(getUserName());
-		name.setAlignmentX(Component.CENTER_ALIGNMENT);
-		name.setFont(new Font(ThemeTokens.FONT_FAMILY, ThemeTokens.FONT_WEIGHT_BOLD, ThemeTokens.FONT_SIZE_BASE));
-		name.setForeground(ThemeTokens.TEXT());
+                nameLabel = new JLabel();
+                nameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+                nameLabel.setFont(new Font(ThemeTokens.FONT_FAMILY, ThemeTokens.FONT_WEIGHT_BOLD, ThemeTokens.FONT_SIZE_BASE));
+                nameLabel.setForeground(ThemeTokens.TEXT());
 
-		JLabel role = new JLabel(getUserRole());
-		role.setAlignmentX(Component.CENTER_ALIGNMENT);
-		role.setFont(new Font(ThemeTokens.FONT_FAMILY, ThemeTokens.FONT_WEIGHT_REGULAR, ThemeTokens.FONT_SIZE_SM));
-		role.setForeground(ThemeTokens.MUTED());
+                roleLabel = new JLabel();
+                roleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+                roleLabel.setFont(new Font(ThemeTokens.FONT_FAMILY, ThemeTokens.FONT_WEIGHT_REGULAR, ThemeTokens.FONT_SIZE_SM));
+                roleLabel.setForeground(ThemeTokens.MUTED());
 
-		info.add(Box.createVerticalStrut(ThemeTokens.SPACE_8));
-		info.add(name);
-		info.add(Box.createVerticalStrut(ThemeTokens.SPACE_4));
-		info.add(role);
+                info.add(Box.createVerticalStrut(ThemeTokens.SPACE_8));
+                info.add(nameLabel);
+                info.add(Box.createVerticalStrut(ThemeTokens.SPACE_4));
+                info.add(roleLabel);
 
-		p.add(info, BorderLayout.CENTER);
-		return p;
-	}
+                profilePanel.add(info, BorderLayout.CENTER);
+
+                refreshProfileInfo();
+
+                profilePanel.addMouseListener(new java.awt.event.MouseAdapter() {
+                        @Override
+                        public void mouseClicked(java.awt.event.MouseEvent e) {
+                                showProfileDialog();
+                        }
+                });
+                return profilePanel;
+        }
 
 	private JPanel buildLogoutRow() {
 		JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT, ThemeTokens.SPACE_8, 0));
@@ -213,12 +228,41 @@ public class MainFrame extends JFrame {
 		return row;
 	}
 
-	private void addNavItem(String name, BootstrapIcons icon, JPanel panel) {
-		navContainer.add(createNavButton(name, icon));
-		if (panel != null) {
-			panelRegistry.put(name, panel);
-		}
-	}
+        private void addNavItem(String name, BootstrapIcons icon, JPanel panel) {
+                navContainer.add(createNavButton(name, icon));
+                if (panel != null) {
+                        panelRegistry.put(name, panel);
+                }
+        }
+
+        private void refreshProfileInfo() {
+                if (nameLabel != null) {
+                        nameLabel.setText(getUserName());
+                }
+                if (roleLabel != null) {
+                        roleLabel.setText(getUserRole());
+                }
+                if (avatarLabel != null) {
+                        var u = SecurityContext.getCurrentUser();
+                        if (u != null) {
+                                ImageIcon icon = ProfileService.loadAvatar(u.getId(), 36);
+                                if (icon != null) {
+                                        avatarLabel.setIcon(icon);
+                                        avatarLabel.setText("");
+                                } else {
+                                        avatarLabel.setIcon(FontIcon.of(BootstrapIcons.PERSON_CIRCLE, 36, ThemeTokens.PRIMARY()));
+                                }
+                        }
+                }
+        }
+
+        private void showProfileDialog() {
+                ProfileDialog d = new ProfileDialog(this);
+                d.setVisible(true);
+                if (d.isUpdated()) {
+                        refreshProfileInfo();
+                }
+        }
 
 	private AbstractButton createNavButton(String text, BootstrapIcons iconDef) {
 		FontIcon icon = FontIcon.of(iconDef, 18, ThemeTokens.TEXT());

@@ -8,6 +8,7 @@ import com.example.travelapp.ui.dialogs.UserFormDialog;
 import com.example.travelapp.ui.tableModels.UsersTableModel;
 import com.example.travelapp.ui.theme.ThemeComponents;
 import com.example.travelapp.ui.theme.ThemeTokens;
+import com.example.travelapp.util.ExcelExporter;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -31,9 +32,10 @@ public class AdminPanel extends JPanel {
 	private final JButton btnFilter = ThemeComponents.primaryButton("Lọc");
 	private final JButton btnReset = ThemeComponents.softButton("Xóa lọc");
 
-	private final JButton addBtn = ThemeComponents.primaryButton("Thêm");
-	private final JButton editBtn = ThemeComponents.softButton("Sửa");
-	private final JButton deleteBtn = ThemeComponents.softButton("Xóa");
+        private final JButton addBtn = ThemeComponents.primaryButton("Thêm");
+        private final JButton editBtn = ThemeComponents.softButton("Sửa");
+        private final JButton deleteBtn = ThemeComponents.softButton("Xóa");
+        private final JButton exportBtn = ThemeComponents.softButton("Tải tệp Excel");
 
 	public AdminPanel() {
 		setLayout(new BorderLayout());
@@ -42,7 +44,7 @@ public class AdminPanel extends JPanel {
 		JPanel top = new JPanel();
 		top.setLayout(new BoxLayout(top, BoxLayout.Y_AXIS));
 		top.setOpaque(false);
-		top.add(new HeaderBar("Quản lý người dùng", addBtn, editBtn, deleteBtn));
+                top.add(new HeaderBar("Quản lý người dùng", addBtn, editBtn, deleteBtn, exportBtn));
 		top.add(Box.createVerticalStrut(ThemeTokens.SPACE_12));
 		top.add(buildFiltersCard());
 		add(top, BorderLayout.NORTH);
@@ -97,7 +99,8 @@ public class AdminPanel extends JPanel {
 
 		addBtn.addActionListener(e -> addUser());
 		editBtn.addActionListener(e -> editUser());
-		deleteBtn.addActionListener(e -> deleteUser());
+                deleteBtn.addActionListener(e -> deleteUser());
+                exportBtn.addActionListener(e -> exportExcel());
 		btnFilter.addActionListener(e -> applyFilter());
 		btnReset.addActionListener(e -> resetFilter());
 
@@ -215,16 +218,31 @@ public class AdminPanel extends JPanel {
 		sorter.setRowFilter(null);
 	}
 
-	private void reloadData() {
-		List<User> list;
+        private void reloadData() {
+                List<User> list;
 		try {
 			list = service.getAllUsers();
 		} catch (SecurityException se) {
 			JOptionPane.showMessageDialog(this, se.getMessage(), "Từ chối truy cập", JOptionPane.ERROR_MESSAGE);
 			list = List.of();
 		}
-		tableModel.setData(list);
-	}
+                tableModel.setData(list);
+        }
+
+        private void exportExcel() {
+                java.time.format.DateTimeFormatter df = java.time.format.DateTimeFormatter.ofPattern("yyyyMMdd");
+                String fname = "DanhSachNguoiDung_" + java.time.LocalDate.now().format(df) + ".xlsx";
+                javax.swing.JFileChooser fc = new javax.swing.JFileChooser();
+                fc.setSelectedFile(new java.io.File(fname));
+                if (fc.showSaveDialog(this) == javax.swing.JFileChooser.APPROVE_OPTION) {
+                        try {
+                                ExcelExporter.exportTable(table, fc.getSelectedFile().toPath(), "NguoiDung");
+                                javax.swing.JOptionPane.showMessageDialog(this, "Xuất Excel thành công.");
+                        } catch (Exception ex) {
+                                javax.swing.JOptionPane.showMessageDialog(this, "Xuất Excel thất bại: " + ex.getMessage(), "Lỗi", javax.swing.JOptionPane.ERROR_MESSAGE);
+                        }
+                }
+        }
 
 	private void addUser() {
 		List<Role> roles = loadAllRoles();

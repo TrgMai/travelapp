@@ -1,0 +1,141 @@
+package com.example.travelapp.ui.dialogs;
+
+import com.example.travelapp.model.User;
+import com.example.travelapp.security.SecurityContext;
+import com.example.travelapp.service.ProfileService;
+import com.example.travelapp.ui.theme.ThemeComponents;
+import com.example.travelapp.ui.theme.ThemeTokens;
+import org.kordamp.ikonli.bootstrapicons.BootstrapIcons;
+import org.kordamp.ikonli.swing.FontIcon;
+
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import java.awt.*;
+import java.io.File;
+
+public class ProfileDialog extends JDialog {
+    private final JTextField usernameField = new JTextField();
+    private final JPasswordField passwordField = new JPasswordField();
+    private final JTextField fullNameField = new JTextField();
+    private final JTextField emailField = new JTextField();
+    private final JTextField phoneField = new JTextField();
+    private final JLabel avatarLabel = new JLabel();
+    private File selectedImage;
+    private boolean updated;
+    private final ProfileService service = new ProfileService();
+
+    public ProfileDialog(Window parent) {
+        super(parent, "Thông tin cá nhân", ModalityType.APPLICATION_MODAL);
+        setSize(400, 500);
+        setLocationRelativeTo(parent);
+        getContentPane().setBackground(ThemeTokens.SURFACE());
+        setLayout(new BorderLayout());
+
+        JPanel center = new JPanel(new GridBagLayout());
+        center.setOpaque(false);
+        center.setBorder(new EmptyBorder(ThemeTokens.SPACE_16, ThemeTokens.SPACE_16, ThemeTokens.SPACE_16, ThemeTokens.SPACE_16));
+        GridBagConstraints g = new GridBagConstraints();
+        g.insets = new Insets(ThemeTokens.SPACE_8, ThemeTokens.SPACE_8, ThemeTokens.SPACE_8, ThemeTokens.SPACE_8);
+        g.anchor = GridBagConstraints.WEST;
+        g.fill = GridBagConstraints.HORIZONTAL;
+
+        avatarLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        avatarLabel.setPreferredSize(new Dimension(72,72));
+        JButton chooseImg = ThemeComponents.softButton("Chọn ảnh");
+        chooseImg.addActionListener(e -> chooseImage());
+
+        int row = 0;
+        g.gridx = 0; g.gridy = row; g.gridwidth = 2; g.weightx = 1;
+        center.add(avatarLabel, g);
+        row++;
+        g.gridy = row; center.add(chooseImg, g);
+        g.gridwidth = 1; g.weightx = 0; row++;
+
+        addField(center, g, row++, "Tên đăng nhập", usernameField);
+        addField(center, g, row++, "Mật khẩu mới", passwordField);
+        addField(center, g, row++, "Họ tên", fullNameField);
+        addField(center, g, row++, "Email", emailField);
+        addField(center, g, row, "SĐT", phoneField);
+
+        add(center, BorderLayout.CENTER);
+
+        JPanel actions = new JPanel(new FlowLayout(FlowLayout.RIGHT, ThemeTokens.SPACE_8, ThemeTokens.SPACE_12));
+        actions.setOpaque(false);
+        JButton saveBtn = ThemeComponents.primaryButton("Lưu");
+        JButton cancelBtn = ThemeComponents.softButton("Hủy");
+        actions.add(saveBtn);
+        actions.add(cancelBtn);
+        add(actions, BorderLayout.SOUTH);
+
+        saveBtn.addActionListener(e -> save());
+        cancelBtn.addActionListener(e -> setVisible(false));
+
+        loadCurrent();
+    }
+
+    private void addField(JPanel parent, GridBagConstraints base, int row, String label, JComponent field) {
+        GridBagConstraints g1 = (GridBagConstraints) base.clone();
+        g1.gridx = 0; g1.gridy = row; g1.weightx = 0; g1.gridwidth = 1;
+        JLabel l = new JLabel(label);
+        l.setForeground(ThemeTokens.TEXT());
+        parent.add(l, g1);
+        GridBagConstraints g2 = (GridBagConstraints) base.clone();
+        g2.gridx = 1; g2.gridy = row; g2.weightx = 1; g2.gridwidth = 1;
+        parent.add(field, g2);
+    }
+
+    private void loadCurrent() {
+        User u = SecurityContext.getCurrentUser();
+        if (u == null) return;
+        usernameField.setText(u.getUsername());
+        fullNameField.setText(u.getFullName());
+        emailField.setText(u.getEmail());
+        phoneField.setText(u.getPhone());
+        ImageIcon avatar = ProfileService.loadAvatar(u.getId(),72);
+        if (avatar != null) {
+            avatarLabel.setIcon(avatar);
+            avatarLabel.setText("");
+        } else {
+            avatarLabel.setIcon(FontIcon.of(BootstrapIcons.PERSON_CIRCLE,72,ThemeTokens.PRIMARY()));
+        }
+    }
+
+    private void chooseImage() {
+        JFileChooser fc = new JFileChooser();
+        fc.setFileFilter(new FileNameExtensionFilter("Images", "png", "jpg", "jpeg", "gif"));
+        if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+            selectedImage = fc.getSelectedFile();
+            ImageIcon icon = new ImageIcon(selectedImage.getAbsolutePath());
+            Image scaled = icon.getImage().getScaledInstance(72,72,Image.SCALE_SMOOTH);
+            avatarLabel.setIcon(new ImageIcon(scaled));
+            avatarLabel.setText("");
+        }
+    }
+
+    private void save() {
+        User u = new User();
+        u.setUsername(usernameField.getText().trim());
+        u.setFullName(fullNameField.getText().trim());
+        u.setEmail(emailField.getText().trim());
+        u.setPhone(phoneField.getText().trim());
+        char[] pwd = passwordField.getPassword();
+        if (service.updateProfile(u, pwd)) {
+            if (selectedImage != null) {
+                try {
+                    service.saveAvatar(selectedImage);
+                } catch (Exception ex) {
+                    // ignore error
+                }
+            }
+            updated = true;
+            setVisible(false);
+        } else {
+            JOptionPane.showMessageDialog(this, "Cập nhật thất bại", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    public boolean isUpdated() {
+        return updated;
+    }
+}

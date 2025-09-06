@@ -19,6 +19,9 @@ out/
 # Logs
 *.log
 
+# User uploaded avatars
+user-images/
+
 # OS files
 .DS_Store
 Thumbs.db

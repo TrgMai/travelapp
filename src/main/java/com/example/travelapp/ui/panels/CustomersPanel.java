@@ -7,6 +7,7 @@ import com.example.travelapp.ui.dialogs.CustomerFormDialog;
 import com.example.travelapp.ui.tableModels.CustomersTableModel;
 import com.example.travelapp.ui.theme.ThemeComponents;
 import com.example.travelapp.ui.theme.ThemeTokens;
+import com.example.travelapp.util.ExcelExporter;
 import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.UtilDateModel;
@@ -33,10 +34,11 @@ public class CustomersPanel extends JPanel {
 	private JDatePickerImpl dobToPicker;
 
 	private final JButton addBtn = ThemeComponents.primaryButton("Thêm");
-	private final JButton editBtn = ThemeComponents.softButton("Sửa");
-	private final JButton deleteBtn = ThemeComponents.softButton("Xóa");
-	private final JButton btnFilter = ThemeComponents.primaryButton("Lọc");
-	private final JButton btnReset = ThemeComponents.softButton("Xóa lọc");
+        private final JButton editBtn = ThemeComponents.softButton("Sửa");
+        private final JButton deleteBtn = ThemeComponents.softButton("Xóa");
+        private final JButton exportBtn = ThemeComponents.softButton("Tải tệp Excel");
+        private final JButton btnFilter = ThemeComponents.primaryButton("Lọc");
+        private final JButton btnReset = ThemeComponents.softButton("Xóa lọc");
 
 	public CustomersPanel() {
 		setLayout(new BorderLayout());
@@ -45,7 +47,7 @@ public class CustomersPanel extends JPanel {
 		JPanel top = new JPanel();
 		top.setLayout(new BoxLayout(top, BoxLayout.Y_AXIS));
 		top.setOpaque(false);
-		top.add(new HeaderBar("Khách hàng", addBtn, editBtn, deleteBtn));
+                top.add(new HeaderBar("Khách hàng", addBtn, editBtn, deleteBtn, exportBtn));
 		top.add(Box.createVerticalStrut(ThemeTokens.SPACE_12));
 		top.add(buildFiltersCard());
 		add(top, BorderLayout.NORTH);
@@ -99,7 +101,8 @@ public class CustomersPanel extends JPanel {
 
 		addBtn.addActionListener(e -> addCustomer());
 		editBtn.addActionListener(e -> editCustomer());
-		deleteBtn.addActionListener(e -> deleteCustomer());
+                deleteBtn.addActionListener(e -> deleteCustomer());
+                exportBtn.addActionListener(e -> exportExcel());
 		btnFilter.addActionListener(e -> reloadData());
 		btnReset.addActionListener(e -> {
 			resetFilter();
@@ -203,8 +206,8 @@ public class CustomersPanel extends JPanel {
 		return card;
 	}
 
-	private void reloadData() {
-		String kw = txtKeyword.getText().trim();
+        private void reloadData() {
+                String kw = txtKeyword.getText().trim();
 		if (kw.isBlank()) {
 			kw = null;
 		}
@@ -226,8 +229,23 @@ public class CustomersPanel extends JPanel {
 			JOptionPane.showMessageDialog(this, se.getMessage(), "Từ chối truy cập", JOptionPane.ERROR_MESSAGE);
 			list = List.of();
 		}
-		tableModel.setData(list);
-	}
+                tableModel.setData(list);
+        }
+
+        private void exportExcel() {
+                java.time.format.DateTimeFormatter df = java.time.format.DateTimeFormatter.ofPattern("yyyyMMdd");
+                String fname = "DanhSachKhachHang_" + java.time.LocalDate.now().format(df) + ".xlsx";
+                javax.swing.JFileChooser fc = new javax.swing.JFileChooser();
+                fc.setSelectedFile(new java.io.File(fname));
+                if (fc.showSaveDialog(this) == javax.swing.JFileChooser.APPROVE_OPTION) {
+                        try {
+                                ExcelExporter.exportTable(table, fc.getSelectedFile().toPath(), "KhachHang");
+                                javax.swing.JOptionPane.showMessageDialog(this, "Xuất Excel thành công.");
+                        } catch (Exception ex) {
+                                javax.swing.JOptionPane.showMessageDialog(this, "Xuất Excel thất bại: " + ex.getMessage(), "Lỗi", javax.swing.JOptionPane.ERROR_MESSAGE);
+                        }
+                }
+        }
 
 	private void resetFilter() {
 		txtKeyword.setText("");
