@@ -81,13 +81,47 @@ public class ProfileDialog extends JDialog {
 
     private void addField(JPanel parent, GridBagConstraints base, int row, String label, JComponent field) {
         GridBagConstraints g1 = (GridBagConstraints) base.clone();
-        g1.gridx = 0; g1.gridy = row; g1.weightx = 0; g1.gridwidth = 1;
+        g1.gridx = 0;
+        g1.gridy = row;
+        g1.weightx = 0;
+        g1.gridwidth = 1;
         JLabel l = new JLabel(label);
         l.setForeground(ThemeTokens.TEXT());
         parent.add(l, g1);
         GridBagConstraints g2 = (GridBagConstraints) base.clone();
-        g2.gridx = 1; g2.gridy = row; g2.weightx = 1; g2.gridwidth = 1;
-        parent.add(field, g2);
+        g2.gridx = 1;
+        g2.gridy = row;
+        g2.weightx = 1;
+        g2.gridwidth = 1;
+        if (field instanceof JPasswordField) {
+            JPasswordField pwdField = (JPasswordField) field;
+            JPanel pwdRow = new JPanel(new BorderLayout());
+            pwdRow.setOpaque(false);
+            pwdRow.add(pwdField, BorderLayout.CENTER);
+
+            JToggleButton reveal = new JToggleButton();
+            reveal.setFocusPainted(false);
+            reveal.setContentAreaFilled(false);
+            reveal.setBorder(new EmptyBorder(0, ThemeTokens.SPACE_8, 0, 0));
+            reveal.setForeground(ThemeTokens.MUTED());
+            FontIcon eyeIcon = FontIcon.of(BootstrapIcons.EYE, 16, ThemeTokens.MUTED());
+            FontIcon eyeSlashIcon = FontIcon.of(BootstrapIcons.EYE_SLASH, 16, ThemeTokens.MUTED());
+            reveal.setIcon(eyeIcon);
+            final char defaultEchoChar = pwdField.getEchoChar();
+            reveal.addActionListener(e -> {
+                boolean show = reveal.isSelected();
+                pwdField.setEchoChar(show ? (char) 0 : defaultEchoChar);
+                reveal.setIcon(show ? eyeSlashIcon : eyeIcon);
+            });
+
+            JPanel revealWrap = new JPanel(new BorderLayout());
+            revealWrap.setOpaque(false);
+            revealWrap.add(reveal, BorderLayout.CENTER);
+            pwdRow.add(revealWrap, BorderLayout.EAST);
+            parent.add(pwdRow, g2);
+        } else {
+            parent.add(field, g2);
+        }
     }
 
     private void loadCurrent() {
