@@ -13,10 +13,13 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.io.File;
+import java.util.Arrays;
 
 public class ProfileDialog extends JDialog {
     private final JTextField usernameField = new JTextField();
-    private final JPasswordField passwordField = new JPasswordField();
+    private final JPasswordField currentPasswordField = new JPasswordField();
+    private final JPasswordField newPasswordField = new JPasswordField();
+    private final JPasswordField confirmPasswordField = new JPasswordField();
     private final JTextField fullNameField = new JTextField();
     private final JTextField emailField = new JTextField();
     private final JTextField phoneField = new JTextField();
@@ -53,7 +56,9 @@ public class ProfileDialog extends JDialog {
         g.gridwidth = 1; g.weightx = 0; row++;
 
         addField(center, g, row++, "Tên đăng nhập", usernameField);
-        addField(center, g, row++, "Mật khẩu mới", passwordField);
+        addField(center, g, row++, "Mật khẩu cũ", currentPasswordField);
+        addField(center, g, row++, "Mật khẩu mới", newPasswordField);
+        addField(center, g, row++, "Nhập lại mật khẩu", confirmPasswordField);
         addField(center, g, row++, "Họ tên", fullNameField);
         addField(center, g, row++, "Email", emailField);
         addField(center, g, row, "SĐT", phoneField);
@@ -119,8 +124,25 @@ public class ProfileDialog extends JDialog {
         u.setFullName(fullNameField.getText().trim());
         u.setEmail(emailField.getText().trim());
         u.setPhone(phoneField.getText().trim());
-        char[] pwd = passwordField.getPassword();
-        if (service.updateProfile(u, pwd)) {
+        char[] oldPwd = currentPasswordField.getPassword();
+        char[] newPwd = newPasswordField.getPassword();
+        char[] confirmPwd = confirmPasswordField.getPassword();
+
+        if (newPwd.length > 0 || confirmPwd.length > 0 || oldPwd.length > 0) {
+            if (oldPwd.length == 0) {
+                JOptionPane.showMessageDialog(this, "Vui lòng nhập mật khẩu cũ", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            if (newPwd.length == 0 || !Arrays.equals(newPwd, confirmPwd)) {
+                JOptionPane.showMessageDialog(this, "Mật khẩu mới không khớp", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        }
+
+        char[] sendOld = oldPwd.length > 0 ? oldPwd : null;
+        char[] sendNew = newPwd.length > 0 ? newPwd : null;
+
+        if (service.updateProfile(u, sendOld, sendNew)) {
             if (selectedImage != null) {
                 try {
                     service.saveAvatar(selectedImage);

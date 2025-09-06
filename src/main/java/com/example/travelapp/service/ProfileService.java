@@ -18,13 +18,17 @@ public class ProfileService {
     private final UserDao userDao = new UserDao();
     private final PasswordEncoder encoder = new BCryptPasswordEncoder();
 
-    public boolean updateProfile(User u, char[] newPassword) {
+    public boolean updateProfile(User u, char[] oldPassword, char[] newPassword) {
         var current = SecurityContext.getCurrentUser();
         if (current == null) {
             return false;
         }
         u.setId(current.getId());
         if (newPassword != null && newPassword.length > 0) {
+            if (oldPassword == null || oldPassword.length == 0 ||
+                    !encoder.matches(new String(oldPassword), current.getPasswordHash())) {
+                return false;
+            }
             u.setPasswordHash(encoder.encode(new String(newPassword)));
         } else {
             u.setPasswordHash(current.getPasswordHash());
