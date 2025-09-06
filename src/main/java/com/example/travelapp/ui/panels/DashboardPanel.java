@@ -193,11 +193,6 @@ public class DashboardPanel extends JPanel {
 		p.add(l, pos(gc));
 	}
 
-	private void newRow(GridBagConstraints gc) {
-		gc.gridx = 0;
-		gc.gridy++;
-	}
-
 	@Override
 	public void addNotify() {
 		super.addNotify();
