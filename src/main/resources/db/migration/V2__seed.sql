@@ -160,7 +160,7 @@ WHERE r.code = 'CS' AND p.code IN (
 ON CONFLICT DO NOTHING;
 
 -- ============================================================
--- 3) USERS (BCrypt "123456")
+-- 3) USERS (BCrypt "123")
 INSERT INTO users (id, username, password_hash, full_name, email, phone, status)
 VALUES
   (next_id('U'),'admin',      '$2a$10$s5iUlpaTU8C4/AGkgEvXaeAJX2b1vnZzG/RxixEmmLP0kwbQBRjTK','Administrator','admin@example.com','0900000001','ACTIVE'),
