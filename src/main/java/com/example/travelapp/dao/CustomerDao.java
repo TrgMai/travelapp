@@ -38,6 +38,12 @@ public class CustomerDao extends BaseDao {
 			WHERE id = ?
 			""";
 
+	private static final String SQL_SEARCH_BASE = """
+			SELECT id, full_name, dob, gender, id_type, id_no, phone, email, note, created_at
+			FROM customers
+			WHERE 1=1
+			""";
+
 	public List<Customer> findAll() {
 		List<Customer> list = new ArrayList<>();
 		try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(SQL_FIND_ALL); ResultSet rs = ps.executeQuery()) {
@@ -65,11 +71,7 @@ public class CustomerDao extends BaseDao {
 	}
 
 	public List<Customer> search(String keyword, String gender, LocalDate dobFrom, LocalDate dobTo) {
-		StringBuilder sql = new StringBuilder("""
-				SELECT id, full_name, dob, gender, id_type, id_no, phone, email, note, created_at
-				FROM customers
-				WHERE 1=1
-				        """);
+		StringBuilder sql = new StringBuilder(SQL_SEARCH_BASE);
 		List<Object> params = new ArrayList<>();
 
 		if (keyword != null && !keyword.isBlank()) {
