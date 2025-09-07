@@ -49,7 +49,7 @@ public class PayablesTableModel extends AbstractTableModel {
 	public Object getValueAt(int r, int c) {
 		var x = data.get(r);
 		return switch (c) {
-		case 0 -> x.getPartnerId();
+		case 0 -> x.getPartnerName();
 		case 1 -> x.getAmount();
 		case 2 -> x.getDueDate() == null ? "" : x.getDueDate().format(df);
 		case 3 -> x.getStatus();

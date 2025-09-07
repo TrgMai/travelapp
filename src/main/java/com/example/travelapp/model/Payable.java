@@ -6,6 +6,7 @@ import java.time.LocalDate;
 public class Payable {
 	private String id;
 	private String partnerId;
+	private String partnerName;
 	private String bookingId;
 	private BigDecimal amount;
 	private LocalDate dueDate;
@@ -25,6 +26,14 @@ public class Payable {
 
 	public void setPartnerId(String partnerId) {
 		this.partnerId = partnerId;
+	}
+
+	public String getPartnerName() {
+		return partnerName;
+	}
+
+	public void setPartnerName(String partnerName) {
+		this.partnerName = partnerName;
 	}
 
 	public String getBookingId() {

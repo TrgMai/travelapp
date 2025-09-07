@@ -9,10 +9,11 @@ import java.util.List;
 
 public class PayableDao extends BaseDao {
 	private static final String SQL_FIND_BY_BOOKING = """
-			SELECT *
-			FROM payables
-			WHERE booking_id=?
-			ORDER BY due_date NULLS LAST, id
+			SELECT p.*, pt.name AS partner_name
+			FROM payables p
+			JOIN partners pt ON p.partner_id = pt.id
+			WHERE p.booking_id=?
+			ORDER BY p.due_date NULLS LAST, p.id
 			""";
 
 	private static final String SQL_INSERT = """
@@ -102,6 +103,11 @@ public class PayableDao extends BaseDao {
 		Payable p = new Payable();
 		p.setId(rs.getString("id"));
 		p.setPartnerId(rs.getString("partner_id"));
+		try {
+			p.setPartnerName(rs.getString("partner_name"));
+		} catch (SQLException ignore) {
+			// column might not be present in result set
+		}
 		p.setBookingId(rs.getString("booking_id"));
 		p.setAmount(rs.getBigDecimal("amount"));
 		Date d = rs.getDate("due_date");
