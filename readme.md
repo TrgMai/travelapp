@@ -13,7 +13,7 @@
 - [PostgreSQL](https://www.postgresql.org/)
 
 ## Cài đặt & chạy
-1. Clone dự án: `git clone <repo>`
+1. Clone dự án: `git clone https://github.com/TrgMai/travelapp.git`
 2. Cấu hình kết nối DB trong `src/main/resources/application.properties`.
 3. Build dự án: `mvn clean package`
 4. Chạy ứng dụng:
