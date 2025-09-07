@@ -5,6 +5,7 @@ public class Allocation {
 	private String bookingId;
 	private Integer dayNo;
 	private String serviceId;
+	private String serviceName;
 	private String detailJson;
 
 	public String getId() {
@@ -37,6 +38,14 @@ public class Allocation {
 
 	public void setServiceId(String serviceId) {
 		this.serviceId = serviceId;
+	}
+
+	public String getServiceName() {
+		return serviceName;
+	}
+
+	public void setServiceName(String serviceName) {
+		this.serviceName = serviceName;
 	}
 
 	public String getDetailJson() {

@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AllocationsTableModel extends AbstractTableModel {
-	private final String[] cols = { "Ngày", "Mã dịch vụ", "Chi tiết" };
+	private final String[] cols = { "Ngày", "Tên dịch vụ", "Chi tiết" };
 	private final List<Allocation> data = new ArrayList<>();
 
 	public void setData(List<Allocation> list) {
@@ -42,7 +42,7 @@ public class AllocationsTableModel extends AbstractTableModel {
 		var x = data.get(r);
 		return switch (c) {
 		case 0 -> x.getDayNo();
-		case 1 -> x.getServiceId();
+		case 1 -> x.getServiceName();
 		case 2 -> x.getDetailJson();
 		default -> "";
 		};

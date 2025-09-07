@@ -9,10 +9,11 @@ import java.util.List;
 
 public class AllocationDao extends BaseDao {
 	private static final String SQL_FIND_BY_BOOKING = """
-			SELECT *
-			FROM allocations
-			WHERE booking_id=?
-			ORDER BY day_no, id
+			SELECT a.*, s.name AS service_name
+			FROM allocations a
+			LEFT JOIN services s ON a.service_id = s.id
+			WHERE a.booking_id=?
+			ORDER BY a.day_no, a.id
 			""";
 
 	private static final String SQL_INSERT = """
@@ -103,6 +104,7 @@ public class AllocationDao extends BaseDao {
 		int d = rs.getInt("day_no");
 		a.setDayNo(rs.wasNull() ? null : d);
 		a.setServiceId(rs.getString("service_id"));
+		a.setServiceName(rs.getString("service_name"));
 		a.setDetailJson(rs.getString("detail"));
 		return a;
 	}
