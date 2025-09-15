@@ -1,0 +1,6 @@
+card_number,id_number,full_name,date_of_birth,gender,nationality
+001,123456789,Nguyen Van A,1990-01-01,M,VN
+002,,Tran Thi B,1992-05-03,F,VN
+003,987654321,,1988-09-10,M,
+004,,,,,
+005,555555555,Le Van C,1995-12-12,M,VN

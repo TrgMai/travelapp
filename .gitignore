@@ -31,3 +31,6 @@ Thumbs.db
 
 # FDF
 invoices/
+
+# Python
+__pycache__/
